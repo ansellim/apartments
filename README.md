@@ -3,6 +3,9 @@ Ansel, Daosheng, Key, Keith
 
 # LATEST UPDATES
 
+### update 31/10/21 2.10am - ansel
+ura.csv is available. however, batch 3 URA data is missing ("Invalid service" error message) -- not sure why...needs further tweaking here.
+
 ### update 31/10/21 12.26am - ansel
 After much debugging, I have managed to write code to download data from URA and LTA. The data is still in raw json format, but I intend to convert them into tabular format (probably csv) soon. Run the code and the data will be stored in a file called "cached_data" (I have not git-tracked this). 
 

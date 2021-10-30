@@ -8,7 +8,7 @@ import os
 import pickle
 import time
 import urllib.request
-
+import pandas as pd
 import requests
 from dotenv import load_dotenv
 
@@ -216,6 +216,19 @@ data_processor.load()
 bus_stops = data_processor.data['bus_stops']
 print(bus_stops)
 
-# next steps:
 # process data --> csv
+ura_data_1 = data_processor.data["ura_data"][1]["Result"]
+ura_data_2 = data_processor.data["ura_data"][2]["Result"]
+#ura_data_3 = data_processor.data["ura_data"][3]["Result"] # FOR SOME REASON, BATCH 3 IS GIVING PROBLEMS.
+ura_data_4 = data_processor.data["ura_data"][4]["Result"]
+ura_1 = pd.DataFrame.from_dict(ura_data_1)
+ura_2 = pd.DataFrame.from_dict(ura_data_2)
+#ura_3 = pd.DataFrame.from_dict(ura_data_3) # FOR SOME REASON, BATCH 3 IS GIVING PROBLEMS.
+ura_4 = pd.DataFrame.from_dict(ura_data_4)
+ura = pd.concat([ura_1,ura_2,
+                 #ura_3, # FOR SOME REASON, BATCH 3 IS GIVING PROBLEMS.
+                 ura_4])
+ura.to_csv("ura.csv")
+
+# next steps:
 # get more interesting data sources
