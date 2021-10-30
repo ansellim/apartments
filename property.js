@@ -1,3 +1,5 @@
+// Old JS code for downloading the URA property transaction data. This code is legacy code since I have now reimplemented this in Python. Bye Javascript!
+
 require("dotenv").config();
 const express = require("express");
 const app = express();
