@@ -10,16 +10,16 @@ def most_common(lst):
 
 #######################
 
-batch1_json = open("./data/batch1.json", 'r')
+batch1_json = open("../data/batch1.json", 'r')
 batch1 = json.load(batch1_json)
 
-batch2_json = open("./data/batch2.json", 'r')
+batch2_json = open("../data/batch2.json", 'r')
 batch2 = json.load(batch2_json)
 
 #batch3_json = open("./ura_data/batch2.json",'r') ## Batch 3 is the problematic batch
 #batch3 = json.load(batch3_json) ## Batch 3 is the problematic batch
 
-batch4_json = open("data/batch4.json", 'r')
+batch4_json = open("../data/batch4.json", 'r')
 batch4 = json.load(batch4_json)
 
 data = batch1['Result']+batch2['Result']+batch4['Result'] #+batch3['Result'] ## Batch 3 is the problematic batch
