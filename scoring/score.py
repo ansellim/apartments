@@ -40,4 +40,4 @@ intersection = gpd.sjoin(gdf_proj,gdf_proj_bus_stops,
 
 print(intersection.shape)
 print(intersection.iloc[0,:])
-#intersection.to_csv("./scored_data/ura_join_bus_stops")
+intersection.to_csv("./scored_data/ura_join_bus_stops.csv")
