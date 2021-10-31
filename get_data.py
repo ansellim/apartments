@@ -60,14 +60,23 @@ class DataLoader:
         print("Starting to load URA transactions")
         start = time.time()
         data = {}
+        data[1],data[2],data[3],data[4] = None,None,None,None
         for i in range(1, 5):
+            # Batch 3 is giving problems, so skip it
+            if i==3:
+                print("Skipping batch 3")
+                continue
+
             print("Loading batch {} of 4 for URA transaction data".format(i))
             url = "https://www.ura.gov.sg/uraDataService/invokeUraDS"
             params = {"service": "PMI_Resi_Transaction",
                       "batch": str(i)}
             headers = {"Token": self.ura_token,
                        "AccessKey": self.ura_api_key,
-                       "User-Agent": "PostmanRuntime/7.26.8"  # for some weird reason, need to pretend we are Postman
+                       "User-Agent": "PostmanRuntime/7.26.8",  # for some weird reason, need to pretend we are Postman
+                       "Connection":"keep-alive",
+                       "Accept":"*/*",
+                       "Accept-Encoding":"gzip, deflate, br"
                        }
             response = requests.get(url, params=params, headers=headers)
             res = response.json()
@@ -169,18 +178,6 @@ class DataLoader:
             pickle.dump(data, file)
             file.close()
 
-
-class DataProcessor:
-    def __init__(self, pickled_loader="cached_data"):
-        self.pickled_loader = pickled_loader
-        self.data = None
-
-    def load(self):
-        cls = pickle.load(open(self.pickled_loader, "rb"))
-        self.data = cls
-        return cls
-
-
 # API keys
 load_dotenv()
 URA_API_KEY = str(os.environ.get("URA_API_KEY"))
@@ -207,28 +204,3 @@ for item in items:
 
 # save data (pickle the object and save to disk)
 loader.save_data(dest="cached_data")
-
-# create a data processor object to load and process the data
-data_processor = DataProcessor('cached_data')
-data_processor.load()
-
-# example: to view bus stops data
-bus_stops = data_processor.data['bus_stops']
-print(bus_stops)
-
-# process data --> csv
-ura_data_1 = data_processor.data["ura_data"][1]["Result"]
-ura_data_2 = data_processor.data["ura_data"][2]["Result"]
-#ura_data_3 = data_processor.data["ura_data"][3]["Result"] # FOR SOME REASON, BATCH 3 IS GIVING PROBLEMS.
-ura_data_4 = data_processor.data["ura_data"][4]["Result"]
-ura_1 = pd.DataFrame.from_dict(ura_data_1)
-ura_2 = pd.DataFrame.from_dict(ura_data_2)
-#ura_3 = pd.DataFrame.from_dict(ura_data_3) # FOR SOME REASON, BATCH 3 IS GIVING PROBLEMS.
-ura_4 = pd.DataFrame.from_dict(ura_data_4)
-ura = pd.concat([ura_1,ura_2,
-                 #ura_3, # FOR SOME REASON, BATCH 3 IS GIVING PROBLEMS.
-                 ura_4])
-ura.to_csv("ura.csv")
-
-# next steps:
-# get more interesting data sources
