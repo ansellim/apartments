@@ -6,7 +6,7 @@ import pickle
 import pandas as pd
 
 class DataProcessor:
-    def __init__(self, pickled_loader="cached_data"):
+    def __init__(self, pickled_loader="./data/cached_data"):
         self.pickled_loader = pickled_loader
         self.data = None
 
@@ -16,7 +16,7 @@ class DataProcessor:
         return cls
 
 # create a data processor object to load and process the data
-data_processor = DataProcessor('cached_data')
+data_processor = DataProcessor('./data/cached_data')
 data_processor.load()
 
 # example: to view bus stops data
