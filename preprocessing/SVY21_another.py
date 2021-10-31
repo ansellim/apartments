@@ -1,10 +1,6 @@
-# THIS CODE IS NOT WRITTEN BY ME - IT IS COPIED FROM THIS GITHUB REPOSITORY: https://gist.github.com/jovianlin/30b0fd93e2b835cb1e8d93bfa0e1e62f
-# PURPOSE OF THIS CODE: "Singapore has a special coordinate system called SVY21. This converts the special coordinates to lat/lng."
-
-## I THINK THIS GIVES WRONG COORDINATES.
-
-# ! /usr/bin/python
-
+# NOT WRITTEN BY ME
+# FROM GITHUB:
+# https://github.com/cgcai/SVY21/blob/master/Python/SVY21.py
 import math
 
 class SVY21:
@@ -27,6 +23,7 @@ class SVY21:
     oE = 28001.642  # false Easting
     k = 1  # scale factor
 
+    #
     def __init__(self):
         self.b = self.a * (1 - self.f)
         self.e2 = (2 * self.f) - (self.f * self.f)

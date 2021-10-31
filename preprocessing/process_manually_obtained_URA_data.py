@@ -1,6 +1,8 @@
 from SVY21 import SVY21
+from SVY21_another import SVY21 as SVY21_2
 import json
 import pandas as pd
+import pyproj
 
 # https://stackoverflow.com/questions/1518522/find-the-most-common-element-in-a-list
 from collections import Counter
@@ -10,16 +12,16 @@ def most_common(lst):
 
 #######################
 
-batch1_json = open("../data/batch1.json", 'r')
+batch1_json = open("./data/batch1.json", 'r')
 batch1 = json.load(batch1_json)
 
-batch2_json = open("../data/batch2.json", 'r')
+batch2_json = open("./data/batch2.json", 'r')
 batch2 = json.load(batch2_json)
 
 #batch3_json = open("./ura_data/batch2.json",'r') ## Batch 3 is the problematic batch
 #batch3 = json.load(batch3_json) ## Batch 3 is the problematic batch
 
-batch4_json = open("../data/batch4.json", 'r')
+batch4_json = open("./data/batch4.json", 'r')
 batch4 = json.load(batch4_json)
 
 data = batch1['Result']+batch2['Result']+batch4['Result'] #+batch3['Result'] ## Batch 3 is the problematic batch
@@ -31,16 +33,24 @@ properties_with_SVY21_coordinates = [property for property in data if 'x' in pro
 print('Number of properties with coordinates',len(properties_with_SVY21_coordinates)) #________
 
 coordinate_transformer = SVY21()
+coordinate_transformer_2 = SVY21_2()
+
+xfm = pyproj.Transformer.from_crs('EPSG:3414', 'EPSG:4326')
 
 for property in properties_with_SVY21_coordinates:
 
     # Convert SVY21 coordinates into latitude and longitude
     x,y = float(property['x']),float(property['y'])
-    lat,long = coordinate_transformer.computeLatLon(x, y)
-    del property['x']
-    del property['y']
+
+    lat,long = xfm.transform(y,x)
+
+    property['SVY21_x']=x
+    property['SVY21_y']=y
     property['lat']=lat
     property['long']=long
+
+    del property['x']
+    del property['y']
 
     # Calculate avg price per sqm
     transactions = property['transaction']
