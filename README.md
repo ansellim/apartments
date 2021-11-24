@@ -3,6 +3,11 @@ Ansel, Daosheng, Key, Keith
 
 # LATEST UPDATES
 
+### update 18/11/21 11.39pm - daosheng
+Published first copy of questionnaire, served via Flask. html file saved in .app/templates/index.html and variables from the form can be accessed in .app/views.py
+Run the command "flask run" in terminal to test.
+Next steps would be to call the scoring system using the saved variables, return a result, then redirect to the map UI page
+
 ### update 31/10/21 2.10am - ansel
 ura.csv is available. however, batch 3 URA data is missing ("Invalid service" error message) -- not sure why...needs further tweaking here.
 
