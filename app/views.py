@@ -49,6 +49,7 @@ def index():
 
         print(minPrice,maxPrice,minArea,maxArea,districts,num_primary_schools,qlt_primary_schools,num_secondary_schools,num_hawker,qlt_hawker,num_eating_establishments,num_chas_clinics,num_sports_facilities,num_community_centers,num_parks,num_malls,qlt_malls,num_supermarkets,num_mrt,num_carparks,num_bus_stops,num_taxi_stands)
 
+
         return redirect(request.url)
     return render_template("index.html")
 
