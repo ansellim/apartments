@@ -1,11 +1,10 @@
 # THIS CODE IS NOT WRITTEN BY ME - IT IS COPIED FROM THIS GITHUB REPOSITORY: https://gist.github.com/jovianlin/30b0fd93e2b835cb1e8d93bfa0e1e62f
 # PURPOSE OF THIS CODE: "Singapore has a special coordinate system called SVY21. This converts the special coordinates to lat/lng."
 
-## I THINK THIS GIVES WRONG COORDINATES.
-
 # ! /usr/bin/python
 
 import math
+
 
 class SVY21:
     # Ref: http://www.linz.govt.nz/geodetic/conversion-coordinates/projection-conversions/transverse-mercator-preliminary-computations/index.aspx
