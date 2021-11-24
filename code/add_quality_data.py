@@ -17,3 +17,6 @@ df_hdb = df_hdb[['block', 'floor_area_sqm',
        'num_hawker', 'num_carparks', 'num_bus_stops', 'num_chas_clinics',
        'num_sports_facilities', 'num_community_centers', 'num_supermarkets',
        'num_secondary_schools', 'num_eating_establishments', 'num_parks']]
+
+df_condo.rename(columns={'avg_price_per_sqm':'price_per_sqm'},inplace=True)
+df_condo.drop(columns=['street','marketSegment'],inplace=True)
