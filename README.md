@@ -8,9 +8,11 @@ Managed to get the database and data retrieval part working.
 Database is stored in data/property.db, currently loaded a dummy dataset into the database, you can view the dummy dataset at data/property.csv
 
 If you want to create a database and load data into it, you just have to do the following steps:
-> import sqlite3 as sql
-  property_db = sql.connect('property.db')
-  df.to_sql('property', property_db)
+``` 
+import sqlite3 as sql
+property_db = sql.connect('property.db')
+df.to_sql('property', property_db)
+```
 
 Lastly, in app/views.py, have set up the logic to retrieve the quantity and quality scores from the database, compute overall score and return top 5 recommendations.
 
