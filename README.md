@@ -3,6 +3,9 @@ Ansel, Daosheng, Key, Keith
 
 # LATEST UPDATES
 
+### update 25/11/21 3.36am - ansel
+Reorganized data. Raw data now in data/raw. Processed data will remain in data/processed. Intermediary data in data/with_quality_scores. Added quality data to multiple feature types: pls refer to df_with_features for example with just 10 properties and 10 features (a feature is a "place of interest" within 1km of a property). Note that "add_quality_data.py" is new script for computing quality metrics and recomputing quantity metrics; please use the new recalculated values instead of previously old calculated values. Script has to be run later over many hours for the actual dataset. For now, please work with the "df_with_features.csv" (unscaled data) or "df_with_features_scaled" (scaled data); this will be, apart from minor modifications and refactoring, the schema of the data file I will produce.
+
 ### update 24/11/21 9.10pm - key
 Managed to get the database and data retrieval part working.
 Database is stored in data/property.db, currently loaded a dummy dataset into the database, you can view the dummy dataset at data/property.csv
