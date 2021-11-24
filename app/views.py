@@ -51,7 +51,15 @@ def index():
 
         print(minPrice,maxPrice,minArea,maxArea,districts,num_primary_schools,qlt_primary_schools,num_secondary_schools,num_hawker,qlt_hawker,num_eating_establishments,num_chas_clinics,num_sports_facilities,num_community_centers,num_parks,num_malls,qlt_malls,num_supermarkets,num_mrt,num_carparks,num_bus_stops,num_taxi_stands)
 
-        districts = tuple(districts)
+        #Handle edge case where there is only 1 district selected
+        if len(districts) == 1:
+            district_value = districts[0]
+            district_str = f"""district == '{district_value}'"""
+        else:
+            district_value = tuple(districts)
+            district_str = f"""district in {district_value}"""
+
+        #Logic to query precomputed scores, compute overall score and return top 5 recommendations
         query = f"""
                  SELECT property_id, price, area, district,
                         num_primary_schools_score * {num_primary_schools}
@@ -74,7 +82,7 @@ def index():
                         as overall_score
                  FROM property
                  WHERE price>={minPrice} and price<={maxPrice} and area>={minArea} and area<={maxArea}
-                 AND district in {districts}
+                 AND """ + district_str + f"""
                  ORDER BY overall_score desc
                  LIMIT 5
         """
