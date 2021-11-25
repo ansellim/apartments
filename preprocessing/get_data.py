@@ -12,7 +12,6 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 
-
 class DataLoader:
     def __init__(self, ura_api_key, lta_api_key, regenerate_ura_token=True):
         self.ura_api_key = ura_api_key
