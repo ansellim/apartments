@@ -18,7 +18,7 @@ The objective of this code is to:
 ###########################################################################################
 
 # A flag to indicate whether we are only doing prototyping of the code. If prototyping, we only load small amounts of the data into the code to test out the code.
-prototype = True
+prototype = False
 
 import os
 import re
