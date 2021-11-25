@@ -538,15 +538,14 @@ for feature_type in list(features.feature_type.unique()):
     print("Considering feature type {}".format(feature_type))
     places = features[features['feature_type'] == feature_type].reset_index()
     print("Number of features in feature type {}: {}".format(feature_type, places.shape[0]))
+    colname_num_features = "num_" + feature_type
+    colname_feature_ids = "feature_ids_" + feature_type
+    colname_feature_scores = "quality_" + feature_type
+    added_numeric_columns.extend([colname_num_features, colname_feature_scores])
     for i in range(df_combined.shape[0]):
-        colname_num_features = "num_" + feature_type
-        colname_feature_ids = "feature_ids_" + feature_type
-        colname_feature_scores = "quality_" + feature_type
-        added_numeric_columns.extend([colname_num_features, colname_feature_scores])
+        counter = 0
         feature_ids = set()
         scores = []
-        counter = 0
-
         try:
             lat1 = float(df_combined.loc[i, "lat"])
             long1 = float(df_combined.loc[i, "long"])
