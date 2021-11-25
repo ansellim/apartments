@@ -3,6 +3,80 @@ Ansel, Daosheng, Key, Keith
 
 # LATEST UPDATES
 
+## Update 25/11/21 11pm-12mn - Ansel. A partial dataset is now available for use! Harmonization of 'schema' of `df_with_features_scaled.csv` dataframe to make column names more sensible. Corrected add_quality_data.py script. 
+
+A **partial dataset** of 1000 properties is now available for immediate use and prototyping of downstream tasks. Because this is too huge (almost 1 GB), it will be uploaded to our Google Drive at https://drive.google.com/drive/folders/1-Q8OQy3JlwRmzUFlaK5vkOl4Wkx4wleY?usp=sharing. (The full dataset is pending script execution.) 
+
+Read the following explanation to find out about the column names in `data/processed/df_with_features_scaled.csv` and `data/processed/features.csv`, which are the two csv files which may be the relations in our database. The former contains properties & nearby features (a property's nearby 'features' are so-called places of interest which are within a 1-kilometer radius), whereas the latter contains all features. Note that all properties and features have unique IDs which can serve as keys in the database.
+
+In the earlier update this morning, I didn't want to drop the previously computed `num_{feature}` columns from the dataframe of properties and nearby features, because I was thinking of comparing the old and new computed values. However, I now think that this is not of interest, so I'll be dropping the old columns and harmonizing the column names that we actually want to use.
+
+So, please check out the description of the tables here:
+
+### `features.csv` - schema is unchanged from 25/11/21 8.30AM description
+
+A "feature" is a place of interest. There are different `feature_type`'s, such as "mall", "gym", or "hawker_center".
+
+| Attribute| Description |
+| ------ | ----------- |
+| `feature_id` | A unique identiifer for each feature |
+| `name` | Name of feature |
+| `google_place_id` | A unique place ID assigned to a place |
+| `num_ratings` | Number of ratings on Google Places API |
+| `avg_rating` | Average rating on Google Places API (max of 5 stars) |
+| `weighted_rating` | A weighted rating, calculated according to formula in report |
+| `W` | a "normalization" ratio used in calculation of weighted rating. Equals the number of ratings for a feature divided by sum of number of ratings for all features with the same feature type. |
+| `lat` | Latitude |
+| `long` | Longitude |
+| `address` | Address of the feature, if available |
+| `feature_type` | Type of feature (type of place of interest) |
+
+### Feature types - definitions are unchanged from 25/11/21 8.30AM description
+
+| Type of place | `feature_type` in features.csv | Quality scores available? |
+| ------ | --- | --- |
+| CHAS clinic | `clinic` | Yes |
+| Community center | `community_center` | Yes |
+| Gym | `gym` | Yes |
+| Hawker center | `hawker_center` | Yes |
+| Shopping mall | `mall` | Yes |
+| Other public sports facilities (mostly swimming complexes) | `other_public_sports_facility` | Yes |
+| Park | `park` | Yes |
+| Primary school | `primary_school` | Yes |
+| Secondary school | `secondary_school` | Yes |
+| Supermarket | `supermarket` | Yes |
+| Bus stop | `bus_stop` | No |
+| Carpark | `carpark` | No |
+| MRT station | `mrt` | No |
+| F&B (eating establishment) | `eating_establishment` | No (too many to calculate) |
+| Taxi stand | `taxi_stand` | No |
+
+### `df_with_features.scaled.csv` -- **CHANGED SCHEMA FROM 25/11/21 8.30AM**
+
+A dataframe of property projects (a 'project' is an HDB block or a condo project), with quantity and *median* quality scores for each feature type. Since a feature is a place of interest, such as 'Bukit Timah Hawker Center' or 'Clementi MRT', it follows that a feature type is a type of place of interest, for example a community center or CHAS clinic. For each property, we look at a one-kilometer radius calculated based on latitude and longitude. 
+
+For each property, therefore, we count the number of features (within each feature type) within a one-kilometer radius, as well as compute the median `quality` score of features (within each feature type), again within that one-kilometer radius. The 'quality' score of a feature is a rating (out of a maximum of 5 stars) extracted from the Google Places API, normalized/weighted by the number of reviews that feature received compared to other features of the same feature type.
+
+ To be clear, given a property, for each feature type, the number of features within a 1-kilometer radius is the quantity score, and the median of the quality scores of features within that same 1-kilometer radius is the quality score. Since different features may have different ranges of scores (this is more of an issue for quantity score, since quality score is on a Likert scale), the quality and quantity scores are scaled according to min-max scaling.
+
+| Attribute| Description |
+| ------ | ----------- |
+| `project_id` | A unique identifier for each property |
+| `project` | Name of property 'project': condominium name or HDB block |
+| `project_type` | Project type: HDB or condominium |
+| `lat` | Latitude |
+| `long` | Longitude |
+| `price_per_sqm` | Average price per square meter of units in this property (historical) |
+| `district` | Postal district |
+| `num_` + any `feature_type` in the list of feature types | (scaled) quantity score: scaled number of features of that `feature_type` within 1km of the property  |
+| `feature_ids_` + any `feature_type` | a list of `feature_id`'s of that `feature_type` within 1km of the property; can join with `features.csv` to get feature data attributes |
+| `quality_` + any `feature_type` | (scaled) quality score: scaled median quality score (weighted/normalized Google Places API rating) of features of that `feature_type` within 1km of the property |
+| `condo_street` | Street name (only available for condominiums) |
+| `condo_market_segment` | Market segment (only available for condos) |
+| `condo_commonest_tenure` | Commonest tenure type (only available for condominiums) |
+| `hdb_avg_floor_area_sqm` | Average floor area of transacted units in the property  (available for HDB only) |
+| `hdb_avg_resale_price` | Average resale price of units in the property [historical] (available for HDB only) | 
+
 ## Update 25/11/21 8.30AM - Ansel. EXPLANATION OF THE DATAFRAMES.
 
 Explanation of what attributes are available in `df_with_features.scaled.csv` (properties + features) and `features.csv` (Features) in the `data/processed` folder.

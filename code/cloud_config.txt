@@ -1,41 +1,33 @@
+# Ansel Lim, ansel@gatech.edu
+# 24/25 Nov 2021
+
 ##### HOW TO RUN ".\add_quality_data_partial_script.py" ON CLOUD #####
+
+# APT-GET UPDATE, INSTALL SCREEN.
+sudo apt-get update
+sudo apt-get install screen
 
 # DOWNLOAD REPOSITORY
 sudo apt-get install git
 git clone https://github.com/ansellim/6242.git
 
-### INSTALL CONDA
-curl https://repo.anaconda.com/pkgs/misc/gpgkeys/anaconda.asc | gpg --dearmor > conda.gpg
-
-sudo install -o root -g root -m 644 conda.gpg /usr/share/keyrings/conda-archive-keyring.gpg
-
-gpg --keyring /usr/share/keyrings/conda-archive-keyring.gpg --no-default-keyring --fingerprint 34161F5BF5EB1D4BFBBB8F0A8AEB4F8B29D82806
-
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/conda-archive-keyring.gpg] https://repo.anaconda.com/pkgs/misc/debrepo/conda stable main" > /etc/apt/sources.list.d/conda.list
-
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/conda-archive-keyring.gpg] https://repo.anaconda.com/pkgs/misc/debrepo/conda stable main" | sudo tee -a /etc/apt/sources.list.d/conda.list
-
-sudo apt update
+# INSTALL CONDA
 sudo apt install conda
-
 source /opt/conda/etc/profile.d/conda.sh
 
-### END OF INSTALL CONDA
-
-### CONFIGURE CONDA
-
+# CONFIGURE CONDA
+source /opt/conda/etc/profile.d/conda.sh
 conda create -n myenv numpy pandas requests
 conda activate myenv
 pip install python-dotenv geopy sklearn
 
-### ADD .ENV FILE MANUALLY WITH GOOGLE_API_KEY
-
+# ADD .ENV FILE MANUALLY, AND ADD GOOGLE_API_KEY
 nano ../.env
 
-## RUN SCRIPT
-
+# RUN SCRIPT
+screen
 source /opt/conda/etc/profile.d/conda.sh
-
 conda activate myenv
+python add_quality_data_partial_script.py
 
-nohup python add_quality_data_partial_script.py &
+# TO EXIT, JUST CTRL + A + D. TO RE-ENTER SCREEN, type "control -r"
