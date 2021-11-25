@@ -10,8 +10,8 @@ def index():
         req = request.form
         # print(req)
 
-        minPrice = request.form.get("minPrice")
-        maxPrice = request.form.get("maxPrice")
+        minPrice = request.form.get("minPrice").replace(',', '')
+        maxPrice = request.form.get("maxPrice").replace(',', '')
         if minPrice == '':
             minPrice = 0
         if maxPrice == '':
@@ -75,16 +75,24 @@ def index():
                         num_primary_schools_score * {num_primary_schools}
                         + qlt_primary_schools_score * {qlt_primary_schools}
                         + num_secondary_schools_score * {num_secondary_schools}
+                        -- + qlt_secondary_schools_score * {qlt_secondary_schools}
                         + num_hawker_score * {num_hawker}
                         + qlt_hawker_score * {qlt_hawker}
                         + num_eating_establishments_score * {num_eating_establishments}
                         + num_chas_clinics_score * {num_clinics}
+                        -- + qlt_chas_clinics_score * {qlt_clinics}
                         + num_sports_facilities_score * {num_sports_facilities}
+                        -- + qlt_sports_facilities_score * {qlt_sports_facilities}
+                        -- + num_gym_score * {num_gym}
+                        -- + qlt_gym_score * {qlt_gym}
                         + num_community_centers_score * {num_community_centers}
+                        -- + qlt_community_centers_score * {qlt_community_centers}
                         + num_parks_score * {num_parks}
+                        -- + qlt_parks_score * {qlt_parks}
                         + num_malls_score * {num_malls}
                         + qlt_malls_score * {qlt_malls}
                         + num_supermarkets_score * {num_supermarkets}
+                        -- + qlt_supermarkets_score * {qlt_supermarkets}
                         + num_mrt_score * {num_mrt}
                         + num_carparks_score * {num_carparks}
                         + num_bus_stops_score * {num_bus_stops}
