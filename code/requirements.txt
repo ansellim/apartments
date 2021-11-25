@@ -1,0 +1,7 @@
+############ REQUIREMENTS FOR "add_quality_data.py" ###############
+
+numpy
+pandas
+python-dotenv
+geopy
+sklearn
