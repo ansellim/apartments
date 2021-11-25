@@ -335,7 +335,7 @@ for feature_type in list(features.feature_type.unique()):
         colname_num_features = "recomputed_" + "num_" + feature_type
         colname_feature_ids = "feature_ids_" + feature_type
         colname_feature_scores = "median_weighted_score_" + feature_type
-        added_numeric_columns.extend([colname_num_features,colname_feature_ids])
+        added_numeric_columns.extend([colname_num_features,colname_feature_scores])
         feature_ids = []
         scores = []
         counter = 0
@@ -364,7 +364,8 @@ for feature_type in list(features.feature_type.unique()):
         df_combined.loc[i, colname_feature_ids] = str(feature_ids)
         df_combined.loc[i, colname_feature_scores] = np.median(scores)
 
-df_combined.to_csv("../data/processed/df_with_features.csv")
+    df_combined.to_csv("../data/processed/df_with_features.csv")
+    print("Checkpointed df_with_features.csv after completion of pairwise comparison for feature {}".format(str(feature_type)))
 
 scaler = MinMaxScaler()
 
@@ -375,7 +376,7 @@ scaled_numeric = pd.DataFrame(scaler.fit_transform(added_numeric_columns_only))
 
 df_scaled = pd.concat([other_columns_only,scaled_numeric],axis=1)
 
-df_scaled.to_csv("../data/processed/df_with_features_scaled")
+df_scaled.to_csv("../data/processed/df_with_features_scaled.csv")
 
 end = time.time()
 
