@@ -5,9 +5,9 @@ Ansel, Daosheng, Key, Keith
 
 ## Update 25/11/21 11pm-12mn - Ansel. A partial dataset is now available for use! Harmonization of 'schema' of `df_with_features_scaled.csv` dataframe to make column names more sensible. Corrected add_quality_data.py script. 
 
-A **partial dataset** of 1000 properties is now available for immediate use and prototyping of downstream tasks. Because this is too huge (almost 1 GB), it will be uploaded to our Google Drive at https://drive.google.com/drive/folders/1-Q8OQy3JlwRmzUFlaK5vkOl4Wkx4wleY?usp=sharing. (The full dataset is pending script execution.) 
+While the full dataset is pending script execution, a **partial dataset** of 2000 properties (1000 condos and 1000 HDB flats) is now available for immediate use and prototyping of downstream tasks. Please refer to `data/processed/df_with_features_scaled.csv` and `data/processed/features.csv`. 
 
-Read the following explanation to find out about the column names in `data/processed/df_with_features_scaled.csv` and `data/processed/features.csv`, which are the two csv files which may be the relations in our database. The former contains properties & nearby features (a property's nearby 'features' are so-called places of interest which are within a 1-kilometer radius), whereas the latter contains all features. Note that all properties and features have unique IDs which can serve as keys in the database.
+Read the following explanation to find out about the column names in `data/processed/df_with_features_scaled.csv` and `data/processed/features.csv`, which are the two csv files that can be the two relations in our database. The former contains properties & nearby features (a property's nearby 'features' are so-called places of interest which are within a 1-kilometer radius), whereas the latter contains all features. Note that all properties and features have unique IDs which can serve as keys in the database.
 
 In the earlier update this morning, I didn't want to drop the previously computed `num_{feature}` columns from the dataframe of properties and nearby features, because I was thinking of comparing the old and new computed values. However, I now think that this is not of interest, so I'll be dropping the old columns and harmonizing the column names that we actually want to use.
 
@@ -31,7 +31,7 @@ A "feature" is a place of interest. There are different `feature_type`'s, such a
 | `address` | Address of the feature, if available |
 | `feature_type` | Type of feature (type of place of interest) |
 
-### Feature types - definitions are unchanged from 25/11/21 8.30AM description
+### Feature types used in the `feature_type` column in `features.csv`- definitions are unchanged from 25/11/21 8.30AM description
 
 | Type of place | `feature_type` in features.csv | Quality scores available? |
 | ------ | --- | --- |
@@ -76,6 +76,8 @@ For each property, therefore, we count the number of features (within each featu
 | `condo_commonest_tenure` | Commonest tenure type (only available for condominiums) |
 | `hdb_avg_floor_area_sqm` | Average floor area of transacted units in the property  (available for HDB only) |
 | `hdb_avg_resale_price` | Average resale price of units in the property [historical] (available for HDB only) | 
+
+------------------------------------------------------
 
 ## Update 25/11/21 8.30AM - Ansel. EXPLANATION OF THE DATAFRAMES.
 
