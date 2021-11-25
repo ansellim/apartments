@@ -5,7 +5,6 @@
 ############################################################################################################
 ############################################################################################################
 
-
 import numpy as np
 import pandas as pd
 import requests
@@ -65,6 +64,8 @@ def get_postal_code(address):
 ############################
 ############################
 ############################
+print("Start of script",time.time())
+print("Start work to create combined dataframe of properties and features",time.time())
 
 df_condo = pd.read_csv('../data/processed/df.csv')
 df_hdb = pd.read_csv('../data/processed/df_hdb.csv')
@@ -101,10 +102,14 @@ def get_postal_code(address):
     except IndexError:
         return np.nan
 
+print("Add postal code to HDB blocks",time.time())
+
 df_hdb['hdb_postal_code'] = df_hdb.apply(lambda x: get_postal_code(x['project']),axis=1)
 
 df_hdb = df_hdb[df_hdb['hdb_postal_code']!='NIL']
 df_hdb.dropna(subset=['hdb_postal_code'],inplace=True)
+
+print("Finished adding postal code to HDB blocks",time.time())
 
 # Generate district information from HDB postal codes
 postal_code_mapping = pd.read_csv("../data/raw/postal_codes_mapping.csv", header=0, names=['district', 'postal_sectors', 'locations'])
@@ -133,6 +138,8 @@ df_combined.rename(columns = {'index': 'project_id'}, inplace=True)
 
 ###### Create combined dataframe of features (places of interest), including places with quality scores (such as clinics, community centers, primary schools) and places without quality scores (such as bus stops, taxi stands, etc.) ####
 
+print("Start working on features w quality scores",time.time())
+
 clinics = pd.read_csv("../data/with_quality_scores/clinics.csv")[['modified_name','google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating', 'lat', 'long', 'address']].rename(columns={'modified_name':'name'})
 community_centers = pd.read_csv("../data/with_quality_scores/community_centers.csv")[['address', 'lat', 'long', 'modified_name', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']].rename(columns={'modified_name':'name'})
 gyms = pd.read_csv("../data/with_quality_scores/gyms.csv")[['address', 'lat', 'long', 'modified_name', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']].rename(columns={'modified_name':'name'})
@@ -151,8 +158,10 @@ for i in range(len(features_with_quality_scores)):
     feature = features_with_quality_scores[i]
     feature['feature_type'] = feature_names_with_quality_scores[i]
 
+print("finish working on features w quality scores",time.time())
+
 # Add in addresses (may take very long time -- can comment out if it takes too long)
-'''
+
 def get_address(search_string):
     matches = requests.get(
         "https://developers.onemap.sg/commonapi/search?searchVal={}&returnGeom=Y&getAddrDetails=Y&pageNum=1".format(
@@ -163,13 +172,18 @@ def get_address(search_string):
     except IndexError:
         return np.nan
 
+print("Add in addresses to features with quality scores",time.time())
+
 for feat in features_with_quality_scores:
     if 'address' not in feat.columns:
         print(feat.loc[0,'feature_type'])
         feat['address'] = feat.apply(lambda x: get_address(x['name']),axis=1)
-'''
+
+print("Finished adding in addresses to features with quality scores",time.time())
 
 # Add features without quality data
+
+print("Add features w/o quality data",time.time())
 
 bus_stops = pd.read_csv("../data/raw/bus_stops.csv")[['RoadName','Description','Latitude','Longitude']]
 bus_stops['name'] = bus_stops['Description'] + ' ,' + bus_stops['RoadName']
@@ -205,11 +219,15 @@ features.rename(columns = {'index':'feature_id'},inplace=True)
 
 features.to_csv("../data/processed/features.csv")
 
-print("Finished creating combined dataframe of properties and features")
+print("finished adding featuress w/o quality data",time.time())
+
+print("Finished creating combined dataframe of properties and features",time.time())
 
 ###### END OF Create combined dataframe of features (places of interest), including places with quality scores (such as clinics, community centers, primary schools) and places without quality scores (such as bus stops, taxi stands, etc.) ####
 
 ################### Add quality data, as well as track which objects are within the radius ####################
+
+print("Start to do pairwise comparison",time.time())
 
 start = time.time()
 
@@ -277,3 +295,5 @@ df_scaled.to_csv("../data/processed/df_with_features_scaled")
 end = time.time()
 
 print("Pairwise comparison took {} seconds".format(end-start))
+
+print("End of script",time.time())
