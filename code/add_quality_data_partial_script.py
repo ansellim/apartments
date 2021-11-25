@@ -261,7 +261,7 @@ for feature_type in list(features.feature_type.unique()):
     loop_end=time.time()
     print("Completed feature type {}, took {} seconds".format(feature_type,loop_end-loop_start))
 
-df_combined.to_csv("../data/processed/df_with_features.csv")
+    df_combined.to_csv("../data/processed/df_with_features.csv")
 
 scaler = MinMaxScaler()
 
