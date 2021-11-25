@@ -332,7 +332,7 @@ for feature_type in list(features.feature_type.unique()):
     places = features[features['feature_type'] == feature_type].reset_index()
     for i in range(df_combined.shape[0]):
 
-        colname_num_features = "recalculated_" + "num_" + feature_type
+        colname_num_features = "recomputed_" + "num_" + feature_type
         colname_feature_ids = "feature_ids_" + feature_type
         colname_feature_scores = "median_weighted_score_" + feature_type
         added_numeric_columns.extend([colname_num_features,colname_feature_ids])
