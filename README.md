@@ -3,6 +3,70 @@ Ansel, Daosheng, Key, Keith
 
 # LATEST UPDATES
 
+## Update 25/11/21 8.30AM - Ansel. EXPLANATION OF THE DATAFRAMES.
+
+Explanation of what attributes are available in `df_with_features.scaled.csv` (properties + features) and `features.csv` (Features) in the `data/processed` folder.
+
+### `features.csv`
+
+A "feature" is a place of interest.
+| Attribute| Description |
+| `feature_id` | A unique identiifer for each feature |
+| `name` | Name of feature |
+| `google_place_id` | A unique place ID assigned to a place |
+| `num_ratings` | Number of ratings on Google Places API |
+| `avg_rating` | Average rating on Google Places API (max of 5 stars) |
+| `weighted_rating` | A weighted rating, calculated according to formula in report |
+| `W` | a "normalization" ratio used in calculation of weighted rating. Equals the number of ratings for a feature divided by sum of number of ratings for all features with the same feature type. |
+| `lat` | Latitude |
+| `long` | Longitude |
+| `address` | Address of the feature, if available |
+| `feature_type` | Type of feature (type of place of interest) |
+
+### Feature types
+
+| Type of place| `feature_type` in features.csv | Quality scores available?
+| --- | ----------- |
+| CHAS clinic | `clinic` | Yes |
+| Community center | `community_center` | Yes |
+| Gym | `gym` | Yes |
+| Hawker center | `hawker_center` | Yes |
+| Shopping mall | `mall` | Yes |
+| Other public sports facilities (mostly swimming complexes) | `other_public_sports_facility` | Yes |
+| Park | `park` | Yes |
+| Primary school | `primary_school` | Yes |
+| Secondary school | `secondary_school` | Yes |
+| Supermarket | `supermarket` | Yes |
+| Bus stop | `bus_stop` | No |
+| Carpark | `carpark` | No |
+| MRT station | `mrt` | No |
+| F&B (eating establishment) | `eating_establishment` | No (too many to calculate) |
+| Taxi stand | `taxi_stand` | No |
+
+### `df_with_features.scaled.csv`
+
+A dataframe of properties (a "property" is an HDB block or a condo project), with quantity and quality scores for each feature type. A feature type is a type of place of interest, for example community center or CHAS clinic. For each property, we look at a one-kilometer radius calculated based on latitude and longitude. For each property, therefore, we count number of features (for each feature type) within the one-kilometer radius, as well as the median `weighted_rating` (a weighted Google Places API rating [maximum of 5 stars] normalized by number of ratings) of the features (for each feature type) within the one-kilometer radius of the property. Given a property, for each feature type, the number of features is the quality score, and the median `weighted_rating` is the quantity score. The quality and quantity scores are scaled according to min-max scaling.
+
+Not all attributes are listed here:
+
+| Attribute| Description |
+| --- | ----------- |
+| `project_id` | A unique identifier for each property |
+| `condo_street` | Street name (only available for condominiums |
+| `project` | Name of property: condominium name or HDB block |
+| `condo_market_segment` | Market segment (only available for condos) |
+| `lat` | Latitude |
+| `long` | Longitude |
+| `price_per_sqm` | Average price per square meter of units in this property (historical) |
+| `district` | Postal district |
+| `condo_commonest_tenure` | Commonest tenure type (only available for condos) |
+| `recomputed_num_` + any `feature_type` | (scaled) quantity score: scaled number of features of that `feature_type` within 1km of the property  |
+| `feature_ids_` + any `feature_type` | (scaled) a list of `feature_id`'s of that `feature_type` within 1km of the property; can join with `features.csv` to get feature data attributes |
+| `median_weighted_score_` + any `feature_type` | (scaled) quality score: scaled median weighted rating of features of that `feature_type` within 1km of the property |
+| `hdb_avg_floor_area_sqm` | Average floor area of transacted units in the property  (available for HDB only) |
+| `hdb_avg_resale_price` | Average resale price of units in the property [historical] (available for HDB only) | 
+
+
 ## update 25/11/21 8am - ansel 
 No changes to repository. Just some additional comments to explain what was done. The script for computing quality scores and quantity scores for HDB and Condominiums will be run today and the data will be made available after completion. Quality score computation is only available for (iirc) ten different feature types, and the feature scores are calculated according to what Key wrote in the report. For each property, feature quality scores in each feature type are aggregated to give the median (to be clear, each feature type is treated independently). Where NO features of a certain type exist within 1km of a property, the feature quality score is `np.nan` and the number of features of that type is 0. For now, please assume that the csv file will broadly follow what you see in df_with_features and df_with_features_scaled, both of which contain example data from just 10 properties and 10 features. So, please build the database and develop according to what you see there. For quantity scores, please use the attributes prefixed by 'recomputed' for now as I need to verify that the recomputation works but it is likely that I will be renaming the column names later. A 'feature' is a place of interest within 1 km of a property. A property is a property project: for a condominium, it's the condominium project; for HDB, it's the HDB block. The data available for each project is fairly standardized, but in the dataframe, some additional attributes applicable to only condo or HDB are prefixed with 'condo_' or 'hdb_'.
 
