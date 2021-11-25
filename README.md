@@ -28,7 +28,7 @@ A "feature" is a place of interest.
 ### Feature types
 
 | Type of place | `feature_type` in features.csv | Quality scores available? |
-| ------ | --- |
+| ------ | --- | --- |
 | CHAS clinic | `clinic` | Yes |
 | Community center | `community_center` | Yes |
 | Gym | `gym` | Yes |
