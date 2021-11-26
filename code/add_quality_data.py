@@ -18,7 +18,7 @@ The objective of this code is to:
 ###########################################################################################
 
 # A flag to indicate whether we are only doing prototyping of the code. If prototyping, we only load small amounts of the data into the code to test out the code.
-prototype = False
+prototype = True
 
 import os
 import re
@@ -43,7 +43,9 @@ print("Start of the script", print_time())
 warnings.filterwarnings("ignore")
 
 if prototype:
-    MAX_ROWS = 1000
+    print("Prototype flag is set to TRUE")
+    MAX_ROWS = 2
+    print("Max rows value is {}".format(MAX_ROWS))
 else:
     MAX_ROWS = None
 
@@ -94,6 +96,7 @@ def get_information(name):
 # Primary schools
 print("Getting ratings data from Google Places API for Primary Schools", print_time())
 primary_schools = pd.read_csv("../data/raw/data_prischools.csv", nrows=MAX_ROWS)
+
 primary_schools = primary_schools.dropna(subset=['Name', 'coordinates'], how='any')
 primary_schools[['long', 'lat']] = primary_schools['coordinates'].str.split(',', 1, expand=True)
 primary_schools[['google_place_id', 'num_ratings', 'avg_rating']] = primary_schools.apply(
@@ -128,7 +131,9 @@ print("Getting ratings data from Google Places API for Parks", print_time())
 parks = pd.read_csv("../data/raw/parks.csv", nrows=MAX_ROWS)
 parks = parks.dropna(subset=['lat', 'long', 'park_name'], how='any')
 
-parks[['google_place_id', 'num_ratings', 'avg_rating']] = parks.apply(lambda x: get_information(x['park_name']), axis=1,
+parks.rename(columns = {'park_name':'name'},inplace=True)
+
+parks[['google_place_id', 'num_ratings', 'avg_rating']] = parks.apply(lambda x: get_information(x['name']), axis=1,
                                                                       result_type='expand')
 
 parks = parks.dropna(subset=['google_place_id', 'num_ratings', 'avg_rating'], how='any')
@@ -159,17 +164,19 @@ def remove_postal_code(address):
 
 supermarkets['location'] = supermarkets.apply(lambda x: remove_postal_code(str(x['premise_address'])), axis=1)
 supermarkets.dropna(subset=['location'], inplace=True)
+
+supermarkets['name'] = supermarkets['business_name'] + ' ' + supermarkets['location']
+supermarkets.dropna(subset = ['name'],inplace=True)
+supermarkets.drop(columns = ['business_name','location'],inplace=True)
+
 supermarkets[['google_place_id', 'num_ratings', 'avg_rating']] = supermarkets.apply(
-    lambda x: get_information(str(x['business_name']) + ' ' + str(x['location'])), axis=1, result_type='expand')
-supermarkets.drop(columns=['location'], inplace=True)
+    lambda x: get_information(x['name']), axis=1, result_type='expand')
 
 supermarkets = supermarkets.dropna(subset=['google_place_id', 'num_ratings', 'avg_rating'], how='any')
 
 supermarkets['W'] = supermarkets['num_ratings'] / (supermarkets['num_ratings'].max())
 r0 = supermarkets['avg_rating'].mean()
 supermarkets['weighted_rating'] = supermarkets['W'] * supermarkets['avg_rating'] + (1 - supermarkets['W']) * r0
-supermarkets['modified_name'] = supermarkets['business_name'] + ' ' + supermarkets['premise_address']
-
 supermarkets.to_csv("../data/with_quality_scores/supermarkets.csv")
 
 # Malls
@@ -338,8 +345,8 @@ df_hdb.dropna(subset=['district'], inplace=True)
 
 # Create combined dataframe of condominium and HDB data
 
-print([col for col in df_condo.columns if col not in df_hdb.columns])
-print([col for col in df_hdb.columns if col not in df_condo.columns])
+# print([col for col in df_condo.columns if col not in df_hdb.columns])
+# print([col for col in df_hdb.columns if col not in df_condo.columns])
 
 df_hdb['project_type'] = 'hdb'
 df_condo['project_type'] = 'condo'
@@ -372,8 +379,7 @@ other_public_sports_facilities = pd.read_csv("../data/with_quality_scores/other_
     ['address', 'lat', 'long', 'modified_name', 'google_place_id', 'num_ratings', 'avg_rating', 'W',
      'weighted_rating']].rename(columns={'modified_name': 'name'})
 parks = pd.read_csv("../data/with_quality_scores/parks.csv")[
-    ['lat', 'long', 'park_name', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']].rename(
-    columns={'park_name': 'name'})
+    ['name','lat', 'long', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']]
 primary_schools = pd.read_csv("../data/with_quality_scores/primary_schools.csv")[
     ['Name', 'long', 'lat', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']].rename(
     columns={'Name': 'name'})
@@ -381,19 +387,13 @@ secondary_schools = pd.read_csv("../data/with_quality_scores/secondary_schools.c
     ['school_name', 'lat', 'long', 'address', 'google_place_id', 'num_ratings', 'avg_rating', 'W',
      'weighted_rating']].rename(columns={'school_name': 'name'})
 supermarkets = pd.read_csv("../data/with_quality_scores/supermarkets.csv")[
-    ['lat', 'long', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating', 'modified_name']].rename(
-    columns={'modified_name': 'name'})
+    ['name','lat', 'long', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']]
 
 features_with_quality_scores = [clinics, community_centers, gyms, hawker_centers, malls, other_public_sports_facilities,
                                 parks, primary_schools, secondary_schools, supermarkets]
 feature_names_with_quality_scores = ["clinic", "community_center", "gym", "hawker_center", "mall",
                                      "other_public_sports_facility", "park", "primary_school", "secondary_school",
                                      "supermarket"]
-
-for i in range(len(features_with_quality_scores)):
-    feature = features_with_quality_scores[i]
-    feature['feature_type'] = feature_names_with_quality_scores[i]
-
 
 # Add in addresses for features with quality scores
 
@@ -410,10 +410,11 @@ def get_address(search_string):
     except IndexError:
         return np.nan
 
-
 print("Add in addresses to features with quality scores", print_time())
 
-for feat in features_with_quality_scores:
+for i in range(len(features_with_quality_scores)):
+    feat = features_with_quality_scores[i]
+    print(feature_names_with_quality_scores[i])
     if 'address' not in feat.columns:
         feat['address'] = feat.apply(lambda x: get_address(x['name']), axis=1)
 
@@ -533,8 +534,14 @@ features = pd.read_csv("../data/processed/features.csv")[
 
 added_numeric_columns = []
 
-for feature_type in list(features.feature_type.unique()):
+print(features)
+
+print(features.feature_type)
+
+for feature_type in list( features.feature_type.unique() ):
     loop_start = time.time()
+    if type(feature_type)!=str:
+        continue
     print("Considering feature type {}".format(feature_type))
     places = features[features['feature_type'] == feature_type].reset_index()
     print("Number of features in feature type {}: {}".format(feature_type, places.shape[0]))
