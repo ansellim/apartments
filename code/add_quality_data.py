@@ -18,7 +18,7 @@ The objective of this code is to:
 ###########################################################################################
 
 # A flag to indicate whether we are only doing prototyping of the code. If prototyping, we only load small amounts of the data into the code to test out the code.
-prototype = True
+prototype = False
 
 import os
 import re
@@ -48,6 +48,7 @@ if prototype:
     print("Max rows value is {}".format(MAX_ROWS))
 else:
     MAX_ROWS = None
+
 
 ###########################################################################################
 #######################Part 1: Get ratings from Google Maps API############################
@@ -418,6 +419,10 @@ for i in range(len(features_with_quality_scores)):
     if 'address' not in feat.columns:
         feat['address'] = feat.apply(lambda x: get_address(x['name']), axis=1)
 
+for i in range(len(features_with_quality_scores)):
+    feature = features_with_quality_scores[i]
+    feature['feature_type'] = feature_names_with_quality_scores[i]
+
 print("Finished adding in addresses to features with quality scores", print_time())
 
 print("Finished working on features with quality scores", print_time())
@@ -627,3 +632,4 @@ for colname in added_numeric_columns:
 df_scaled.to_csv("../data/processed/df_with_features_binned.csv")
 
 print("End of Part 6 and end of script", print_time())
+
