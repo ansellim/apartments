@@ -42,7 +42,6 @@ else:
 ###########################################################################################
 ###########################################################################################
 
-
 ###########################################################################################
 #######################Part 2: Combine condo and HDB dataframes############################
 ###########################################################################################
@@ -389,6 +388,30 @@ df_scaled = pd.concat([other_columns_only, scaled_numeric], axis=1)
 df_scaled.to_csv("../data/processed/df_with_features_scaled_with_deprecated.csv")
 
 df_scaled = df_scaled.drop(columns=[column for column in renamed_old_metrics if column in df_scaled.columns])
+
+df_scaled.to_csv("../data/processed/df_with_features_scaled.csv")
+
+for colname in added_numeric_columns:
+    q25 = np.percentile(df_scaled.loc[:,colname],25)
+    q50 = np.percentile(df_scaled.loc[:,colname],50)
+    q75 = np.percentile(df_scaled.loc[:,colname],25)
+    for i in range(df_scaled.shape[0]):
+        val = df_scaled.loc[i,colname]
+        if val == np.nan:
+            pass
+        elif val<=q25:
+            df_scaled.loc[i,colname] = 'q1'
+        elif val<=q50:
+            df_scaled.loc[i,colname] = 'q2'
+        elif val<=q75:
+            df_scaled.loc[i,colname] = 'q3'
+        else:
+            df_scaled.loc[i,colname] = 'q4'
+
+df_scaled.to_csv("../data/processed/df_with_features_binned.csv")
+
+print("End of Part 6 and end of script", print_time())
+
 
 df_scaled.to_csv("../data/processed/df_with_features_scaled.csv")
 

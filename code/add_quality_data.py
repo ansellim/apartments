@@ -101,7 +101,7 @@ primary_schools[['google_place_id', 'num_ratings', 'avg_rating']] = primary_scho
 
 primary_schools = primary_schools.dropna(subset=['google_place_id', 'num_ratings', 'avg_rating'], how='any')
 
-primary_schools['W'] = primary_schools['num_ratings'] / (primary_schools['num_ratings'].sum())
+primary_schools['W'] = primary_schools['num_ratings'] / (primary_schools['num_ratings'].max())
 r0 = primary_schools['avg_rating'].mean()
 primary_schools['weighted_rating'] = primary_schools['W'] * primary_schools['avg_rating'] + (
         1 - primary_schools['W']) * r0
@@ -117,7 +117,7 @@ secondary_schools[['google_place_id', 'num_ratings', 'avg_rating']] = secondary_
 
 secondary_schools = secondary_schools.dropna(subset=['google_place_id', 'num_ratings', 'avg_rating'], how='any')
 
-secondary_schools['W'] = secondary_schools['num_ratings'] / (secondary_schools['num_ratings'].sum())
+secondary_schools['W'] = secondary_schools['num_ratings'] / (secondary_schools['num_ratings'].max())
 r0 = secondary_schools['avg_rating'].mean()
 secondary_schools['weighted_rating'] = secondary_schools['W'] * secondary_schools['avg_rating'] + (
         1 - secondary_schools['W']) * r0
@@ -133,7 +133,7 @@ parks[['google_place_id', 'num_ratings', 'avg_rating']] = parks.apply(lambda x: 
 
 parks = parks.dropna(subset=['google_place_id', 'num_ratings', 'avg_rating'], how='any')
 
-parks['W'] = parks['num_ratings'] / (parks['num_ratings'].sum())
+parks['W'] = parks['num_ratings'] / (parks['num_ratings'].max())
 r0 = parks['avg_rating'].mean()
 parks['weighted_rating'] = parks['W'] * parks['avg_rating'] + (1 - parks['W']) * r0
 
@@ -165,7 +165,7 @@ supermarkets.drop(columns=['location'], inplace=True)
 
 supermarkets = supermarkets.dropna(subset=['google_place_id', 'num_ratings', 'avg_rating'], how='any')
 
-supermarkets['W'] = supermarkets['num_ratings'] / (supermarkets['num_ratings'].sum())
+supermarkets['W'] = supermarkets['num_ratings'] / (supermarkets['num_ratings'].max())
 r0 = supermarkets['avg_rating'].mean()
 supermarkets['weighted_rating'] = supermarkets['W'] * supermarkets['avg_rating'] + (1 - supermarkets['W']) * r0
 supermarkets['modified_name'] = supermarkets['business_name'] + ' ' + supermarkets['premise_address']
@@ -179,7 +179,7 @@ malls = pd.read_csv("../data/raw/data_malls.csv", nrows=MAX_ROWS)
 malls = malls.dropna(subset=['Name', 'long', 'lat', 'rating', 'user_ratings_total'])
 malls.rename(columns={'rating': 'avg_rating', 'user_ratings_total': 'num_ratings'}, inplace=True)
 
-malls['W'] = malls['num_ratings'] / (malls['num_ratings'].sum())
+malls['W'] = malls['num_ratings'] / (malls['num_ratings'].max())
 r0 = malls['avg_rating'].mean()
 malls['weighted_rating'] = malls['W'] * malls['avg_rating'] + (1 - malls['W']) * r0
 
@@ -209,24 +209,24 @@ gyms = amenities[amenities['facility_type'] == 'Gym']
 community_centers = amenities[amenities['facility_type'] == 'Community Centre']
 other_public_sports_facilities = amenities[~amenities['facility_type'].isin(['CHAS Clinic', 'Gym', 'Community Centre'])]
 
-clinics['W'] = clinics['num_ratings'] / (clinics['num_ratings'].sum())
+clinics['W'] = clinics['num_ratings'] / (clinics['num_ratings'].max())
 r0 = clinics['avg_rating'].mean()
 clinics['weighted_rating'] = clinics['W'] * clinics['avg_rating'] + (1 - clinics['W']) * r0
 clinics.to_csv("../data/with_quality_scores/clinics.csv")
 
-gyms['W'] = gyms['num_ratings'] / (gyms['num_ratings'].sum())
+gyms['W'] = gyms['num_ratings'] / (gyms['num_ratings'].max())
 r0 = gyms['avg_rating'].mean()
 gyms['weighted_rating'] = gyms['W'] * gyms['avg_rating'] + (1 - gyms['W']) * r0
 gyms.to_csv("../data/with_quality_scores/gyms.csv")
 
-community_centers['W'] = community_centers['num_ratings'] / (community_centers['num_ratings'].sum())
+community_centers['W'] = community_centers['num_ratings'] / (community_centers['num_ratings'].max())
 r0 = community_centers['avg_rating'].mean()
 community_centers['weighted_rating'] = community_centers['W'] * community_centers['avg_rating'] + (
         1 - community_centers['W']) * r0
 community_centers.to_csv("../data/with_quality_scores/community_centers.csv")
 
 other_public_sports_facilities['W'] = other_public_sports_facilities['num_ratings'] / (
-    other_public_sports_facilities['num_ratings'].sum())
+    other_public_sports_facilities['num_ratings'].max())
 r0 = other_public_sports_facilities['avg_rating'].mean()
 other_public_sports_facilities['weighted_rating'] = other_public_sports_facilities['W'] * \
                                                     other_public_sports_facilities['avg_rating'] + (
@@ -242,7 +242,7 @@ hawker_centers.dropna(subset=['Coordinates', 'Name', 'rating', 'user_ratings_tot
 hawker_centers[['long', 'lat']] = hawker_centers['Coordinates'].str.split(',', 1, expand=True)
 hawker_centers.rename(columns={'rating': 'avg_rating', 'user_ratings_total': 'num_ratings'}, inplace=True)
 
-hawker_centers['W'] = hawker_centers['num_ratings'] / (hawker_centers['num_ratings'].sum())
+hawker_centers['W'] = hawker_centers['num_ratings'] / (hawker_centers['num_ratings'].max())
 r0 = hawker_centers['avg_rating'].mean()
 hawker_centers['weighted_rating'] = hawker_centers['W'] * hawker_centers['avg_rating'] + (1 - hawker_centers['W']) * r0
 
@@ -599,5 +599,24 @@ df_scaled.to_csv("../data/processed/df_with_features_scaled_with_deprecated.csv"
 df_scaled = df_scaled.drop(columns=[column for column in renamed_old_metrics if column in df_scaled.columns])
 
 df_scaled.to_csv("../data/processed/df_with_features_scaled.csv")
+
+for colname in added_numeric_columns:
+    q25 = np.percentile(df_scaled.loc[:,colname],25)
+    q50 = np.percentile(df_scaled.loc[:,colname],50)
+    q75 = np.percentile(df_scaled.loc[:,colname],25)
+    for i in range(df_scaled.shape[0]):
+        val = df_scaled.loc[i,colname]
+        if val == np.nan:
+            pass
+        elif val<=q25:
+            df_scaled.loc[i,colname] = 'q1'
+        elif val<=q50:
+            df_scaled.loc[i,colname] = 'q2'
+        elif val<=q75:
+            df_scaled.loc[i,colname] = 'q3'
+        else:
+            df_scaled.loc[i,colname] = 'q4'
+
+df_scaled.to_csv("../data/processed/df_with_features_binned.csv")
 
 print("End of Part 6 and end of script", print_time())
