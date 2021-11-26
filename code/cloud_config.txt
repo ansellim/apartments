@@ -1,33 +1,36 @@
 # Ansel Lim, ansel@gatech.edu
-# 24/25 Nov 2021
+# 24, 25, 26 Nov 2021
 
-##### HOW TO RUN ".\add_quality_data_partial_script.py" ON CLOUD #####
+##### HOW TO RUN ".\add_quality_data.py" ON CLOUD #####
 
 # APT-GET UPDATE, INSTALL SCREEN.
 sudo apt-get update
 sudo apt-get install screen
 
-# DOWNLOAD REPOSITORY
+# DOWNLOAD REPOSITORY (enter credentials to download private repository)
 sudo apt-get install git
 git clone https://github.com/ansellim/6242.git
 
 # INSTALL CONDA
-sudo apt install conda
-source /opt/conda/etc/profile.d/conda.sh
+sudo apt install curl
+curl -O https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh
+bash Anaconda3-2020.02-Linux-x86_64.sh
+source ~/anaconda3/bin/activate
 
 # CONFIGURE CONDA
-source /opt/conda/etc/profile.d/conda.sh
 conda create -n myenv numpy pandas requests
 conda activate myenv
 pip install python-dotenv geopy sklearn
 
-# ADD .ENV FILE MANUALLY, AND ADD GOOGLE_API_KEY
-nano ../.env
+# CD INTO CODE FOLDER
+cd 6242/code
+
+# ADD .ENV FILE WITH GOOGLE API KEY
+echo "GOOGLE_API_KEY=<YOUR API KEY HERE>" > ../.env
 
 # RUN SCRIPT
 screen
-source /opt/conda/etc/profile.d/conda.sh
 conda activate myenv
-python add_quality_data_partial_script.py
+python add_quality_data.py
 
-# TO EXIT, JUST CTRL + A + D. TO RE-ENTER SCREEN, type "control -r"
+# TO DETACH SCREEN, JUST CTRL + A + D. TO RE-ENTER SCREEN, type "screen-r"
