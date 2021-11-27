@@ -18,7 +18,7 @@ The objective of this code is to:
 ###########################################################################################
 
 # A flag to indicate whether we are only doing prototyping of the code. If prototyping, we only load small amounts of the data into the code to test out the code.
-prototype = True
+prototype = False
 
 import os
 import re
@@ -44,10 +44,12 @@ warnings.filterwarnings("ignore")
 
 if prototype:
     print("Prototype flag is set to TRUE")
-    MAX_ROWS = 2
+    MAX_ROWS = 200
     print("Max rows value is {}".format(MAX_ROWS))
 else:
+    print("Prototype flag is set to FALSE")
     MAX_ROWS = None
+
 
 ###########################################################################################
 #######################Part 1: Get ratings from Google Maps API############################
@@ -248,7 +250,8 @@ hawker_centers = pd.read_csv("../data/raw/data_hawker.csv", nrows=MAX_ROWS)
 hawker_centers.dropna(subset=['Coordinates', 'Name', 'rating', 'user_ratings_total'], how='any', inplace=True)
 hawker_centers[['long', 'lat']] = hawker_centers['Coordinates'].str.split(',', 1, expand=True)
 hawker_centers.rename(columns={'rating': 'avg_rating', 'user_ratings_total': 'num_ratings'}, inplace=True)
-
+hawker_centers[['lat','temp']]= hawker_centers['lat'].str.split(',',1,expand=True)
+hawker_centers.drop(columns = ['temp'],inplace=True)
 hawker_centers['W'] = hawker_centers['num_ratings'] / (hawker_centers['num_ratings'].max())
 r0 = hawker_centers['avg_rating'].mean()
 hawker_centers['weighted_rating'] = hawker_centers['W'] * hawker_centers['avg_rating'] + (1 - hawker_centers['W']) * r0
@@ -418,6 +421,10 @@ for i in range(len(features_with_quality_scores)):
     if 'address' not in feat.columns:
         feat['address'] = feat.apply(lambda x: get_address(x['name']), axis=1)
 
+for i in range(len(features_with_quality_scores)):
+    feature = features_with_quality_scores[i]
+    feature['feature_type'] = feature_names_with_quality_scores[i]
+
 print("Finished adding in addresses to features with quality scores", print_time())
 
 print("Finished working on features with quality scores", print_time())
@@ -547,8 +554,11 @@ for feature_type in list( features.feature_type.unique() ):
     print("Number of features in feature type {}: {}".format(feature_type, places.shape[0]))
     colname_num_features = "num_" + feature_type
     colname_feature_ids = "feature_ids_" + feature_type
-    colname_feature_scores = "quality_" + feature_type
-    added_numeric_columns.extend([colname_num_features, colname_feature_scores])
+    if feature_type in feature_names_with_quality_scores:
+        colname_feature_scores = "quality_" + feature_type
+        added_numeric_columns.extend([colname_num_features, colname_feature_scores])
+    else:
+        added_numeric_columns.append(colname_num_features)
     for i in range(df_combined.shape[0]):
         counter = 0
         feature_ids = set()
@@ -569,13 +579,15 @@ for feature_type in list( features.feature_type.unique() ):
                 if dist <= radius:
                     counter += 1
                     feature_ids.add(places.loc[j, "feature_id"])
-                    scores.append(places.loc[j, "weighted_rating"])
+                    if feature_type in feature_names_with_quality_scores: 
+                        scores.append(places.loc[j, "weighted_rating"])
             except ValueError:
                 continue
 
         df_combined.loc[i, colname_num_features] = counter
         df_combined.loc[i, colname_feature_ids] = str(feature_ids)
-        df_combined.loc[i, colname_feature_scores] = np.median(scores)
+        if feature_type in feature_names_with_quality_scores: 
+            df_combined.loc[i, colname_feature_scores] = np.median(scores)
     loop_end = time.time()
     print("Completed feature type {}, took {} seconds. Time now: {}".format(feature_type, loop_end - loop_start,
                                                                             print_time()))
@@ -627,3 +639,4 @@ for colname in added_numeric_columns:
 df_scaled.to_csv("../data/processed/df_with_features_binned.csv")
 
 print("End of Part 6 and end of script", print_time())
+
