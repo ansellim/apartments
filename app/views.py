@@ -62,7 +62,6 @@ def index():
         weight_num_bus_stop = int(request.form.get("num_bus_stops_slider")) / 100.0
         weight_num_taxi_stand = int(request.form.get("num_taxi_stands_slider")) / 100.0
 
-        # Logic to query precomputed scores, compute overall score and return top 5 recommendations
         query = f"""
                          SELECT project_id, project, project_type, lat, long, price_per_sqm, district, feature_ids_clinic, feature_ids_community_center, feature_ids_gym, feature_ids_hawker_center, feature_ids_mall, feature_ids_other_public_sports_facility, feature_ids_park, feature_ids_primary_school, feature_ids_secondary_school, feature_ids_supermarket, feature_ids_bus_stop, feature_ids_carpark, feature_ids_mrt, feature_ids_eating_establishment, feature_ids_taxi_stand, raw_num_bus_stop, raw_num_carpark, raw_num_clinic, raw_num_community_center, raw_num_eating_establishment, raw_num_gym, raw_num_hawker_center, raw_num_mall, raw_num_mrt, raw_num_other_public_sports_facility, raw_num_park, raw_num_primary_school, raw_num_secondary_school, raw_num_supermarket, raw_num_taxi_stand, raw_quality_clinic, raw_quality_community_center, raw_quality_gym, raw_quality_hawker_center, raw_quality_mall, raw_quality_other_public_sports_facility, raw_quality_park, raw_quality_primary_school, raw_quality_secondary_school, raw_quality_supermarket,
                                 -- calculate overall score per property, given user weights
@@ -101,7 +100,6 @@ def index():
 
         conn = sql.connect('../data/database.db')
         matches = pd.read_sql_query(query, conn)
-        print(matches)
 
         colnames_to_drop = []
         for colname in matches.columns:
@@ -117,6 +115,7 @@ def index():
             @param feature_ids: a set of feature_ids
             @return feature information as a dictionary
             '''
+            feature_ids = eval(feature_ids)
 
             if len(feature_ids) == 0:
                 return np.nan
@@ -126,13 +125,13 @@ def index():
             else:
                 feature_ids_str = f"""feature_id in {tuple(feature_ids)}"""
 
-            query = f"""
+            query2 = f"""
                         SELECT name,num_ratings,avg_rating,lat,long,feature_type,address
                         FROM features
                         WHERE """ + feature_ids_str + """
                     """
 
-            features = pd.read_sql_query(query, conn)
+            features = pd.read_sql_query(query2, conn)
 
             json = features.to_json(orient='records')
 
