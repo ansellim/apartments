@@ -9,6 +9,7 @@
 
 '''
 Purpose of this code is to allow the user to run add_quality_data.py without the Part 1 API calls, conditioned on the fact that the Part 1 API calls may have already been made and there is no need to re-run them and incur API costs.
+Since this code exists purely for functional purposes, this code should not be read as part of the codebase; please read "add_quality_data.py" instead.
 '''
 
 prototype = True
@@ -280,11 +281,17 @@ print("Part 6: Create a combined dataframe of properties and features (pairwise 
 
 '''
 For each property, add quantitative and quality scores, as well as track which places of interest (features) are within a 1km radius of each property.
+
 The purpose of this part of the code is to produce df_with_features_scaled, which contains (for each property) a quantitative +/- a quality score for each type of nearby place of interest.
+
 DESCRIPTION OF THE OUTCOME OF THE CODE IN THIS PART (df_with_features_scaled.csv)
+
 - A dataframe of property projects (a 'project' is an HDB block or a condo project), with quantity and *median* quality scores for each feature type. Since a feature is a place of interest, such as 'Bukit Timah Hawker Center' or 'Clementi MRT', it follows that a feature type is a type of place of interest, for example a community center or CHAS clinic. For each property, we look at a one-kilometer radius calculated based on latitude and longitude. 
+
 - For each property, therefore, we count the number of features (within each feature type) within a one-kilometer radius, as well as compute the median `quality` score of features (within each feature type), again within that one-kilometer radius. The 'quality' score of a feature is a rating (out of a maximum of 5 stars) extracted from the Google Places API, normalized/weighted by the number of reviews that feature received compared to other features of the same feature type.
+
 - To be clear, given a property, for each feature type, the number of features within a 1-kilometer radius is the quantity score, and the median of the quality scores of features within that same 1-kilometer radius is the quality score. Since different features may have different ranges of scores (this is more of an issue for quantity score, since quality score is on a Likert scale), the quality and quantity scores are scaled according to min-max scaling.
+
 '''
 
 ### Rename old column names in combined dataframe of properties  ###
@@ -356,14 +363,14 @@ for feature_type in list( features.feature_type.unique() ):
                 if dist <= radius:
                     counter += 1
                     feature_ids.add(places.loc[j, "feature_id"])
-                    if feature_type in feature_names_with_quality_scores: 
+                    if feature_type in feature_names_with_quality_scores:
                         scores.append(places.loc[j, "weighted_rating"])
             except ValueError:
                 continue
 
         df_combined.loc[i, colname_num_features] = counter
         df_combined.loc[i, colname_feature_ids] = str(feature_ids)
-        if feature_type in feature_names_with_quality_scores: 
+        if feature_type in feature_names_with_quality_scores:
             df_combined.loc[i, colname_feature_scores] = np.median(scores)
     loop_end = time.time()
     print("Completed feature type {}, took {} seconds. Time now: {}".format(feature_type, loop_end - loop_start,
@@ -405,14 +412,15 @@ for colname in added_numeric_columns:
         if val == np.nan:
             pass
         elif val<=q25:
-            df_scaled.loc[i,colname] = 'q1'
+            df_scaled.loc[i,colname] = 0.25
         elif val<=q50:
-            df_scaled.loc[i,colname] = 'q2'
+            df_scaled.loc[i,colname] = 0.50
         elif val<=q75:
-            df_scaled.loc[i,colname] = 'q3'
+            df_scaled.loc[i,colname] = 0.75
         else:
-            df_scaled.loc[i,colname] = 'q4'
+            df_scaled.loc[i,colname] = 1.00
 
 df_scaled.to_csv("../data/processed/df_with_features_binned.csv")
 
 print("End of Part 6 and end of script", print_time())
+

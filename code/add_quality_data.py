@@ -10,7 +10,7 @@ The objective of this code is to:
     1. add quality score (weighted rating on Google Places API)
     2. recompute quantity scores
     3. for each property, store the ID's of nearby places of interest, so that some of these places of interest may be displayed downstream.
-    4. process the property and feature information into two well-organized relations so that the resulting dataframes may be fed into a relational database (SQLite)..
+    4. process the property and feature information into two well-organized relations so that the resulting dataframes may be fed into a relational database (SQLite).
 '''
 
 ###########################################################################################
@@ -619,6 +619,8 @@ df_scaled = df_scaled.drop(columns=[column for column in renamed_old_metrics if 
 
 df_scaled.to_csv("../data/processed/df_with_features_scaled.csv")
 
+# Bin the quality and quantity scores into quartiles (Q1 -> 0.25, Q2 -> 0.50, Q3 -> 0.75, Q4 -> 1.00)
+
 for colname in added_numeric_columns:
     q25 = np.percentile(df_scaled.loc[:,colname],25)
     q50 = np.percentile(df_scaled.loc[:,colname],50)
@@ -628,13 +630,13 @@ for colname in added_numeric_columns:
         if val == np.nan:
             pass
         elif val<=q25:
-            df_scaled.loc[i,colname] = 'q1'
+            df_scaled.loc[i,colname] = 0.25
         elif val<=q50:
-            df_scaled.loc[i,colname] = 'q2'
+            df_scaled.loc[i,colname] = 0.50
         elif val<=q75:
-            df_scaled.loc[i,colname] = 'q3'
+            df_scaled.loc[i,colname] = 0.75
         else:
-            df_scaled.loc[i,colname] = 'q4'
+            df_scaled.loc[i,colname] = 1.00
 
 df_scaled.to_csv("../data/processed/df_with_features_binned.csv")
 
