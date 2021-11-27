@@ -10,21 +10,13 @@ def index():
         req = request.form
         # print(req)
 
-        minPrice = request.form.get("minPrice").replace(',', '')
-        maxPrice = request.form.get("maxPrice").replace(',', '')
-        if minPrice == '':
-            minPrice = 0
-        if maxPrice == '':
+        minPricePerSqM = request.form.get("minPricePerSqM").replace(',', '')
+        maxPricePerSqM = request.form.get("maxPricePerSqM").replace(',', '')
+        if minPricePerSqM == '':
+            minPricePerSqM = 0
+        if maxPricePerSqM == '':
             # set to 10b.. probably no houses above this price.....?
-            maxPrice = 10000000000
-
-        minArea = request.form.get("minArea")
-        maxArea = request.form.get("maxArea")
-        if minArea == '':
-            minArea = 0
-        if maxArea == '':
-            # set to 10b sqm.. bigger than the size of SG?!
-            maxArea = 10000000000
+            maxPricePerSqM = 10000000000
 
         districts = []
         for k, v in req.items():
@@ -57,7 +49,7 @@ def index():
         num_bus_stops = int(request.form.get("num_bus_stops_slider"))/100.0
         num_taxi_stands = int(request.form.get("num_taxi_stands_slider"))/100.0
 
-        print(minPrice,maxPrice,minArea,maxArea,districts,num_primary_schools,qlt_primary_schools,num_secondary_schools,qlt_secondary_schools,num_hawker,qlt_hawker,
+        print(minPricePerSqM,maxPricePerSqM,districts,num_primary_schools,qlt_primary_schools,num_secondary_schools,qlt_secondary_schools,num_hawker,qlt_hawker,
         num_eating_establishments,num_clinics,qlt_clinics,num_sports_facilities,qlt_sports_facilities,num_gym,qlt_gym,num_community_centers,qlt_community_centers,
         num_parks,qlt_parks,num_malls,qlt_malls,num_supermarkets,qlt_supermarkets,num_mrt,num_carparks,num_bus_stops,num_taxi_stands)
 
@@ -99,7 +91,7 @@ def index():
                         + num_taxi_stands_score * {num_taxi_stands}
                         as overall_score
                  FROM property
-                 WHERE price>={minPrice} and price<={maxPrice} and area>={minArea} and area<={maxArea}
+                 WHERE price>={minPricePerSqM} and price<={maxPricePerSqM}
                  AND """ + district_str + f"""
                  ORDER BY overall_score desc
                  LIMIT 5

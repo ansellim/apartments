@@ -41,17 +41,9 @@
         
         <div class="block">
             <div class="columns">
-                <div class="column is-2 is-align-items-center is-flex"><div class="column has-text-right"><strong>Price range:</strong></div></div>
-                <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded" name='minPrice' id='minPrice' type="text" placeholder="Minimum price (S$)"></div>
-                <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded" name='maxPrice' id='maxPrice' type="text" placeholder="Maximum price (S$)"></div>
-            </div>
-        </div>
-
-        <div class="block">
-            <div class="columns">
-                <div class="column is-2 is-align-items-center is-flex"><div class="column has-text-right"><strong>Area:</strong></div></div>
-                <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded" name='minArea' id='minArea' type="text" placeholder="Minimum area (sq m)"></div>
-                <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded" name='maxArea' id='maxArea' type="text" placeholder="Maximum area (sq m)"></div>
+                <div class="column is-2 is-align-items-center is-flex"><div class="column has-text-right"><strong>Price range (per square metre):</strong></div></div>
+                <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded" name='minPricePerSqM' id='minPricePerSqM' type="text" placeholder="Minimum Price Per sq m (S$)"></div>
+                <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded" name='maxPricePerSqM' id='maxPricePerSqM' type="text" placeholder="Maximum Price per sq m (S$)"></div>
             </div>
         </div>
 
@@ -468,13 +460,13 @@
         function numberWithCommas(x) {
             return x.toString().replace(/\D/g,'').replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         }
-        const minPrice = document.getElementById("minPrice");
-        const maxPrice = document.getElementById("maxPrice");
-        minPrice.addEventListener("focusout", function(){
-            minPrice.value = numberWithCommas(minPrice.value)
+        const minPricePerSqM = document.getElementById("minPricePerSqM");
+        const maxPricePerSqM = document.getElementById("maxPricePerSqM");
+        minPricePerSqM.addEventListener("focusout", function(){
+            minPricePerSqM.value = numberWithCommas(minPricePerSqM.value)
         })
-        maxPrice.addEventListener("focusout", function(){
-            maxPrice.value = numberWithCommas(maxPrice.value)
+        maxPricePerSqM.addEventListener("focusout", function(){
+            maxPricePerSqM.value = numberWithCommas(maxPricePerSqM.value)
         })
 
         var num_primary_schools_slider = document.getElementById("num_primary_schools_slider");
