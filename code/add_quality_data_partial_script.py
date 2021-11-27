@@ -1,7 +1,5 @@
 # Ansel Lim, ansel@gatech.edu
-# 24/25 Nov 2021
-
-#### THIS CODE NEEDS TO BE UPDATED WITH THE LATEST VERSION OF ADD_QUALITY_DATA. DO NOT USE UNTIL IT IS UPDATED.
+# 24-26 Nov 2021.
 
 ############################################################################################################
 #####################################add_quality_data_partial_script.py#####################################
@@ -133,8 +131,8 @@ df_hdb.dropna(subset=['district'], inplace=True)
 
 # Create combined dataframe of condominium and HDB data
 
-print([col for col in df_condo.columns if col not in df_hdb.columns])
-print([col for col in df_hdb.columns if col not in df_condo.columns])
+# print([col for col in df_condo.columns if col not in df_hdb.columns])
+# print([col for col in df_hdb.columns if col not in df_condo.columns])
 
 df_hdb['project_type'] = 'hdb'
 df_condo['project_type'] = 'condo'
@@ -167,8 +165,7 @@ other_public_sports_facilities = pd.read_csv("../data/with_quality_scores/other_
     ['address', 'lat', 'long', 'modified_name', 'google_place_id', 'num_ratings', 'avg_rating', 'W',
      'weighted_rating']].rename(columns={'modified_name': 'name'})
 parks = pd.read_csv("../data/with_quality_scores/parks.csv")[
-    ['lat', 'long', 'park_name', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']].rename(
-    columns={'park_name': 'name'})
+    ['name','lat', 'long', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']]
 primary_schools = pd.read_csv("../data/with_quality_scores/primary_schools.csv")[
     ['Name', 'long', 'lat', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']].rename(
     columns={'Name': 'name'})
@@ -176,19 +173,13 @@ secondary_schools = pd.read_csv("../data/with_quality_scores/secondary_schools.c
     ['school_name', 'lat', 'long', 'address', 'google_place_id', 'num_ratings', 'avg_rating', 'W',
      'weighted_rating']].rename(columns={'school_name': 'name'})
 supermarkets = pd.read_csv("../data/with_quality_scores/supermarkets.csv")[
-    ['lat', 'long', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating', 'modified_name']].rename(
-    columns={'modified_name': 'name'})
+    ['name','lat', 'long', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']]
 
 features_with_quality_scores = [clinics, community_centers, gyms, hawker_centers, malls, other_public_sports_facilities,
                                 parks, primary_schools, secondary_schools, supermarkets]
 feature_names_with_quality_scores = ["clinic", "community_center", "gym", "hawker_center", "mall",
                                      "other_public_sports_facility", "park", "primary_school", "secondary_school",
                                      "supermarket"]
-
-for i in range(len(features_with_quality_scores)):
-    feature = features_with_quality_scores[i]
-    feature['feature_type'] = feature_names_with_quality_scores[i]
-
 
 # Add in addresses for features with quality scores
 
@@ -205,12 +196,17 @@ def get_address(search_string):
     except IndexError:
         return np.nan
 
-
 print("Add in addresses to features with quality scores", print_time())
 
-for feat in features_with_quality_scores:
+for i in range(len(features_with_quality_scores)):
+    feat = features_with_quality_scores[i]
+    print(feature_names_with_quality_scores[i])
     if 'address' not in feat.columns:
         feat['address'] = feat.apply(lambda x: get_address(x['name']), axis=1)
+
+for i in range(len(features_with_quality_scores)):
+    feature = features_with_quality_scores[i]
+    feature['feature_type'] = feature_names_with_quality_scores[i]
 
 print("Finished adding in addresses to features with quality scores", print_time())
 
@@ -284,17 +280,11 @@ print("Part 6: Create a combined dataframe of properties and features (pairwise 
 
 '''
 For each property, add quantitative and quality scores, as well as track which places of interest (features) are within a 1km radius of each property.
-
 The purpose of this part of the code is to produce df_with_features_scaled, which contains (for each property) a quantitative +/- a quality score for each type of nearby place of interest.
-
 DESCRIPTION OF THE OUTCOME OF THE CODE IN THIS PART (df_with_features_scaled.csv)
-
 - A dataframe of property projects (a 'project' is an HDB block or a condo project), with quantity and *median* quality scores for each feature type. Since a feature is a place of interest, such as 'Bukit Timah Hawker Center' or 'Clementi MRT', it follows that a feature type is a type of place of interest, for example a community center or CHAS clinic. For each property, we look at a one-kilometer radius calculated based on latitude and longitude. 
-
 - For each property, therefore, we count the number of features (within each feature type) within a one-kilometer radius, as well as compute the median `quality` score of features (within each feature type), again within that one-kilometer radius. The 'quality' score of a feature is a rating (out of a maximum of 5 stars) extracted from the Google Places API, normalized/weighted by the number of reviews that feature received compared to other features of the same feature type.
-
 - To be clear, given a property, for each feature type, the number of features within a 1-kilometer radius is the quantity score, and the median of the quality scores of features within that same 1-kilometer radius is the quality score. Since different features may have different ranges of scores (this is more of an issue for quantity score, since quality score is on a Likert scale), the quality and quantity scores are scaled according to min-max scaling.
-
 '''
 
 ### Rename old column names in combined dataframe of properties  ###
@@ -328,15 +318,24 @@ features = pd.read_csv("../data/processed/features.csv")[
 
 added_numeric_columns = []
 
-for feature_type in list(features.feature_type.unique()):
+print(features)
+
+print(features.feature_type)
+
+for feature_type in list( features.feature_type.unique() ):
     loop_start = time.time()
+    if type(feature_type)!=str:
+        continue
     print("Considering feature type {}".format(feature_type))
     places = features[features['feature_type'] == feature_type].reset_index()
     print("Number of features in feature type {}: {}".format(feature_type, places.shape[0]))
     colname_num_features = "num_" + feature_type
     colname_feature_ids = "feature_ids_" + feature_type
-    colname_feature_scores = "quality_" + feature_type
-    added_numeric_columns.extend([colname_num_features, colname_feature_scores])
+    if feature_type in feature_names_with_quality_scores:
+        colname_feature_scores = "quality_" + feature_type
+        added_numeric_columns.extend([colname_num_features, colname_feature_scores])
+    else:
+        added_numeric_columns.append(colname_num_features)
     for i in range(df_combined.shape[0]):
         counter = 0
         feature_ids = set()
@@ -357,13 +356,15 @@ for feature_type in list(features.feature_type.unique()):
                 if dist <= radius:
                     counter += 1
                     feature_ids.add(places.loc[j, "feature_id"])
-                    scores.append(places.loc[j, "weighted_rating"])
+                    if feature_type in feature_names_with_quality_scores: 
+                        scores.append(places.loc[j, "weighted_rating"])
             except ValueError:
                 continue
 
         df_combined.loc[i, colname_num_features] = counter
         df_combined.loc[i, colname_feature_ids] = str(feature_ids)
-        df_combined.loc[i, colname_feature_scores] = np.median(scores)
+        if feature_type in feature_names_with_quality_scores: 
+            df_combined.loc[i, colname_feature_scores] = np.median(scores)
     loop_end = time.time()
     print("Completed feature type {}, took {} seconds. Time now: {}".format(feature_type, loop_end - loop_start,
                                                                             print_time()))
@@ -415,10 +416,3 @@ for colname in added_numeric_columns:
 df_scaled.to_csv("../data/processed/df_with_features_binned.csv")
 
 print("End of Part 6 and end of script", print_time())
-
-
-df_scaled.to_csv("../data/processed/df_with_features_scaled.csv")
-
-print("End of Part 6 and end of script", print_time())
-
-
