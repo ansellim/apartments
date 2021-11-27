@@ -1,5 +1,7 @@
 '''
 
+Ansel Lim, 27 November 2021.
+
 Create database from csv files.
 
 Inputs:
@@ -46,16 +48,24 @@ df_with_features.drop(columns = feature_ids_colnames,inplace=True)
 
 mapping = {column_name : 'raw_'+column_name for column_name in feature_scores_colnames}
 
-df_with_features.rename(columns = mapping, inplace=True)
+df_with_features.rename(columns=mapping, inplace=True)
 
-df_with_features_binned.drop(columns = ['apartment_type'],inplace=True)
+df_with_features_binned.drop(columns=['apartment_type'], inplace=True)
 
 columns = list(df_with_features.columns.difference(df_with_features_binned.columns))
 columns.append('project_id')
 
-properties = df_with_features_binned.merge(right = df_with_features[columns], on='project_id', how = 'inner')
+properties = df_with_features_binned.merge(right=df_with_features[columns], on='project_id', how='inner')
+
+if 'Unnamed: 0.1' in properties.columns:
+    properties.drop(columns=['Unnamed: 0.1'], inplace=True)
+
+if 'Unnamed: 0' in features.columns:
+    features.drop(columns=['Unnamed: 0'], inplace=True)
 
 conn = sqlite3.connect('database.db')
+conn.execute("DROP TABLE IF EXISTS properties;")
+conn.execute("DROP TABLE IF EXISTS features;")
 properties.to_sql('properties', conn)
 features.to_sql('features', conn)
 

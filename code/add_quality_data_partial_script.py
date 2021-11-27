@@ -1,5 +1,5 @@
 # Ansel Lim, ansel@gatech.edu
-# 24-26 Nov 2021.
+# 24-28 Nov 2021.
 
 ############################################################################################################
 #####################################add_quality_data_partial_script.py#####################################
@@ -403,24 +403,30 @@ df_scaled = df_scaled.drop(columns=[column for column in renamed_old_metrics if 
 
 df_scaled.to_csv("../data/processed/df_with_features_scaled.csv")
 
+# Bin the quality and quantity scores into quartiles (Q1 -> 0.25, Q2 -> 0.50, Q3 -> 0.75, Q4 -> 1.00)
+
+df_with_features_binned = copy.deepcopy(df_combined)
+
 for colname in added_numeric_columns:
-    q25 = np.percentile(df_scaled.loc[:,colname],25)
-    q50 = np.percentile(df_scaled.loc[:,colname],50)
-    q75 = np.percentile(df_scaled.loc[:,colname],25)
-    for i in range(df_scaled.shape[0]):
-        val = df_scaled.loc[i,colname]
+    q25 = np.percentile(df_with_features_binned.loc[:, colname], 25)
+    q50 = np.percentile(df_with_features_binned.loc[:, colname], 50)
+    q75 = np.percentile(df_with_features_binned.loc[:, colname], 25)
+    for i in range(df_with_features_binned.shape[0]):
+        val = df_with_features_binned.loc[i, colname]
         if val == np.nan:
             pass
-        elif val<=q25:
-            df_scaled.loc[i,colname] = 0.25
-        elif val<=q50:
-            df_scaled.loc[i,colname] = 0.50
-        elif val<=q75:
-            df_scaled.loc[i,colname] = 0.75
+        elif val == 0:
+            df_with_features_binned.loc[i, colname] = 0
+        elif val <= q25:
+            df_with_features_binned.loc[i, colname] = 0.25
+        elif val <= q50:
+            df_with_features_binned.loc[i, colname] = 0.50
+        elif val <= q75:
+            df_with_features_binned.loc[i, colname] = 0.75
         else:
-            df_scaled.loc[i,colname] = 1.00
+            df_with_features_binned.loc[i, colname] = 1.00
 
-df_scaled.to_csv("../data/processed/df_with_features_binned.csv")
+df_with_features_binned.to_csv("../data/processed/df_with_features_binned.csv")
 
 print("End of Part 6 and end of script", print_time())
 

@@ -57,50 +57,94 @@ def index():
 
         # Get user's weights for features (amenities / places of interest) with quantity scores ONLY. These amenities do not have quality scores.
         weight_num_eating_establishment = int(request.form.get("num_eating_establishments_slider")) / 100.0
-        weight_num_mrt = int(request.form.get("num_mrt_slider"))/100.0
-        weight_num_carpark = int(request.form.get("num_carparks_slider"))/100.0
-        weight_num_bus_stop = int(request.form.get("num_bus_stops_slider"))/100.0
-        weight_num_taxi_stand = int(request.form.get("num_taxi_stands_slider"))/100.0
+        weight_num_mrt = int(request.form.get("num_mrt_slider")) / 100.0
+        weight_num_carpark = int(request.form.get("num_carparks_slider")) / 100.0
+        weight_num_bus_stop = int(request.form.get("num_bus_stops_slider")) / 100.0
+        weight_num_taxi_stand = int(request.form.get("num_taxi_stands_slider")) / 100.0
 
-        #Logic to query precomputed scores, compute overall score and return top 5 recommendations
+        # Logic to query precomputed scores, compute overall score and return top 5 recommendations
         query = f"""
-                 SELECT project_id, price_per_sqm, area, district,
-                        -- calculate overall score per property, given user weights
-                        num_primary_school * {weight_num_primary_school}
-                        + quality_primary_school * {weight_quality_primary_school}
-                        + num_secondary_school * {weight_num_secondary_school}
-                        + quality_secondary_school * {weight_quality_secondary_school}
-                        + num_hawker_center * {weight_num_hawker_center}
-                        + quality_hawker_center * {weight_quality_hawker_center}
-                        + num_clinic * {weight_num_clinic}
-                        + quality_clinic * {weight_quality_clinic}
-                        + num_other_public_sports_facility * {weight_other_public_sports_facility}
-                        + quality_other_public_sports_facility * {weight_quality_other_public_sports_facility}
-                        + num_gym * {weight_num_gym}
-                        + quality_gym * {weight_quality_gym}
-                        + num_community_center * {weight_num_community_center}
-                        + quality_community_center * {weight_quality_community_center}
-                        + num_park * {weight_num_park}
-                        + quality_park * {weight_quality_park}
-                        + num_mall * {weight_num_mall}
-                        + quality_mall * {weight_quality_mall}
-                        + num_supermarket * {weight_num_supermarket}
-                        + quality_supermarket * {weight_quality_supermarket}
-                        + num_mrt * {weight_num_mrt}
-                        + num_eating_establishment * {weight_num_eating_establishment}
-                        + num_carpark * {weight_num_carpark}
-                        + num_bus_stop* {weight_num_bus_stop}
-                        + num_taxi_stand * {weight_num_taxi_stand}
-                        as overall_score
-                 FROM properties
-                 WHERE price_per_sqm>={min_price_per_sq_m} and price_per_sqm<={max_price_per_sq_m}
-                 AND """ + district_str + f"""
-                 ORDER BY overall_score desc
-                 LIMIT 5
-        """
-        property_db = sql.connect('data/database.db')
-        top_five_property = pd.read_sql_query(query, property_db)
-        print(top_five_property)
+                         SELECT project_id, project, project_type, lat, long, price_per_sqm, district, feature_ids_clinic, feature_ids_community_center, feature_ids_gym, feature_ids_hawker_center, feature_ids_mall, feature_ids_other_public_sports_facility, feature_ids_park, feature_ids_primary_school, feature_ids_secondary_school, feature_ids_supermarket, feature_ids_bus_stop, feature_ids_carpark, feature_ids_mrt, feature_ids_eating_establishment, feature_ids_taxi_stand, raw_num_bus_stop, raw_num_carpark, raw_num_clinic, raw_num_community_center, raw_num_eating_establishment, raw_num_gym, raw_num_hawker_center, raw_num_mall, raw_num_mrt, raw_num_other_public_sports_facility, raw_num_park, raw_num_primary_school, raw_num_secondary_school, raw_num_supermarket, raw_num_taxi_stand, raw_quality_clinic, raw_quality_community_center, raw_quality_gym, raw_quality_hawker_center, raw_quality_mall, raw_quality_other_public_sports_facility, raw_quality_park, raw_quality_primary_school, raw_quality_secondary_school, raw_quality_supermarket,
+                                -- calculate overall score per property, given user weights
+                                num_primary_school * {weight_num_primary_school}
+                                + quality_primary_school * {weight_quality_primary_school}
+                                + num_secondary_school * {weight_num_secondary_school}
+                                + quality_secondary_school * {weight_quality_secondary_school}
+                                + num_hawker_center * {weight_num_hawker_center}
+                                + quality_hawker_center * {weight_quality_hawker_center}
+                                + num_clinic * {weight_num_clinic}
+                                + quality_clinic * {weight_quality_clinic}
+                                + num_other_public_sports_facility * {weight_other_public_sports_facility}
+                                + quality_other_public_sports_facility * {weight_quality_other_public_sports_facility}
+                                + num_gym * {weight_num_gym}
+                                + quality_gym * {weight_quality_gym}
+                                + num_community_center * {weight_num_community_center}
+                                + quality_community_center * {weight_quality_community_center}
+                                + num_park * {weight_num_park}
+                                + quality_park * {weight_quality_park}
+                                + num_mall * {weight_num_mall}
+                                + quality_mall * {weight_quality_mall}
+                                + num_supermarket * {weight_num_supermarket}
+                                + quality_supermarket * {weight_quality_supermarket}
+                                + num_mrt * {weight_num_mrt}
+                                + num_eating_establishment * {weight_num_eating_establishment}
+                                + num_carpark * {weight_num_carpark}
+                                + num_bus_stop* {weight_num_bus_stop}
+                                + num_taxi_stand * {weight_num_taxi_stand}
+                                as overall_score
+                         FROM properties
+                         WHERE price_per_sqm>={min_price_per_sq_m} and price_per_sqm<={max_price_per_sq_m}
+                         AND """ + district_str + """
+                         ORDER BY overall_score desc, price_per_sqm desc
+                         LIMIT 10
+                """
+
+        conn = sql.connect('../data/database.db')
+        matches = pd.read_sql_query(query, conn)
+        print(matches)
+
+        colnames_to_drop = []
+        for colname in matches.columns:
+            if 'raw_' in colname:
+                matches.loc[:, colname.lstrip("raw_")] = matches.loc[:, colname]
+                colnames_to_drop.append(colname)
+        matches.drop(columns=colnames_to_drop, inplace=True)
+
+        # Get feature data for these
+
+        def get_feature_information(feature_ids):
+            '''
+            @param feature_ids: a set of feature_ids
+            @return feature information as a dictionary
+            '''
+
+            if len(feature_ids) == 0:
+                return np.nan
+            elif len(feature_ids) == 1:
+                (elem,) = feature_ids
+                feature_ids_str = f"""feature_id = {elem}"""
+            else:
+                feature_ids_str = f"""feature_id in {tuple(feature_ids)}"""
+
+            query = f"""
+                        SELECT name,num_ratings,avg_rating,lat,long,feature_type,address
+                        FROM features
+                        WHERE """ + feature_ids_str + """
+                    """
+
+            features = pd.read_sql_query(query, conn)
+
+            json = features.to_json(orient='records')
+
+            return json
+
+        colnames_to_drop = []
+        for colname in matches.columns:
+            if 'feature_ids_' in colname:
+                new_colname = colname[12:]
+                matches.loc[:, new_colname] = matches.apply(lambda x: get_feature_information(x[colname]), axis=1)
+                colnames_to_drop.append(colname)
+        matches.drop(columns=colnames_to_drop, inplace=True)
 
         return redirect(request.url)
     return render_template("index.html")
