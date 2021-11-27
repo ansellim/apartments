@@ -1,8 +1,10 @@
 # Ansel Lim, ansel@gatech.edu
 # 24/25 Nov 2021
 
+#### THIS CODE NEEDS TO BE UPDATED WITH THE LATEST VERSION OF ADD_QUALITY_DATA. DO NOT USE UNTIL IT IS UPDATED.
+
 ############################################################################################################
-#####################################add_quality_data.py####################################################
+#####################################add_quality_data_partial_script.py#####################################
 #####################this is a partial copy of ADD_QUALITY_DATA but without API calls#######################
 ############################################################################################################
 ############################################################################################################
@@ -32,9 +34,11 @@ def print_time():
 
 
 if prototype:
-    MAX_ROWS = 100
+    MAX_ROWS = 200
+    print("Prototype flag is set to TRUE")
 else:
     MAX_ROWS = None
+    print("Prototype flag is set to FALSE")
 
 ###########################################################################################
 ###########################################################################################
@@ -416,3 +420,5 @@ print("End of Part 6 and end of script", print_time())
 df_scaled.to_csv("../data/processed/df_with_features_scaled.csv")
 
 print("End of Part 6 and end of script", print_time())
+
+
