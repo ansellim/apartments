@@ -1,3 +1,5 @@
+// ANSEL LIM, 28 NOVEMBER 2021
+
 (myenv) anselprivate2@instance-1:~/6242/code$ python add_quality_data.py
 Start of the script 2021-11-26T14:55:03
 Prototype flag is set to FALSE
