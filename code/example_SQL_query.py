@@ -1,6 +1,8 @@
 # Ansel Lim
 # 28 November 2021
 
+# Run this code in the project's root directory.
+
 # Minimal reproducible code (incorporated into views.py) for querying the database and returning an object that is rendered by the mapping application.
 
 import sqlite3 as sql
@@ -92,7 +94,7 @@ query = f"""
                          LIMIT 10
                 """
 
-conn = sql.connect('../data/database.db')
+conn = sql.connect('./data/database.db')
 matches = pd.read_sql_query(query, conn)
 
 colnames_to_drop = []
@@ -142,6 +144,6 @@ matches.drop(columns=colnames_to_drop, inplace=True)
 
 ####### save files ############
 
-matches.to_csv("../data/processed/example_query.csv")
+matches.to_csv("./data/processed/example_query.csv")
 
-data = pd.read_csv("../data/processed/example_query.csv")
+data = pd.read_csv("./data/processed/example_query.csv")
