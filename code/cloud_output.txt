@@ -1,0 +1,130 @@
+// ANSEL LIM, 28 NOVEMBER 2021
+
+(myenv) anselprivate2@instance-1:~/6242/code$ python add_quality_data.py
+Start of the script 2021-11-26T14:55:03
+Prototype flag is set to FALSE
+Part 1: Started working on getting ratings from Google Maps API for features we want to compute quality scores on 2021-11-26T14:55:03
+API key loaded
+Getting ratings data from Google Places API for Primary Schools 2021-11-26T14:55:03
+Getting ratings data from Google Places API for Secondary Schools 2021-11-26T14:56:23
+Getting ratings data from Google Places API for Parks 2021-11-26T14:57:21
+Getting ratings data from Google Places API for Supermarkets 2021-11-26T14:59:54
+Calculating scores for malls 2021-11-26T15:05:01
+Getting ratings data from Google Places API for Amenities (CHAS clinics, gyms, community centers, other sports facilities) 2021-11-26T15:05:01
+Calculating scores for hawker centers 2021-11-26T15:17:26
+Finished working on getting ratings from Google Maps API for features we want to compute quality scores on 2021-11-26T15:17:26
+Part 2: Started combining condo and hdb dataframes 2021-11-26T15:17:26
+Add postal code to HDB blocks 2021-11-26T15:17:26
+Finished adding postal code to HDB blocks 2021-11-26T16:54:23
+Started adding district information to HDB blocks 2021-11-26T16:54:23
+Finished adding district information to HDB blocks 2021-11-26T16:54:23
+Finished combining condo and hdb dataframes 2021-11-26T16:54:23
+Part 3: Start working on features with quality scores 2021-11-26T16:54:23
+Add in addresses to features with quality scores 2021-11-26T16:54:24
+clinic
+community_center
+gym
+hawker_center
+mall
+other_public_sports_facility
+park
+primary_school
+secondary_school
+supermarket
+Finished adding in addresses to features with quality scores 2021-11-26T17:07:59
+Finished working on features with quality scores 2021-11-26T17:07:59
+Part 4: Started working on features without quality scores 2021-11-26T17:07:59
+Finished working on features without quality scores 2021-11-26T17:08:00
+Part 5: Create a combined feature dataframe incorporating features with and without quality scores  2021-11-26T17:08:00
+Part 6: Create a combined dataframe of properties and features (pairwise computation) 2021-11-26T17:08:00
+Started pairwise comparison 2021-11-26T17:08:00
+       feature_id  ... feature_type
+0               0  ...       clinic
+1               1  ...       clinic
+2               2  ...       clinic
+3               3  ...       clinic
+4               4  ...       clinic
+...           ...  ...          ...
+32690       32690  ...   taxi_stand
+32691       32691  ...   taxi_stand
+32692       32692  ...   taxi_stand
+32693       32693  ...   taxi_stand
+32694       32694  ...   taxi_stand
+
+[32695 rows x 11 columns]
+0            clinic
+1            clinic
+2            clinic
+3            clinic
+4            clinic
+            ...
+32690    taxi_stand
+32691    taxi_stand
+32692    taxi_stand
+32693    taxi_stand
+32694    taxi_stand
+Name: feature_type, Length: 32695, dtype: object
+Considering feature type clinic
+Number of features in feature type clinic: 1160
+Completed feature type clinic, took 2548.227017402649 seconds. Time now: 2021-11-26T17:50:28
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature clinic
+Considering feature type community_center
+Number of features in feature type community_center: 112
+Completed feature type community_center, took 260.2876777648926 seconds. Time now: 2021-11-26T17:54:49
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature community_center
+Considering feature type gym
+Number of features in feature type gym: 138
+Completed feature type gym, took 316.79783821105957 seconds. Time now: 2021-11-26T18:00:06
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature gym
+Considering feature type hawker_center
+Number of features in feature type hawker_center: 119
+Completed feature type hawker_center, took 275.7826552391052 seconds. Time now: 2021-11-26T18:04:42
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature hawker_center
+Considering feature type mall
+Number of features in feature type mall: 169
+Completed feature type mall, took 384.2451548576355 seconds. Time now: 2021-11-26T18:11:06
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature mall
+Considering feature type other_public_sports_facility
+Number of features in feature type other_public_sports_facility: 32
+Completed feature type other_public_sports_facility, took 85.13721323013306 seconds. Time now: 2021-11-26T18:12:31
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature other_public_sports_facility
+Considering feature type park
+Number of features in feature type park: 340
+Completed feature type park, took 755.605465888977 seconds. Time now: 2021-11-26T18:25:07
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature park
+Considering feature type primary_school
+Number of features in feature type primary_school: 161
+Completed feature type primary_school, took 366.3965117931366 seconds. Time now: 2021-11-26T18:31:14
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature primary_school
+Considering feature type secondary_school
+Number of features in feature type secondary_school: 137
+Completed feature type secondary_school, took 314.37562251091003 seconds. Time now: 2021-11-26T18:36:29
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature secondary_school
+Considering feature type supermarket
+Number of features in feature type supermarket: 500
+Completed feature type supermarket, took 1103.0321311950684 seconds. Time now: 2021-11-26T18:54:52
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature supermarket
+Considering feature type bus_stop
+Number of features in feature type bus_stop: 500
+Completed feature type bus_stop, took 1103.2962882518768 seconds. Time now: 2021-11-26T19:13:16
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature bus_stop
+Considering feature type carpark
+Number of features in feature type carpark: 500
+Completed feature type carpark, took 1098.380862236023 seconds. Time now: 2021-11-26T19:31:35
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature carpark
+Considering feature type mrt
+Number of features in feature type mrt: 189
+Completed feature type mrt, took 425.79901576042175 seconds. Time now: 2021-11-26T19:38:41
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature mrt
+Considering feature type eating_establishment
+Number of features in feature type eating_establishment: 28359
+^[[A^[[A^[[A^[[A^[[A^[[A^XCompleted feature type eating_establishment, took 61726.489664554596 seconds. Time now: 2021-11-27T12:47:28
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature eating_establishment
+Considering feature type taxi_stand
+Number of features in feature type taxi_stand: 279
+Completed feature type taxi_stand, took 623.8177802562714 seconds. Time now: 2021-11-27T12:57:53
+Checkpointing df_with_features.csv after completion of pairwise comparison for feature taxi_stand
+Finished pairwise comparison. Pairwise comparison took 71393.70934987068 seconds
+Finished pairwise comparison 2021-11-27T12:57:53
+Started performing min-max scaling for num_features (quantity score) and median weighted ratings (quality score) 2021-11-27T12:57:53
+End of Part 6 and end of script 2021-11-27T12:59:18
