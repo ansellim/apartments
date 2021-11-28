@@ -1,8 +1,10 @@
 from app import app
-from flask import render_template
-from flask import request, redirect
+from flask import render_template, request, redirect, url_for
 import pandas as pd
 import sqlite3 as sql
+import os
+
+DB_FILEPATH = os.getcwd() + '/data/database.db'
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -23,7 +25,7 @@ def index():
         districts = []
         for k, v in req.items():
             if k[:7] == 'check_D':
-                districts.append(k[6:])
+                districts.append(k[7:])
 
         # Handle edge case where there is only 1 district selected by the user
         if len(districts) == 1:
@@ -95,10 +97,9 @@ def index():
                          WHERE price_per_sqm>={min_price_per_sq_m} and price_per_sqm<={max_price_per_sq_m}
                          AND """ + district_str + """
                          ORDER BY overall_score desc, price_per_sqm desc
-                         LIMIT 10
+                         LIMIT 5
                 """
-
-        conn = sql.connect('../data/database.db')
+        conn = sql.connect(DB_FILEPATH)
         matches = pd.read_sql_query(query, conn)
 
         colnames_to_drop = []
@@ -106,6 +107,7 @@ def index():
             if 'raw_' in colname:
                 matches.loc[:, colname.lstrip("raw_")] = matches.loc[:, colname]
                 colnames_to_drop.append(colname)
+
         matches.drop(columns=colnames_to_drop, inplace=True)
 
         # Function to get feature information from the `features` table, given a set of feature_ids.
@@ -143,9 +145,13 @@ def index():
                 matches[new_colname] = matches.apply(lambda x: get_feature_information(eval(x[colname])), axis=1)
                 colnames_to_drop.append(colname)
         matches.drop(columns=colnames_to_drop, inplace=True)
-
-        return redirect(request.url)
+        return redirect(url_for('map', matches = matches))       #Pass dataframe to map() function that renders OneMap.html
     return render_template("index.html")
+
+@app.route("/map")
+def map():
+    matches = request.args['matches']
+    return render_template("OneMap.html", matches = matches)     #pass matches to OneMap.html
 
 @app.route("/about")
 def about():
