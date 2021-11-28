@@ -1,8 +1,10 @@
 from app import app
-from flask import render_template
-from flask import request, redirect
+from flask import render_template, request, redirect, url_for
 import pandas as pd
 import sqlite3 as sql
+import os
+
+DB_FILEPATH = os.getcwd() + '/data/database.db'
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -23,7 +25,7 @@ def index():
         districts = []
         for k, v in req.items():
             if k[:7] == 'check_D':
-                districts.append(k[6:])
+                districts.append(k[7:])
 
         # Handle edge case where there is only 1 district selected by the user
         if len(districts) == 1:
@@ -63,51 +65,49 @@ def index():
         weight_num_taxi_stand = int(request.form.get("num_taxi_stands_slider")) / 100.0
 
         query = f"""
-                                 SELECT project_id, project, project_type, lat, long, price_per_sqm, district, feature_ids_clinic, feature_ids_community_center, feature_ids_gym, feature_ids_hawker_center, feature_ids_mall, feature_ids_other_public_sports_facility, feature_ids_park, feature_ids_primary_school, feature_ids_secondary_school, feature_ids_supermarket, feature_ids_bus_stop, feature_ids_carpark, feature_ids_mrt, feature_ids_eating_establishment, feature_ids_taxi_stand, raw_num_bus_stop, raw_num_carpark, raw_num_clinic, raw_num_community_center, raw_num_eating_establishment, raw_num_gym, raw_num_hawker_center, raw_num_mall, raw_num_mrt, raw_num_other_public_sports_facility, raw_num_park, raw_num_primary_school, raw_num_secondary_school, raw_num_supermarket, raw_num_taxi_stand, raw_quality_clinic, raw_quality_community_center, raw_quality_gym, raw_quality_hawker_center, raw_quality_mall, raw_quality_other_public_sports_facility, raw_quality_park, raw_quality_primary_school, raw_quality_secondary_school, raw_quality_supermarket,
-                                        -- calculate overall score per property, given user weights
-                                        num_primary_school * {weight_num_primary_school}
-                                        + quality_primary_school * {weight_quality_primary_school}
-                                        + num_secondary_school * {weight_num_secondary_school}
-                                        + quality_secondary_school * {weight_quality_secondary_school}
-                                        + num_hawker_center * {weight_num_hawker_center}
-                                        + quality_hawker_center * {weight_quality_hawker_center}
-                                        + num_clinic * {weight_num_clinic}
-                                        + quality_clinic * {weight_quality_clinic}
-                                        + num_other_public_sports_facility * {weight_other_public_sports_facility}
-                                        + quality_other_public_sports_facility * {weight_quality_other_public_sports_facility}
-                                        + num_gym * {weight_num_gym}
-                                        + quality_gym * {weight_quality_gym}
-                                        + num_community_center * {weight_num_community_center}
-                                        + quality_community_center * {weight_quality_community_center}
-                                        + num_park * {weight_num_park}
-                                        + quality_park * {weight_quality_park}
-                                        + num_mall * {weight_num_mall}
-                                        + quality_mall * {weight_quality_mall}
-                                        + num_supermarket * {weight_num_supermarket}
-                                        + quality_supermarket * {weight_quality_supermarket}
-                                        + num_mrt * {weight_num_mrt}
-                                        + num_eating_establishment * {weight_num_eating_establishment}
-                                        + num_carpark * {weight_num_carpark}
-                                        + num_bus_stop* {weight_num_bus_stop}
-                                        + num_taxi_stand * {weight_num_taxi_stand}
-                                        as overall_score
-                                 FROM properties
-                                 WHERE price_per_sqm>={min_price_per_sq_m} and price_per_sqm<={max_price_per_sq_m}
-                                 AND """ + district_str + """
-                                 ORDER BY overall_score desc, price_per_sqm desc
-                                 LIMIT 10
-                        """
-
-        conn = sql.connect('./data/database.db')
+                         SELECT project_id, project, project_type, lat, long, price_per_sqm, district, feature_ids_clinic, feature_ids_community_center, feature_ids_gym, feature_ids_hawker_center, feature_ids_mall, feature_ids_other_public_sports_facility, feature_ids_park, feature_ids_primary_school, feature_ids_secondary_school, feature_ids_supermarket, feature_ids_bus_stop, feature_ids_carpark, feature_ids_mrt, feature_ids_eating_establishment, feature_ids_taxi_stand, raw_num_bus_stop, raw_num_carpark, raw_num_clinic, raw_num_community_center, raw_num_eating_establishment, raw_num_gym, raw_num_hawker_center, raw_num_mall, raw_num_mrt, raw_num_other_public_sports_facility, raw_num_park, raw_num_primary_school, raw_num_secondary_school, raw_num_supermarket, raw_num_taxi_stand, raw_quality_clinic, raw_quality_community_center, raw_quality_gym, raw_quality_hawker_center, raw_quality_mall, raw_quality_other_public_sports_facility, raw_quality_park, raw_quality_primary_school, raw_quality_secondary_school, raw_quality_supermarket,
+                                -- calculate overall score per property, given user weights
+                                num_primary_school * {weight_num_primary_school}
+                                + quality_primary_school * {weight_quality_primary_school}
+                                + num_secondary_school * {weight_num_secondary_school}
+                                + quality_secondary_school * {weight_quality_secondary_school}
+                                + num_hawker_center * {weight_num_hawker_center}
+                                + quality_hawker_center * {weight_quality_hawker_center}
+                                + num_clinic * {weight_num_clinic}
+                                + quality_clinic * {weight_quality_clinic}
+                                + num_other_public_sports_facility * {weight_other_public_sports_facility}
+                                + quality_other_public_sports_facility * {weight_quality_other_public_sports_facility}
+                                + num_gym * {weight_num_gym}
+                                + quality_gym * {weight_quality_gym}
+                                + num_community_center * {weight_num_community_center}
+                                + quality_community_center * {weight_quality_community_center}
+                                + num_park * {weight_num_park}
+                                + quality_park * {weight_quality_park}
+                                + num_mall * {weight_num_mall}
+                                + quality_mall * {weight_quality_mall}
+                                + num_supermarket * {weight_num_supermarket}
+                                + quality_supermarket * {weight_quality_supermarket}
+                                + num_mrt * {weight_num_mrt}
+                                + num_eating_establishment * {weight_num_eating_establishment}
+                                + num_carpark * {weight_num_carpark}
+                                + num_bus_stop* {weight_num_bus_stop}
+                                + num_taxi_stand * {weight_num_taxi_stand}
+                                as overall_score
+                         FROM properties
+                         WHERE price_per_sqm>={min_price_per_sq_m} and price_per_sqm<={max_price_per_sq_m}
+                         AND """ + district_str + """
+                         ORDER BY overall_score desc, price_per_sqm desc
+                         LIMIT 5
+                """
+        conn = sql.connect(DB_FILEPATH)
         matches = pd.read_sql_query(query, conn)
-
-        print("print dataframe returned by query", matches)
 
         colnames_to_drop = []
         for colname in matches.columns:
             if 'raw_' in colname:
                 matches.loc[:, colname.lstrip("raw_")] = matches.loc[:, colname]
                 colnames_to_drop.append(colname)
+
         matches.drop(columns=colnames_to_drop, inplace=True)
 
         # Function to get feature information from the `features` table, given a set of feature_ids.
@@ -126,10 +126,10 @@ def index():
                 feature_ids_str = f"""feature_id in {tuple(feature_ids)}"""
 
             query2 = f"""
-                                SELECT name,num_ratings,avg_rating,lat,long,feature_type,address
-                                FROM features
-                                WHERE """ + feature_ids_str + """
-                            """
+                        SELECT name,num_ratings,avg_rating,lat,long,feature_type,address
+                        FROM features
+                        WHERE """ + feature_ids_str + """
+                    """
 
             features = pd.read_sql_query(query2, conn)
 
@@ -145,9 +145,13 @@ def index():
                 matches[new_colname] = matches.apply(lambda x: get_feature_information(eval(x[colname])), axis=1)
                 colnames_to_drop.append(colname)
         matches.drop(columns=colnames_to_drop, inplace=True)
-
-        return redirect(request.url)
+        return redirect(url_for('map', matches = matches))       #Pass dataframe to map() function that renders OneMap.html
     return render_template("index.html")
+
+@app.route("/map")
+def map():
+    matches = request.args['matches']
+    return render_template("OneMap.html", matches = matches)     #pass matches to OneMap.html
 
 @app.route("/about")
 def about():
