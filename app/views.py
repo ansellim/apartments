@@ -108,14 +108,12 @@ def index():
                 colnames_to_drop.append(colname)
         matches.drop(columns=colnames_to_drop, inplace=True)
 
-        # Get feature data for these
-
+        # Function to get feature information from the `features` table, given a set of feature_ids.
         def get_feature_information(feature_ids):
             '''
             @param feature_ids: a set of feature_ids
-            @return feature information as a dictionary
+            @return feature information as a JSON string
             '''
-            feature_ids = eval(feature_ids)
 
             if len(feature_ids) == 0:
                 return np.nan
@@ -137,11 +135,12 @@ def index():
 
             return json
 
+        # Get the necessary amenities information for each amenities type, and place it inside a new column.
         colnames_to_drop = []
         for colname in matches.columns:
             if 'feature_ids_' in colname:
-                new_colname = colname[12:]
-                matches.loc[:, new_colname] = matches.apply(lambda x: get_feature_information(x[colname]), axis=1)
+                new_colname = str(colname[12:])
+                matches[new_colname] = matches.apply(lambda x: get_feature_information(eval(x[colname])), axis=1)
                 colnames_to_drop.append(colname)
         matches.drop(columns=colnames_to_drop, inplace=True)
 
