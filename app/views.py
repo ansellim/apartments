@@ -151,7 +151,7 @@ def index():
 @app.route("/map")
 def map():
     matches = request.args['matches']
-    return render_template("OneMap.html", matches = matches)     #pass matches to OneMap.html
+    return render_template("map.html", matches = matches)     #pass matches to map.html
 
 @app.route("/about")
 def about():
