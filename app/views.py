@@ -1,5 +1,6 @@
 from app import app
 from flask import render_template, request, redirect, url_for
+from flask import jsonify # Added by Keith #
 import pandas as pd
 import sqlite3 as sql
 import os
@@ -145,13 +146,149 @@ def index():
                 matches[new_colname] = matches.apply(lambda x: get_feature_information(eval(x[colname])), axis=1)
                 colnames_to_drop.append(colname)
         matches.drop(columns=colnames_to_drop, inplace=True)
-        return redirect(url_for('map', matches = matches))       #Pass dataframe to map() function that renders OneMap.html
+        return redirect(url_for('map', matches = matches))       #Pass dataframe to map() function that renders map.html
     return render_template("index.html")
 
 @app.route("/map")
 def map():
     matches = request.args['matches']
     return render_template("map.html", matches = matches)     #pass matches to map.html
+
+
+######################################
+# Added by Keith for testing purpose #
+######################################
+
+@app.route("/GeoJSon_properties")
+def create_GeoJSon():    
+    
+    GeoJSon_properties = [
+    #1 Property details #
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 1,
+            "description": "Property",
+            "name": "119 ANG MO KIO AVE 3",
+            "price_per_sqm": 4451.222288,
+            "overall_score": 11.145,
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.8446989, 1.369563443]
+        }
+    },
+
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 1,
+            "description": "School",
+            "name": "TECK GHEE PRIMARY SCHOOL",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.851009800453, 1.36565018546903]
+        }
+    },
+
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 1,
+            "description": "Mall",
+            "name": "AMK Hub",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.8484398, 1.36953]
+        }
+    },
+
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 1,
+            "description": "Supermarket",
+            "name": "SHENG SIONG SUPERMARKET",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.843413231524, 1.37018860668947]
+        }
+    },
+
+    #2 Property details #
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 2,
+            "description": "Property",
+            "name": "120 ANG MO KIO AVE 3",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.8445948, 1.370047397]
+        }
+    },
+
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 2,
+            "description": "School",
+            "name": "TECK GHEE PRIMARY SCHOOL",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.851009800453, 1.36565018546903]
+        }
+    },
+
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 2,
+            "description": "Mall",
+            "name": "AMK Hub",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.8484398, 1.36953]
+        }
+    },
+
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 2,
+            "description": "Supermarket",
+            "name": "SHENG SIONG SUPERMARKET",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.843413231524, 1.37018860668947]
+        }
+    },
+    
+    #3 Property details #
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 3,
+            "description": "Property",
+            "name": "201 ANG MO KIO AVE 3",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.8445648, 1.368849627]
+        }
+    }
+]
+    return jsonify(GeoJSon_properties)
+
+# End of code added by Keith #
+##############################
 
 @app.route("/about")
 def about():

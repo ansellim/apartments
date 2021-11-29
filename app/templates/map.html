@@ -8,7 +8,7 @@ crossorigin=""/>
 integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
 crossorigin=""></script>
 
-<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <body>
 <div id='map' style='height:550px; width: 1000px;'></div>
@@ -28,21 +28,20 @@ var tempLatLong = {latitude: 1.2901276549478262, longitude: 103.81655234786841, 
 
 // icon variables //
 var hse_icon = L.icon({
-    iconUrl: "icons/hse.jpg",
+    //iconUrl: "../icons/hse.jpg",
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/hse.jpg') }}",    
     iconSize: [25, 25], // size of the icon
-    //iconAnchor:   [40, 40], // point of the icon which will correspond to marker's location
-    //popupAnchor:  [50, 50] // point from which the popup should open relative to the iconAnchor
 });
 var sch_icon = L.icon({
-    iconUrl: "icons/sch.png",
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/sch.png') }}",
     iconSize: [20, 20], // size of the icon
 });
 var mall_icon = L.icon({
-    iconUrl: "icons/mall.png",
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/mall.png') }}",
     iconSize: [20, 20], // size of the icon
 });
 var mkt_icon = L.icon({
-    iconUrl: "icons/mkt.jpg",
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/mkt.jpg') }}",
     iconSize: [20, 20], // size of the icon
 });
 
@@ -99,7 +98,7 @@ function pointToLayer (feature, latlng) {
 
 function onClick(e) {
     
-    //map.fitBounds([e.latlng])
+    map.fitBounds([e.latlng])
 
     if (features_layer == null) {
         showFeatures(e.sourceTarget.feature.properties.item)
@@ -111,7 +110,7 @@ function onClick(e) {
 }
 
 function showFeatures(item) {
-    features_layer = L.geoJSON(testGeoJSon_properties, {
+    features_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
@@ -125,6 +124,11 @@ function hideFeatures() {
 }
 
 // global variables //
+var features_visible = false
+var GeoJSon_properties 
+var property_layer
+var features_layer
+
 var testGeoJSon_properties = [
     // #1 Property //
     {
@@ -249,8 +253,6 @@ var testGeoJSon_properties = [
     }
 ];
 
-var features_visible = false
-var features_layer
 
 // map variables //
 var default_map = L.tileLayer("https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png", {detectRetina: true, maxZoom: 18, minZoom: 11});
@@ -259,21 +261,23 @@ var map = L.map('map', {center: [1.355, 103.81], zoom: 12 }); //layers: [default
 // layer variables //
 var base_maps = { "Default": default_map };
 var overlay_maps = {}; //var overlayMaps = { //"Boundaries" : boundaries, //"Locations": locations };
-
 //var area_layer = L.geoJSON(null, {onEachFeature: onEachFeature, style: onEachStyle}).addTo(map);
 
-var property_layer = L.geoJSON(testGeoJSon_properties, {
-    onEachFeature: onEachFeature,
-    pointToLayer: pointToLayer,
-    filter: function(feature, layer) {
-        if (feature.properties.description == "Property") return true;
-    }   
-}).on('click', onClick)
+axios.get('http://127.0.0.1:5000/GeoJSon_properties').then(response => {
+    GeoJSon_properties = response.data;
+    
+    property_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.description == "Property") return true;
+        }   
+    }).on('click', onClick)
 
-default_map.addTo(map);
-property_layer.addTo(map);
-//map.fitBounds(property_layer)
-          
+    default_map.addTo(map);
+    property_layer.addTo(map);
+    //map.fitBounds(property_layer)
+})
 
 </script>
 </body>
