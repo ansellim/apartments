@@ -93,11 +93,14 @@ function pointToLayer (feature, latlng) {
         case "Property": return L.marker(latlng, {icon: hse_icon});
         case "School": return L.marker(latlng, {icon: sch_icon});
         case "Mall": return L.marker(latlng, {icon: mall_icon});
-        case "Market": return L.marker(latlng, {icon: mkt_icon});
+        case "Supermarket": return L.marker(latlng, {icon: mkt_icon});
     }
 }
 
 function onClick(e) {
+    
+    //map.fitBounds([e.latlng])
+
     if (features_layer == null) {
         showFeatures(e.sourceTarget.feature.properties.item)
     }
@@ -129,12 +132,26 @@ var testGeoJSon_properties = [
         "properties": {
             "item": 1,
             "description": "Property",
-            "name": "FORTE SUITES", // "popupContent": "#1 Property"
-            "show_on_map": true
+            "name": "119 ANG MO KIO AVE 3", // "popupContent": "#1 Property"
+            "price_per_sqm": 4451.222288,
+            "overall_score": 11.145,
         },
         "geometry": {
             "type": "Point",
-            "coordinates": [103.8519705, 1.317827996]
+            "coordinates": [103.8446989, 1.369563443]
+        }
+    },
+
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 1,
+            "description": "School",
+            "name": "TECK GHEE PRIMARY SCHOOL",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.851009800453, 1.36565018546903]
         }
     },
 
@@ -143,27 +160,51 @@ var testGeoJSon_properties = [
         "properties": {
             "item": 1,
             "description": "Mall",
-            "name": "City Square Mall",
-            "show_on_map": true
+            "name": "AMK Hub",
         },
         "geometry": {
             "type": "Point",
-            "coordinates": [103.8561608, 1.3114516]
+            "coordinates": [103.8484398, 1.36953]
         }
     },
-    
+
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 1,
+            "description": "Supermarket",
+            "name": "SHENG SIONG SUPERMARKET",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.843413231524, 1.37018860668947]
+        }
+    },
+
     // #2 Property //
     {
         "type": "Feature",
         "properties": {
             "item": 2,
             "description": "Property",
-            "name": "CITYSCAPE @FARRER PARK",
-            "show_on_map": true
+            "name": "120 ANG MO KIO AVE 3",
         },
         "geometry": {
             "type": "Point",
-            "coordinates": [103.8515937, 1.318021994]
+            "coordinates": [103.8445948, 1.370047397]
+        }
+    },
+
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 2,
+            "description": "School",
+            "name": "TECK GHEE PRIMARY SCHOOL",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.851009800453, 1.36565018546903]
         }
     },
 
@@ -172,15 +213,42 @@ var testGeoJSon_properties = [
         "properties": {
             "item": 2,
             "description": "Mall",
-            "name": "100 AM",
-            "show_on_map": true
+            "name": "AMK Hub",
         },
         "geometry": {
             "type": "Point",
-            "coordinates": [103.8435656, 1.2750063]
+            "coordinates": [103.8484398, 1.36953]
+        }
+    },
+
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 2,
+            "description": "Supermarket",
+            "name": "SHENG SIONG SUPERMARKET",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.843413231524, 1.37018860668947]
+        }
+    },
+    
+    // #3 Property //
+    {
+        "type": "Feature",
+        "properties": {
+            "item": 3,
+            "description": "Property",
+            "name": "201 ANG MO KIO AVE 3",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [103.8445648, 1.368849627]
         }
     }
 ];
+
 var features_visible = false
 var features_layer
 
@@ -204,67 +272,7 @@ var property_layer = L.geoJSON(testGeoJSon_properties, {
 
 default_map.addTo(map);
 property_layer.addTo(map);
-
-
-//L.geoJSON(testGeoJSon_property1).addTo(map);
-
-
-
-//var property_layer = L.geoJSON().addTo(map);
-//property_layer.addData(testGeoJSon_properties, {onEachFeature: onEachFeature});
-
-
-
-
-
-
-
-
-
-
-
-//L.geoJSON(testGeoJSon_properties).addTo(map);
-
-
-
-
-
-
-    //var zones = L.geoJSON().addTo(map);
-    //var locations = L.layerGroup(positions);
-    //var boundaries = omnivore.kml(boundary_file, null, customLayer)
-
-    //L.control.layers(baseMaps, overlayMaps).addTo(map);
-    
-    //omnivore.geojson('map.geojson').addTo(map);
-
-    //L.geoJSON('map.geojson').addTo(map);
-  
-    //omnivore.kml(boundary_file).addTo(map);
-    
-    //AllPlanningAreas()
-
-//var locations = L.layerGroup(positions);
-//console.log(positions)
-
-//var center = L.bounds([1.55, 104.12], [1.16, 103.50]).getCenter();
-//var OneMap = L.map('map').setView([center.x, center.y], 12);
-//console.log(center.x, center.y) // 1.355, 103.81
-//var BaseMap = L.tileLayer("https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png", { //https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png
-//    detectRetina: true, maxZoom: 18, minZoom: 11
-//}).addTo(OneMap);
-
-//showPosition(map, testlocationLatLong1);
-//showPosition(map, testlocationLatLong2);
-
-//var polygon = L.polygon([ [51.509, -0.08],[51.503, -0.06], [51.51, -0.047] ]).addTo(OneMap);
-//var circle = L.circle([51.508, -0.11], { color: 'red', fillColor: '#f03', fillOpacity: 0.5, radius: 500 }).addTo(OneMap);
-//marker = new L.Marker([position.coords.latitude, position.coords.longitude], {bounceOnAdd: false}).addTo(map);             
-//var popup = L.popup();
-  
-//OneMap.on('locationfound', onLocationFound);
-//map.on('click', onMapClick);
-
+//map.fitBounds(property_layer)
           
 
 </script>
