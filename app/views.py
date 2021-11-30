@@ -1,6 +1,7 @@
 from app import app
 from flask import render_template, request, redirect, url_for
 from flask import jsonify # Added by Keith #
+import json
 import pandas as pd
 import sqlite3 as sql
 import os
@@ -146,13 +147,61 @@ def index():
                 matches[new_colname] = matches.apply(lambda x: get_feature_information(eval(x[colname])), axis=1)
                 colnames_to_drop.append(colname)
         matches.drop(columns=colnames_to_drop, inplace=True)
-        return redirect(url_for('map', matches = matches))       #Pass dataframe to map() function that renders map.html
+
+        #function that takes in one amenity for a given feature and return GeoJson format
+        def get_amenity_geojson(amenity, index, description):
+            feature = {'type':'Feature',
+                       'properties':{},
+                       'geometry':{'type':'Point',
+                                   'coordinates':[]}}
+            feature['geometry']['coordinates'] = [float(amenity["long"]),float(amenity["lat"])]
+            feature['properties']['item'] = index + 1
+            feature['properties']['description'] = description
+            feature['properties']['name'] = amenity['name']
+            return feature
+
+        #Convert dataframe to GeoJson format
+        geojson_list = []
+        for index, row in matches.iterrows():
+            #Add property to geojson list
+            feature = {'type':'Feature',
+                       'properties':{},
+                       'geometry':{'type':'Point',
+                                   'coordinates':[]}}
+            feature['geometry']['coordinates'] = [row["long"],row["lat"]]
+            feature['properties']['item'] = index + 1
+            feature['properties']['description'] = 'Property'
+            feature['properties']['name'] = row['project']
+            feature['properties']['price_per_sqm'] = row['price_per_sqm']
+            feature['properties']['overall_score'] = row['overall_score']
+            geojson_list.append(feature)
+
+            #For given property, add amenity to geojson list
+            for amenity in json.loads(row.eating_establishment):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Eating Establishment')
+                geojson_list.append(feature)
+
+            for amenity in json.loads(row.primary_school):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Primary School')
+                geojson_list.append(feature)
+
+            for amenity in json.loads(row.mall):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Mall')
+                geojson_list.append(feature)
+
+            for amenity in json.loads(row.supermarket):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Supermarket')
+                geojson_list.append(feature)
+
+        #print(geojson_list)
+        return redirect(url_for('map', geojson_response = jsonify(geojson_list)))       #Pass matches in geojson format to map() function that renders map.html
     return render_template("index.html")
 
 @app.route("/map")
 def map():
-    matches = request.args['matches']
-    return render_template("map.html", matches = matches)     #pass matches to map.html
+    geojson_response_str = request.args['geojson_response']
+    geojson_response = jsonify(geojson_response_str)
+    return render_template("map.html", geojson_response = geojson_response)     #pass matches in geojson format to map.html
 
 
 ######################################
@@ -160,8 +209,8 @@ def map():
 ######################################
 
 @app.route("/GeoJSon_properties")
-def create_GeoJSon():    
-    
+def create_GeoJSon():
+
     GeoJSon_properties = [
     #1 Property details #
     {
@@ -270,7 +319,7 @@ def create_GeoJSon():
             "coordinates": [103.843413231524, 1.37018860668947]
         }
     },
-    
+
     #3 Property details #
     {
         "type": "Feature",
