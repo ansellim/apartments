@@ -221,7 +221,7 @@ def create_GeoJSon():
 @app.route("/GeoJSon_testing")
 def create_GeoJSon_object():
 
-    GeoJSon_properties = [
+    GeoJSon_samples = [
     #1 Property details #
     {
         "type": "Feature",
@@ -344,7 +344,7 @@ def create_GeoJSon_object():
         }
     }
 ]
-    return jsonify(GeoJSon_properties)
+    return jsonify(GeoJSon_samples)
 
 # End of code added by Keith #
 ##############################
