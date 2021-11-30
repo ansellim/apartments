@@ -104,6 +104,9 @@ def index():
         conn = sql.connect(DB_FILEPATH)
         matches = pd.read_sql_query(query, conn)
 
+        if matches.empty:
+            raise ValueError("Oops! There are no available housing projects for this selection. Please try again.")
+
         colnames_to_drop = []
         for colname in matches.columns:
             if 'raw_' in colname:
