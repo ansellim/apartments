@@ -7,6 +7,7 @@ import sqlite3 as sql
 import os
 
 DB_FILEPATH = os.getcwd() + '/data/database.db'
+geojson_list = []
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -164,7 +165,7 @@ def index():
             return feature
 
         #Convert dataframe to GeoJson format
-        geojson_list = []
+        #geojson_list = []
         for index, row in matches.iterrows():
             #Add property to geojson list
             feature = {'type':'Feature',
@@ -200,6 +201,7 @@ def index():
         return redirect(url_for('map', geojson_response = jsonify(geojson_list)))       #Pass matches in geojson format to map() function that renders map.html
     return render_template("index.html")
 
+
 @app.route("/map")
 def map():
     geojson_response_str = request.args['geojson_response']
@@ -207,12 +209,17 @@ def map():
     return render_template("map.html", geojson_response = geojson_response)     #pass matches in geojson format to map.html
 
 
+@app.route("/GeoJSon_properties")
+def create_GeoJSon():
+    return jsonify(geojson_list)
+
+
 ######################################
 # Added by Keith for testing purpose #
 ######################################
 
-@app.route("/GeoJSon_properties")
-def create_GeoJSon():
+@app.route("/GeoJSon_testing")
+def create_GeoJSon_object():
 
     GeoJSon_properties = [
     #1 Property details #
