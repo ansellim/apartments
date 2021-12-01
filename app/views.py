@@ -5,6 +5,7 @@ import json
 import pandas as pd
 import sqlite3 as sql
 import os
+import numpy as np
 
 DB_FILEPATH = os.getcwd() + '/data/database.db'
 geojson_list = []
@@ -106,7 +107,8 @@ def index():
         matches = pd.read_sql_query(query, conn)
 
         if matches.empty:
-            raise ValueError("Oops! There are no available housing projects for this selection. Please try again.")
+            return render_template("no_results.html")
+            # raise ValueError("Oops! There are no available housing projects for this selection. Please try again.")
 
         colnames_to_drop = []
         for colname in matches.columns:
@@ -349,10 +351,6 @@ def create_GeoJSon_object():
 # End of code added by Keith #
 ##############################
 
-@app.route("/about")
-def about():
-    return """
-    <h1 style='color: red;'>I'm a red H1 heading!</h1>
-    <p>This is a lovely little paragraph</p>
-    <code>Flask is <em>awesome</em></code>
-    """
+@app.route("/no_results")
+def no_results():
+    return render_template("no_results.html")
