@@ -11,7 +11,7 @@ crossorigin=""></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <body>
-<div id='map' style='height:550px; width: 1000px;'></div>
+<div id='map' style='height:100%; width:100%;'></div>
 
 <script>
 
@@ -30,20 +30,78 @@ var tempLatLong = {latitude: 1.2901276549478262, longitude: 103.81655234786841, 
 var hse_icon = L.icon({
     //iconUrl: "../icons/hse.jpg",
     iconUrl: "{{ url_for('static', filename='/bulma/icons/hse.jpg') }}",    
-    iconSize: [25, 25], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
-var sch_icon = L.icon({
-    iconUrl: "{{ url_for('static', filename='/bulma/icons/sch.png') }}",
-    iconSize: [20, 20], // size of the icon
+
+
+var clinic_icon = L.icon({
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/clinic.png') }}",
+    iconSize: [15, 15], // size of the icon
+});
+var cc_icon = L.icon({
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/cc.png') }}",
+    iconSize: [15, 15], // size of the icon
+});
+var gym_icon = L.icon({
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/gym.jpg') }}",
+    iconSize: [15, 15], // size of the icon
+});
+var hawker_icon = L.icon({
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/hawker.jpg') }}",
+    iconSize: [15, 15], // size of the icon
 });
 var mall_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/mall.png') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
+});
+
+
+var sport_icon = L.icon({
+    //iconUrl: "../icons/hse.jpg",
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/sport.png') }}",    
+    iconSize: [15, 15], // size of the icon
+});
+var park_icon = L.icon({
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/park.png') }}",
+    iconSize: [15, 15], // size of the icon
+});
+var psch_icon = L.icon({
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/psch.jpg') }}",
+    iconSize: [15, 15], // size of the icon
+});
+var ssch_icon = L.icon({
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/ssch.png') }}",
+    iconSize: [15, 15], // size of the icon
 });
 var mkt_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/mkt.jpg') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
+
+
+var busstop_icon = L.icon({
+    //iconUrl: "../icons/hse.jpg",
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/busstop.png') }}",    
+    iconSize: [15, 15], // size of the icon
+});
+var carpark_icon = L.icon({
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/carpark.png') }}",
+    iconSize: [15, 15], // size of the icon
+});
+var mrt_icon = L.icon({
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/mrt.png') }}",
+    iconSize: [15, 15], // size of the icon
+});
+var eating_icon = L.icon({
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/eating.png') }}",
+    iconSize: [15, 15], // size of the icon
+});
+var taxistand_icon = L.icon({
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/taxistand.jpg') }}",
+    iconSize: [15, 15], // size of the icon
+});
+
+
 
 // OneMap APIs //
 function nameSearch(){
@@ -90,44 +148,224 @@ function onEachFeature (feature, layer) {
 function pointToLayer (feature, latlng) {
     switch (feature.properties.description) {
         case "Property": return L.marker(latlng, {icon: hse_icon});
-        case "School": return L.marker(latlng, {icon: sch_icon});
-        case "Mall": return L.marker(latlng, {icon: mall_icon});
+
+        case "School": return L.marker(latlng, {icon: clinic_icon});
+        case "Mall": return L.marker(latlng, {icon: cc_icon});
+        case "Supermarket": return L.marker(latlng, {icon: gym_icon});
+        case "Supermarket": return L.marker(latlng, {icon: hawker_icon});
+        case "Supermarket": return L.marker(latlng, {icon: mall_icon});
+
+        case "School": return L.marker(latlng, {icon: sport_icon});
+        case "Mall": return L.marker(latlng, {icon: park_icon});
+        case "Supermarket": return L.marker(latlng, {icon: psch_icon});
+        case "Supermarket": return L.marker(latlng, {icon: ssch_icon});
         case "Supermarket": return L.marker(latlng, {icon: mkt_icon});
+
+        case "School": return L.marker(latlng, {icon: busstop_icon});
+        case "Mall": return L.marker(latlng, {icon: carpark_icon});
+        case "Supermarket": return L.marker(latlng, {icon: mrt_icon});
+        case "Supermarket": return L.marker(latlng, {icon: eating_icon});
+        case "Supermarket": return L.marker(latlng, {icon: taxistand_icon});
     }
 }
 
 function onClick(e) {
     
     map.fitBounds([e.latlng])
-
-    if (features_layer == null) {
-        showFeatures(e.sourceTarget.feature.properties.item)
+    //map.fitBounds(DistrictLayer.getBounds())
+    
+    if (controlLayers._layers.length > 0 ) {
+        resetFeatures()
     }
-    else {
-        hideFeatures()
-        showFeatures(e.sourceTarget.feature.properties.item)
-    }    
+    
+    showFeatures(e.sourceTarget.feature.properties.item)
+
 }
 
 function showFeatures(item) {
-    features_layer = L.geoJSON(GeoJSon_properties, {
+    
+    // Feature #1 to #5 //
+    clinic_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description != "Property") return true;
+            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
         }
-    }).addTo(map);
+    })
+    
+    cc_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+        }
+    })
+    
+    gym_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+        }
+    })
+
+    hawker_center_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+        }
+    })
+
+    mall_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Mall") return true;
+        }
+    })
+
+    // Feature #6 to #10 //
+
+    sport_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+        }
+    })
+
+    park_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+        }
+    })
+
+    pschool_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+        }
+    })
+
+    sschool_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+        }
+    })
+
+    supermarket_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
+        }
+    })
+
+    // Feature #11 to #15 //
+    bus_stop_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
+        }
+    })
+
+    carpark_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
+        }
+    })
+
+    mrt_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
+        }
+    })
+
+    eating_establishment_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
+        }
+    })
+
+    taxi_stand_layer = L.geoJSON(GeoJSon_properties, {
+        onEachFeature: onEachFeature,
+        pointToLayer: pointToLayer,
+        filter: function(feature, layer) {
+            if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
+        }
+    })
+
+     bus_stop_layer, carpark_layer, mrt_layer, eating_establishment_layer, taxi_stand_layer
+    
+    controlLayers.addOverlay(clinic_layer, "Clinics").addTo(map);
+    controlLayers.addOverlay(cc_layer, "Community Centers").addTo(map);
+    controlLayers.addOverlay(gym_layer, "Gyms").addTo(map);
+    controlLayers.addOverlay(hawker_center_layer, "Hawker Centers").addTo(map);    
+    controlLayers.addOverlay(mall_layer, "Malls").addTo(map);
+
+    controlLayers.addOverlay(sport_layer, "Sports").addTo(map);
+    controlLayers.addOverlay(park_layer, "Parks").addTo(map);
+    controlLayers.addOverlay(pschool_layer, "Primary Schools").addTo(map);
+    controlLayers.addOverlay(sschool_layer, "Secondary Schools").addTo(map);
+    controlLayers.addOverlay(supermarket_layer, "Supermarkets").addTo(map);
+
+    controlLayers.addOverlay(bus_stop_layer, "Bus Stops").addTo(map);
+    controlLayers.addOverlay(carpark_layer, "Carparks").addTo(map);
+    controlLayers.addOverlay(mrt_layer, "Train Stations").addTo(map);
+    controlLayers.addOverlay(eating_establishment_layer, "Eating Establishments").addTo(map);
+    controlLayers.addOverlay(taxi_stand_layer, "Taxi Stands").addTo(map);
+
 }
 
-function hideFeatures() {
-    map.removeLayer(features_layer);
+
+function resetFeatures() {
+    controlLayers.removeLayer(clinic_layer)
+    controlLayers.removeLayer(cc_layer)
+    controlLayers.removeLayer(gym_layer)
+    controlLayers.removeLayer(hawker_center_layer)   
+    controlLayers.removeLayer(mall_layer)
+    
+    controlLayers.removeLayer(sport_layer)
+    controlLayers.removeLayer(park_layer)
+    controlLayers.removeLayer(pschool_layer)
+    controlLayers.removeLayer(sschool_layer)
+    controlLayers.removeLayer(supermarket_layer)
+
+    controlLayers.removeLayer(bus_stop_layer)
+    controlLayers.removeLayer(carpark_layer)
+    controlLayers.removeLayer(mrt_layer)
+    controlLayers.removeLayer(eating_establishment_layer)
+    controlLayers.removeLayer(taxi_stand_layer)
+
+    //controlLayers.eachLayer(function (layer) {
+    //    controlLayers.removeLayer(layer)
+    //    console.log(1)
+    //});
+
+    //markers.clearLayers();
+    //map.removeLayer(supermarket_layer);
 }
 
 // global variables //
 var features_visible = false
-var GeoJSon_properties 
+var GeoJSon_properties
+ 
 var property_layer
-var features_layer
+var clinic_layer, cc_layer, gym_layer, hawker_center_layer, mall_layer, sport_layer, park_layer, pschool_layer, sschool_layer, supermarket_layer, bus_stop_layer, carpark_layer, mrt_layer, eating_establishment_layer, taxi_stand_layer
+
 
 var testGeoJSon_properties = [
     // #1 Property //
@@ -257,10 +495,13 @@ var testGeoJSon_properties = [
 // map variables //
 var default_map = L.tileLayer("https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png", {detectRetina: true, maxZoom: 18, minZoom: 11});
 var map = L.map('map', {center: [1.355, 103.81], zoom: 12 }); //layers: [default_map]
+var controlLayers = L.control.layers()
+
 
 // layer variables //
 var base_maps = { "Default": default_map };
-var overlay_maps = {}; //var overlayMaps = { //"Boundaries" : boundaries, //"Locations": locations };
+var overlay_maps = {};
+//var overlayMaps = { //"Boundaries" : boundaries, //"Locations": locations };
 //var area_layer = L.geoJSON(null, {onEachFeature: onEachFeature, style: onEachStyle}).addTo(map);
 
 axios.get('http://127.0.0.1:5000/GeoJSon_properties').then(response => {
