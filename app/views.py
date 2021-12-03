@@ -183,20 +183,66 @@ def index():
             geojson_list.append(feature)
 
             #For given property, add amenity to geojson list
-            for amenity in json.loads(row.eating_establishment):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Eating Establishment')
+            for amenity in json.loads(row.clinic):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Clinic')
                 geojson_list.append(feature)
 
-            for amenity in json.loads(row.primary_school):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Primary School')
+            for amenity in json.loads(row.community_center):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Community Center')
+                geojson_list.append(feature)
+
+            for amenity in json.loads(row.gym):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Gym')
+                geojson_list.append(feature)
+
+            for amenity in json.loads(row.hawker_center):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Hawker Center')
                 geojson_list.append(feature)
 
             for amenity in json.loads(row.mall):
                 feature = get_amenity_geojson(amenity=amenity, index=index, description='Mall')
                 geojson_list.append(feature)
 
+
+            for amenity in json.loads(row.other_public_sports_facility):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Sport')
+                geojson_list.append(feature)
+
+            for amenity in json.loads(row.park):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Park')
+                geojson_list.append(feature)
+
+            for amenity in json.loads(row.primary_school):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Primary School')
+                geojson_list.append(feature)
+
+            for amenity in json.loads(row.secondary_school):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Secondary School')
+                geojson_list.append(feature)
+
             for amenity in json.loads(row.supermarket):
                 feature = get_amenity_geojson(amenity=amenity, index=index, description='Supermarket')
+                geojson_list.append(feature)
+
+
+            for amenity in json.loads(row.bus_stop):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Bus Stop')
+                geojson_list.append(feature)
+
+            for amenity in json.loads(row.carpark):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Carpark')
+                geojson_list.append(feature)
+
+            for amenity in json.loads(row.mrt):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Mrt')
+                geojson_list.append(feature)
+
+            for amenity in json.loads(row.eating_establishment):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Eating')
+                geojson_list.append(feature)
+
+            for amenity in json.loads(row.taxi_stand):
+                feature = get_amenity_geojson(amenity=amenity, index=index, description='Taxi Stand')
                 geojson_list.append(feature)
 
         #print(geojson_list)

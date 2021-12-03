@@ -30,75 +30,73 @@ var tempLatLong = {latitude: 1.2901276549478262, longitude: 103.81655234786841, 
 var hse_icon = L.icon({
     //iconUrl: "../icons/hse.jpg",
     iconUrl: "{{ url_for('static', filename='/bulma/icons/hse.jpg') }}",    
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 
 
 var clinic_icon = L.icon({
-    iconUrl: "{{ url_for('static', filename='/bulma/icons/clinic.png') }}",
-    iconSize: [15, 15], // size of the icon
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/clinic.jpg') }}",
+    iconSize: [20, 20], // size of the icon
 });
 var cc_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/cc.png') }}",
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 var gym_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/gym.jpg') }}",
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 var hawker_icon = L.icon({
-    iconUrl: "{{ url_for('static', filename='/bulma/icons/hawker.jpg') }}",
-    iconSize: [15, 15], // size of the icon
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/hawker.png') }}",
+    iconSize: [20, 20], // size of the icon
 });
 var mall_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/mall.png') }}",
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 
 
 var sport_icon = L.icon({
-    //iconUrl: "../icons/hse.jpg",
     iconUrl: "{{ url_for('static', filename='/bulma/icons/sport.png') }}",    
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 var park_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/park.png') }}",
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 var psch_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/psch.jpg') }}",
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 var ssch_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/ssch.png') }}",
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 var mkt_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/mkt.jpg') }}",
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 
 
 var busstop_icon = L.icon({
-    //iconUrl: "../icons/hse.jpg",
     iconUrl: "{{ url_for('static', filename='/bulma/icons/busstop.png') }}",    
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 var carpark_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/carpark.png') }}",
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 var mrt_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/mrt.png') }}",
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 var eating_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/eating.png') }}",
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 var taxistand_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/taxistand.jpg') }}",
-    iconSize: [15, 15], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 
 
@@ -142,30 +140,40 @@ function GeoLatLong(input, PopUp_flag){
 
 // functions //
 function onEachFeature (feature, layer) {
-    layer.bindPopup("Name: <b>" + feature.properties.name + "</b>");
+
+    if (feature.properties.description == "Property") {
+
+        layer.bindPopup("Name: <b>" + feature.properties.name +
+                        "</b><br>Price/Sqm: <b>$" + Math.round(feature.properties.price_per_sqm) +
+                        "</b><br>Overall Score: <b>" + feature.properties.overall_score);
+
+    } else {
+        layer.bindPopup("Name: <b>" + feature.properties.name + "</b>");
+    }
+
 }
 
 function pointToLayer (feature, latlng) {
     switch (feature.properties.description) {
         case "Property": return L.marker(latlng, {icon: hse_icon});
 
-        case "School": return L.marker(latlng, {icon: clinic_icon});
-        case "Mall": return L.marker(latlng, {icon: cc_icon});
-        case "Supermarket": return L.marker(latlng, {icon: gym_icon});
-        case "Supermarket": return L.marker(latlng, {icon: hawker_icon});
-        case "Supermarket": return L.marker(latlng, {icon: mall_icon});
+        case "Clinic": return L.marker(latlng, {icon: clinic_icon});
+        case "Community Center": return L.marker(latlng, {icon: cc_icon});
+        case "Gym": return L.marker(latlng, {icon: gym_icon});
+        case "Hawker Center": return L.marker(latlng, {icon: hawker_icon});
+        case "Mall": return L.marker(latlng, {icon: mall_icon});
 
-        case "School": return L.marker(latlng, {icon: sport_icon});
-        case "Mall": return L.marker(latlng, {icon: park_icon});
-        case "Supermarket": return L.marker(latlng, {icon: psch_icon});
-        case "Supermarket": return L.marker(latlng, {icon: ssch_icon});
+        case "Sport": return L.marker(latlng, {icon: sport_icon});
+        case "Park": return L.marker(latlng, {icon: park_icon});
+        case "Primary School": return L.marker(latlng, {icon: psch_icon});
+        case "Secondary School": return L.marker(latlng, {icon: ssch_icon});
         case "Supermarket": return L.marker(latlng, {icon: mkt_icon});
 
-        case "School": return L.marker(latlng, {icon: busstop_icon});
-        case "Mall": return L.marker(latlng, {icon: carpark_icon});
-        case "Supermarket": return L.marker(latlng, {icon: mrt_icon});
-        case "Supermarket": return L.marker(latlng, {icon: eating_icon});
-        case "Supermarket": return L.marker(latlng, {icon: taxistand_icon});
+        case "Bus Stop": return L.marker(latlng, {icon: busstop_icon});
+        case "Carpark": return L.marker(latlng, {icon: carpark_icon});
+        case "Mrt": return L.marker(latlng, {icon: mrt_icon});
+        case "Eating": return L.marker(latlng, {icon: eating_icon});
+        case "Taxi Stand": return L.marker(latlng, {icon: taxistand_icon});
     }
 }
 
@@ -189,7 +197,7 @@ function showFeatures(item) {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+            if (feature.properties.item == item && feature.properties.description == "Clinic") return true;
         }
     })
     
@@ -197,7 +205,7 @@ function showFeatures(item) {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+            if (feature.properties.item == item && feature.properties.description == "Community Center") return true;
         }
     })
     
@@ -205,7 +213,7 @@ function showFeatures(item) {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+            if (feature.properties.item == item && feature.properties.description == "Gym") return true;
         }
     })
 
@@ -213,7 +221,7 @@ function showFeatures(item) {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+            if (feature.properties.item == item && feature.properties.description == "Hawker Center") return true;
         }
     })
 
@@ -231,7 +239,7 @@ function showFeatures(item) {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+            if (feature.properties.item == item && feature.properties.description == "Sport") return true;
         }
     })
 
@@ -239,7 +247,7 @@ function showFeatures(item) {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+            if (feature.properties.item == item && feature.properties.description == "Park") return true;
         }
     })
 
@@ -255,7 +263,7 @@ function showFeatures(item) {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+            if (feature.properties.item == item && feature.properties.description == "Secondary School") return true;
         }
     })
 
@@ -272,7 +280,7 @@ function showFeatures(item) {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
+            if (feature.properties.item == item && feature.properties.description == "Bus Stop") return true;
         }
     })
 
@@ -280,7 +288,7 @@ function showFeatures(item) {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
+            if (feature.properties.item == item && feature.properties.description == "Carpark") return true;
         }
     })
 
@@ -288,7 +296,7 @@ function showFeatures(item) {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
+            if (feature.properties.item == item && feature.properties.description == "Mrt") return true;
         }
     })
 
@@ -296,7 +304,7 @@ function showFeatures(item) {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
+            if (feature.properties.item == item && feature.properties.description == "Eating") return true;
         }
     })
 
@@ -304,11 +312,9 @@ function showFeatures(item) {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
         filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
+            if (feature.properties.item == item && feature.properties.description == "Taxi Stand") return true;
         }
     })
-
-     bus_stop_layer, carpark_layer, mrt_layer, eating_establishment_layer, taxi_stand_layer
     
     controlLayers.addOverlay(clinic_layer, "Clinics").addTo(map);
     controlLayers.addOverlay(cc_layer, "Community Centers").addTo(map);
@@ -332,6 +338,7 @@ function showFeatures(item) {
 
 
 function resetFeatures() {
+    // remove from layer control //
     controlLayers.removeLayer(clinic_layer)
     controlLayers.removeLayer(cc_layer)
     controlLayers.removeLayer(gym_layer)
@@ -350,10 +357,24 @@ function resetFeatures() {
     controlLayers.removeLayer(eating_establishment_layer)
     controlLayers.removeLayer(taxi_stand_layer)
 
-    //controlLayers.eachLayer(function (layer) {
-    //    controlLayers.removeLayer(layer)
-    //    console.log(1)
-    //});
+    // remove from map  //
+    map.removeLayer(clinic_layer)
+    map.removeLayer(cc_layer)
+    map.removeLayer(gym_layer)
+    map.removeLayer(hawker_center_layer)   
+    map.removeLayer(mall_layer)
+
+    map.removeLayer(sport_layer)
+    map.removeLayer(park_layer)
+    map.removeLayer(pschool_layer)
+    map.removeLayer(sschool_layer)
+    map.removeLayer(supermarket_layer)
+
+    map.removeLayer(bus_stop_layer)
+    map.removeLayer(carpark_layer)
+    map.removeLayer(mrt_layer)
+    map.removeLayer(eating_establishment_layer)
+    map.removeLayer(taxi_stand_layer)
 
     //markers.clearLayers();
     //map.removeLayer(supermarket_layer);
