@@ -2,12 +2,12 @@
 
 Ansel Lim, 27 November 2021.
 
-Create database from csv files.
+Create SQLite database from csv files. This was run after quantity and quality data had already been completed.
 
 Inputs:
 
-1. features.csv: a dataframe of 32,695 amenities (features).
-2. df_with_features.csv: a dataframe of 10,614 properties. Each property has quality and quantity scores for various amenities (features) within a 1 kilometer radius.
+1. features.csv: a dataframe of around 32,695 amenities (features).
+2. df_with_features.csv: a dataframe of around 10,614 properties. Each property has quality and quantity scores for various amenities (features) within a 1 kilometer radius.
 3. df_with_features_binned.csv: the same data as df_with_features.csv, but with the quality and quantity scores binned into quartiles (encoding of quartile information: first quartile/Q1 --> 0.25, second quartile --> 0.50, third quartile --> 0.75, fourth quartile --> 1.00)
 
 '''

@@ -20,12 +20,13 @@ The objective of this code is to:
 # A flag to indicate whether we are only doing prototyping of the code. If prototyping, we only load small amounts of the data into the code to test out the code.
 prototype = False
 
+import copy
 import os
 import re
 import time
 import warnings
 from datetime import datetime
-import copy
+
 import numpy as np
 import pandas as pd
 import requests
@@ -34,6 +35,7 @@ from geopy.distance import geodesic
 from sklearn.preprocessing import MinMaxScaler
 
 
+# A utility function to print the UTC time.
 def print_time():
     return datetime.utcnow().isoformat(timespec='seconds')
 
@@ -42,6 +44,8 @@ print("Start of the script", print_time())
 
 warnings.filterwarnings("ignore")
 
+# If prototyping, then set the prototype flag to True at the top of the script.
+# Prototyping helps to avoid unnecessary API calls that will incur additional costs.
 if prototype:
     print("Prototype flag is set to TRUE")
     MAX_ROWS = 200
@@ -50,14 +54,30 @@ else:
     print("Prototype flag is set to FALSE")
     MAX_ROWS = None
 
-
+###########################################################################################
 ###########################################################################################
 #######################Part 1: Get ratings from Google Maps API############################
 ###################for features we want to compute quality scores on#######################
 ###########################################################################################
+###########################################################################################
 
 '''
-Note that a 'feature' is a place of interest, for example, a shopping mall, park, or primary school.
+Note that a 'feature' is a place of interest (you could also call it a neighborhood amenity), for example, a shopping mall, park, or primary school.
+
+We only compute quality scores for the following amenity types:
+1. Primary schools
+2. Secondary schools
+3. Parks
+4. Supermarkets
+5. Malls
+6. CHAS Clinics
+7. Gyms
+8. Community Centers.
+9. Other Public Sports Facilities (most are swimming pools)
+10. Hawker centers.
+
+The raw Google Places ratings for hawker centers & malls were scraped manually by Daosheng. We'll get the other feature types' ratings from Google Places API using our script.
+
 '''
 
 print(
@@ -133,7 +153,7 @@ print("Getting ratings data from Google Places API for Parks", print_time())
 parks = pd.read_csv("../data/raw/parks.csv", nrows=MAX_ROWS)
 parks = parks.dropna(subset=['lat', 'long', 'park_name'], how='any')
 
-parks.rename(columns = {'park_name':'name'},inplace=True)
+parks.rename(columns={'park_name': 'name'}, inplace=True)
 
 parks[['google_place_id', 'num_ratings', 'avg_rating']] = parks.apply(lambda x: get_information(x['name']), axis=1,
                                                                       result_type='expand')
@@ -168,8 +188,8 @@ supermarkets['location'] = supermarkets.apply(lambda x: remove_postal_code(str(x
 supermarkets.dropna(subset=['location'], inplace=True)
 
 supermarkets['name'] = supermarkets['business_name'] + ' ' + supermarkets['location']
-supermarkets.dropna(subset = ['name'],inplace=True)
-supermarkets.drop(columns = ['business_name','location'],inplace=True)
+supermarkets.dropna(subset=['name'], inplace=True)
+supermarkets.drop(columns=['business_name', 'location'], inplace=True)
 
 supermarkets[['google_place_id', 'num_ratings', 'avg_rating']] = supermarkets.apply(
     lambda x: get_information(x['name']), axis=1, result_type='expand')
@@ -182,7 +202,8 @@ supermarkets['weighted_rating'] = supermarkets['W'] * supermarkets['avg_rating']
 supermarkets.to_csv("../data/with_quality_scores/supermarkets.csv")
 
 # Malls
-# Daosheng already did scraping of ratings and number of ratings for malls, so we'll just calculate the scores
+# Daosheng already did scraping of ratings and number of ratings for malls, so we'll just calculate the scores rather than obtain them from Google Places API.
+
 print("Calculating scores for malls", print_time())
 malls = pd.read_csv("../data/raw/data_malls.csv", nrows=MAX_ROWS)
 malls = malls.dropna(subset=['Name', 'long', 'lat', 'rating', 'user_ratings_total'])
@@ -194,7 +215,7 @@ malls['weighted_rating'] = malls['W'] * malls['avg_rating'] + (1 - malls['W']) *
 
 malls.to_csv("../data/with_quality_scores/malls.csv")
 
-# Amenities
+# Other amenities - CHAS Clinics, Gyms, Community Centers.
 '''
 Since we have 1167 CHAS Clinics, 160 gyms, 120 community centers, and fewer numbers of other facility types, we'll focus on CHAS Clinics, gyms, and community centers.
 The remaining 34 are mostly swimming complexes +/- sports halls / tennis courts / et cetera.
@@ -243,15 +264,15 @@ other_public_sports_facilities['weighted_rating'] = other_public_sports_faciliti
 other_public_sports_facilities.to_csv("../data/with_quality_scores/other_public_sports_facilities.csv")
 
 # Hawker centers
-# Daosheng already did scraping of ratings and number of ratings for hawker centers, so we'll just calculate the scores
+# Daosheng already did manual scraping of ratings and number of ratings for hawker centers, so we'll just calculate the scores rather than obtain them from Google Places API.
 
 print("Calculating scores for hawker centers", print_time())
 hawker_centers = pd.read_csv("../data/raw/data_hawker.csv", nrows=MAX_ROWS)
 hawker_centers.dropna(subset=['Coordinates', 'Name', 'rating', 'user_ratings_total'], how='any', inplace=True)
 hawker_centers[['long', 'lat']] = hawker_centers['Coordinates'].str.split(',', 1, expand=True)
 hawker_centers.rename(columns={'rating': 'avg_rating', 'user_ratings_total': 'num_ratings'}, inplace=True)
-hawker_centers[['lat','temp']]= hawker_centers['lat'].str.split(',',1,expand=True)
-hawker_centers.drop(columns = ['temp'],inplace=True)
+hawker_centers[['lat', 'temp']] = hawker_centers['lat'].str.split(',', 1, expand=True)
+hawker_centers.drop(columns=['temp'], inplace=True)
 hawker_centers['W'] = hawker_centers['num_ratings'] / (hawker_centers['num_ratings'].max())
 r0 = hawker_centers['avg_rating'].mean()
 hawker_centers['weighted_rating'] = hawker_centers['W'] * hawker_centers['avg_rating'] + (1 - hawker_centers['W']) * r0
@@ -262,7 +283,9 @@ print("Finished working on getting ratings from Google Maps API for features we 
       print_time())
 
 ###########################################################################################
+###########################################################################################
 #######################Part 2: Combine condo and HDB dataframes############################
+###########################################################################################
 ###########################################################################################
 
 print("Part 2: Started combining condo and hdb dataframes", print_time())
@@ -382,7 +405,7 @@ other_public_sports_facilities = pd.read_csv("../data/with_quality_scores/other_
     ['address', 'lat', 'long', 'modified_name', 'google_place_id', 'num_ratings', 'avg_rating', 'W',
      'weighted_rating']].rename(columns={'modified_name': 'name'})
 parks = pd.read_csv("../data/with_quality_scores/parks.csv")[
-    ['name','lat', 'long', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']]
+    ['name', 'lat', 'long', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']]
 primary_schools = pd.read_csv("../data/with_quality_scores/primary_schools.csv")[
     ['Name', 'long', 'lat', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']].rename(
     columns={'Name': 'name'})
@@ -390,13 +413,14 @@ secondary_schools = pd.read_csv("../data/with_quality_scores/secondary_schools.c
     ['school_name', 'lat', 'long', 'address', 'google_place_id', 'num_ratings', 'avg_rating', 'W',
      'weighted_rating']].rename(columns={'school_name': 'name'})
 supermarkets = pd.read_csv("../data/with_quality_scores/supermarkets.csv")[
-    ['name','lat', 'long', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']]
+    ['name', 'lat', 'long', 'google_place_id', 'num_ratings', 'avg_rating', 'W', 'weighted_rating']]
 
 features_with_quality_scores = [clinics, community_centers, gyms, hawker_centers, malls, other_public_sports_facilities,
                                 parks, primary_schools, secondary_schools, supermarkets]
 feature_names_with_quality_scores = ["clinic", "community_center", "gym", "hawker_center", "mall",
                                      "other_public_sports_facility", "park", "primary_school", "secondary_school",
                                      "supermarket"]
+
 
 # Add in addresses for features with quality scores
 
@@ -412,6 +436,7 @@ def get_address(search_string):
         return first_match['ADDRESS']
     except IndexError:
         return np.nan
+
 
 print("Add in addresses to features with quality scores", print_time())
 
@@ -545,9 +570,9 @@ print(features)
 
 print(features.feature_type)
 
-for feature_type in list( features.feature_type.unique() ):
+for feature_type in list(features.feature_type.unique()):
     loop_start = time.time()
-    if type(feature_type)!=str:
+    if type(feature_type) != str:
         continue
     print("Considering feature type {}".format(feature_type))
     places = features[features['feature_type'] == feature_type].reset_index()
@@ -579,14 +604,14 @@ for feature_type in list( features.feature_type.unique() ):
                 if dist <= radius:
                     counter += 1
                     feature_ids.add(places.loc[j, "feature_id"])
-                    if feature_type in feature_names_with_quality_scores: 
+                    if feature_type in feature_names_with_quality_scores:
                         scores.append(places.loc[j, "weighted_rating"])
             except ValueError:
                 continue
 
         df_combined.loc[i, colname_num_features] = counter
         df_combined.loc[i, colname_feature_ids] = str(feature_ids)
-        if feature_type in feature_names_with_quality_scores: 
+        if feature_type in feature_names_with_quality_scores:
             df_combined.loc[i, colname_feature_scores] = np.median(scores)
     loop_end = time.time()
     print("Completed feature type {}, took {} seconds. Time now: {}".format(feature_type, loop_end - loop_start,
@@ -598,6 +623,9 @@ for feature_type in list( features.feature_type.unique() ):
 end_pairwise = time.time()
 print("Finished pairwise comparison. Pairwise comparison took {} seconds".format(end_pairwise - start_pairwise))
 print("Finished pairwise comparison", print_time())
+
+# Save file, just to be extra sure
+df_combined.to_csv("../data/processed/df_with_features.csv")
 
 ### Perform min-max scaling for numeric columns of number of features & median quality score. ###
 
@@ -645,4 +673,3 @@ for colname in added_numeric_columns:
 df_with_features_binned.to_csv("../data/processed/df_with_features_binned.csv")
 
 print("End of Part 6 and end of script", print_time())
-
