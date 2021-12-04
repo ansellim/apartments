@@ -18,6 +18,7 @@
 \usepackage{setspace}
 \usepackage{multirow}
 \usepackage{graphicx}
+\usepackage{comment}
 
 \begin{document}
 
@@ -53,6 +54,10 @@
 	The Government of Singapore maintains and publishes publicly available datasets (e.g. www.data.gov.sg), and OneMap API, a map API. Through these sources, we were downloaded and scraped details of residential projects (e.g. past sale transactions, addresses, map coordinates) and locations of various amenities (e.g. parks, educational institutions, food and beverage establishments). We further enriched the information with data from Google Places API, adding details such as review ratings and number of reviews. 
 	
 	The raw data was stored in multiple comma separated values (CSV) files, and subsequently formatted into a consistent schema and loaded into an SQLite database. The data was stored in two tables, (1) a “properties” table, containing details of the various residential housing projects such as name, district, location, average transacted price, and (2) a “features” table, containing details of the different amenities such as name, category, location, and review ratings. In total, we retrieved 10,614 rows of property transaction data and 32,695 rows of amenities data over 15 different types of amenities (subsidized clinics, community centers, gyms, hawker centers, shopping malls, public sports facilities, parks, primary schools, secondary schools, supermarkets, food and beverage establishments, bus stops, carparks, subway stations, and taxi stands).
+	
+	\begin{comment}
+	Number of properties is 11,488 if Batch 4 is fixed.
+	\end{comment}
 
     \subsection{User preferences questionnaire}
     
@@ -100,7 +105,7 @@ For the computation of quantity scores, we computed the number of nearby schools
 For quality scores, we first computed the median rating across all nearby schools for a given housing project, followed by min-max scaling so that the range of the score will be kept between 0 and 1. We chose to take the median instead of average, since it will be more representative and avoid situations where quality score might be largely affected by one anomalous poor school. This process was repeated for all attributes.
 
 As our ratings are scraped from user reviews on Google Places, we have to consider the number of reviews in conjunction with the average ratings. If a school rated 5 stars has only 1 review, it may not be necessarily better than another school rated 4.5 stars with 1,000 reviews. Stated another way, an amenity's rating has to be adjusted for the number of reviews received. To take into account both the rating and number of reviews, we shall use a weighted average of individual and global ratings. Using schools as an example again, we define the weighted rating $R_w$ as follows:
-\[ R_w = W\times R +(1-W)\times R_{\text{avg}}\] where $R_w$ is the weighted rating, $W$ is the weight factor (number of reviews for a particular school divided by the maximum reviews for all schools), $R$ is the unadjusted (raw) rating for the school, and $R_{\text{avg}}$ is the global average rating (average of all schools in our dataset). Using this formula, if a school has only a small number of reviews, $W$ will be small, and consequently, the output rating $R_w$ will have a larger contribution from the global average rating $R_{\text{avg}}$ compared to that school's raw individual school rating. This approach gives us an accurate ranking of schools, taking into account ratings and number of reviews (votes).
+\[ R_w = W\times R +(1-W)\times R_{\text{avg}}\] where $R_w$ is the weighted rating, $W$ is the weight factor (number of reviews for a particular school divided by the maximum number of reviews across all schools), $R$ is the unadjusted (raw) rating for the school, and $R_{\text{avg}}$ is the global average rating (average of all schools in our dataset). Using this formula, if a school has only a small number of reviews, $W$ will be small, and consequently, the output rating $R_w$ will have a larger contribution from the global average rating $R_{\text{avg}}$ compared to that school's raw individual school rating. This approach gives us an accurate ranking of schools, taking into account ratings and number of reviews (votes).
 
 \subsection{Database design \& data retrieval}
 
