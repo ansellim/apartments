@@ -78,6 +78,13 @@ The user may then view the top recommendations (top 5 recommendations) as well a
 
 ## Try it out yourself!
 
+### Run the app on the web
+
+The app is available
+at [https://apartments-recommendation.herokuapp.com/](https://apartments-recommendation.herokuapp.com/).
+
+### Run the app locally
+
 Create a conda environment using the `environment.yml` file by running the following command in the project root.
 
 ```
