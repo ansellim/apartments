@@ -5,11 +5,7 @@ FROM continuumio/miniconda3
 ADD . /application
 WORKDIR /application
 
-COPY environment.yml .
-RUN conda env create -f environment.yml
-SHELL ["conda", "run", "-n", "apartments-project", "/bin/bash", "-c"]
+RUN conda install numpy pandas geopandas flask
+RUN pip install sklearn python-dotenv
 
-RUN echo "Make sure flask is installed"
-RUN python -c "import flask"
-
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "apartments-project", "python", "run.py"]
+ENTRYPOINT ["python", "run.py"]
