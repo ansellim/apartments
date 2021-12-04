@@ -28,11 +28,12 @@
         	Ansel Lim,
         	Daosheng Lin
         	Hong Wen Tai,
-        	Keith Loo (Team 153)\\
+        	Keith Loo (Team 153)}\\
+        	
 	\end{center}
 	
-	All team members contributed equally to the project.  Ansel performed data collection & scoring. Scoring algorithm was designed by Key. Daosheng designed the user preferences questionnaire. Keith created the map.
-
+	
+All team members contributed equally to the project.  Ansel performed data collection \& scoring. Scoring algorithm was designed by Key. Daosheng designed the user preferences questionnaire. Keith created the map.
 
 	\section{Introduction}
 	
@@ -87,7 +88,7 @@ To derive scores for individual attributes, we have to consider the type of attr
 For the computation of the quantity score, we computed the number of nearby schools for a given housing project. We then plotted a histogram to analyze the distribution of schools across various properties in Singapore. Depending on the nature of the specific attributes (in this case schools) and the shape of the distribution, we assigned a score, applying a higher score for housing projects with more schools in the vicinity. Thereafter, we applied scaling to keep the score range between 0 and 1. For the quality score, we first computed the median rating across all nearby schools for a given housing project, followed by min-max scaling so that the range of the score will be kept between 0 and 1. We chose to take the median instead of average, since it will be more representative and avoid situations where quality score is largely affected by one anomalous poor school. This process was repeated for all attributes.
 
  As our ratings are scraped from user reviews, we have to consider the number of reviews in conjunction with the average ratings. If a school rated 5 stars has only 1 review, it may not be necessarily better than another school rated 4.5 stars with 1,000 reviews. To take into account both the rating and number of reviews, we shall use a weighted average of individual and global ratings: 
-\[R_a = W\timesR +(1-W)\times R_0\] where $R_a$ is the weighted rating, $W$ is the weight factor (number of reviews for a particular school / maximum reviews for all schools), $R$ is the rating for the school, and $R_0$ is the global average rating (average of all schools in our dataset). Using this formula, if a school has only a low number of reviews, W will be small, and consequently, the output rating Ra will take a higher weight from the global average rating instead of the individual school rating. This approach gives us an accurate ranking of schools, taking into account rating and number of votes.
+\[ R_a = W\times R +(1-W)\times R_0\] where $R_a$ is the weighted rating, $W$ is the weight factor (number of reviews for a particular school / maximum reviews for all schools), $R$ is the rating for the school, and $R_0$ is the global average rating (average of all schools in our dataset). Using this formula, if a school has only a low number of reviews, W will be small, and consequently, the output rating Ra will take a higher weight from the global average rating instead of the individual school rating. This approach gives us an accurate ranking of schools, taking into account rating and number of votes.
 
 \subsection{Database design \& data retrieval}
 
