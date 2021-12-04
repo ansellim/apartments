@@ -388,6 +388,13 @@
                 </div>
             </div>
             <div class="columns">
+                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Bus stops:</strong></div></div>
+                <div class="column is-2 is-align-items-center is-flex">
+                        <input type="range" min="0" max="100" value="50" class="slider" name="num_bus_stop_slider" id="num_bus_stop_slider">
+                        <div class="column has-text-left" name="num_bus_stop_val" id="num_bus_stop_val">50</div>
+                </div>
+            </div>
+            <div class="columns">
                 <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Carparks:</strong></div></div>
                 <div class="column is-2 is-align-items-center is-flex">
                         <input type="range" min="0" max="100" value="50" class="slider" name="num_carparks_slider" id="num_carparks_slider">
@@ -610,6 +617,12 @@
         num_mrt_val.innerHTML = num_mrt_slider.value; 
         num_mrt_slider.oninput = function() {
             num_mrt_val.innerHTML = this.value;
+        }
+        var num_bus_stop_slider = document.getElementById("num_bus_stop_slider");
+        var num_bus_stop_val = document.getElementById("num_bus_stop_val");
+        num_bus_stop_val.innerHTML = num_bus_stop_slider.value; 
+        num_bus_stop_slider.oninput = function() {
+            num_bus_stop_val.innerHTML = this.value;
         }
         var num_carparks_slider = document.getElementById("num_carparks_slider");
         var num_carparks_val = document.getElementById("num_carparks_val");

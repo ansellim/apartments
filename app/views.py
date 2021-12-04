@@ -64,11 +64,12 @@ def index():
         # Get user's weights for features (amenities / places of interest) with quantity scores ONLY. These amenities do not have quality scores.
         weight_num_eating_establishment = int(request.form.get("num_eating_establishments_slider")) / 100.0
         weight_num_mrt = int(request.form.get("num_mrt_slider")) / 100.0
+        weight_num_bus_stop = int(request.form.get("num_bus_stop_slider")) / 100.0
         weight_num_carpark = int(request.form.get("num_carparks_slider")) / 100.0
         weight_num_taxi_stand = int(request.form.get("num_taxi_stands_slider")) / 100.0
 
         query = f"""
-                         SELECT project_id, project, project_type, lat, long, price_per_sqm, district, feature_ids_clinic, feature_ids_community_center, feature_ids_gym, feature_ids_hawker_center, feature_ids_mall, feature_ids_other_public_sports_facility, feature_ids_park, feature_ids_primary_school, feature_ids_secondary_school, feature_ids_supermarket, feature_ids_carpark, feature_ids_mrt, feature_ids_eating_establishment, feature_ids_taxi_stand, raw_num_carpark, raw_num_clinic, raw_num_community_center, raw_num_eating_establishment, raw_num_gym, raw_num_hawker_center, raw_num_mall, raw_num_mrt, raw_num_other_public_sports_facility, raw_num_park, raw_num_primary_school, raw_num_secondary_school, raw_num_supermarket, raw_num_taxi_stand, raw_quality_clinic, raw_quality_community_center, raw_quality_gym, raw_quality_hawker_center, raw_quality_mall, raw_quality_other_public_sports_facility, raw_quality_park, raw_quality_primary_school, raw_quality_secondary_school, raw_quality_supermarket,
+                         SELECT project_id, project, project_type, lat, long, price_per_sqm, district, feature_ids_clinic, feature_ids_community_center, feature_ids_gym, feature_ids_hawker_center, feature_ids_mall, feature_ids_other_public_sports_facility, feature_ids_park, feature_ids_primary_school, feature_ids_secondary_school, feature_ids_supermarket, feature_ids_carpark, feature_ids_mrt, feature_ids_bus_stop, feature_ids_eating_establishment, feature_ids_taxi_stand, raw_num_carpark, raw_num_clinic, raw_num_community_center, raw_num_eating_establishment, raw_num_gym, raw_num_hawker_center, raw_num_mall, raw_num_mrt, raw_num_bus_stop, raw_num_other_public_sports_facility, raw_num_park, raw_num_primary_school, raw_num_secondary_school, raw_num_supermarket, raw_num_taxi_stand, raw_quality_clinic, raw_quality_community_center, raw_quality_gym, raw_quality_hawker_center, raw_quality_mall, raw_quality_other_public_sports_facility, raw_quality_park, raw_quality_primary_school, raw_quality_secondary_school, raw_quality_supermarket,
                                 -- calculate overall score per property, given user weights
                                 num_primary_school * {weight_num_primary_school}
                                 + quality_primary_school * {weight_quality_primary_school}
@@ -91,6 +92,7 @@ def index():
                                 + num_supermarket * {weight_num_supermarket}
                                 + quality_supermarket * {weight_quality_supermarket}
                                 + num_mrt * {weight_num_mrt}
+                                + num_bus_stop * {weight_num_bus_stop}
                                 + num_eating_establishment * {weight_num_eating_establishment}
                                 + num_carpark * {weight_num_carpark}
                                 + num_taxi_stand * {weight_num_taxi_stand}
@@ -165,7 +167,7 @@ def index():
             feature['properties']['name'] = amenity['name']
 
             #Exclude these non-rated features: Carpark, Mrt, Eating, and Taxi Stand)
-            if description != 'Carpark' and description != 'Mrt' and description != 'Eating' and description != 'Taxi Stand':
+            if description != 'Carpark' and description != 'Mrt' and description != 'Eating' and description != 'Taxi Stand' and description != 'Bus Stop':
                 feature['properties']['weighted_rating'] = float(amenity["weighted_rating"])
             
             return feature
@@ -245,6 +247,11 @@ def index():
             if not pd.isna(row.mrt):
                 for amenity in json.loads(row.mrt):
                     feature = get_amenity_geojson(amenity=amenity, index=index, description='Mrt')
+                    geojson_list.append(feature)
+
+            if not pd.isna(row.bus_stop):
+                for amenity in json.loads(row.bus_stop):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Bus Stop')
                     geojson_list.append(feature)
 
             if not pd.isna(row.eating_establishment):
