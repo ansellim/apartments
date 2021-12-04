@@ -65,11 +65,10 @@ def index():
         weight_num_eating_establishment = int(request.form.get("num_eating_establishments_slider")) / 100.0
         weight_num_mrt = int(request.form.get("num_mrt_slider")) / 100.0
         weight_num_carpark = int(request.form.get("num_carparks_slider")) / 100.0
-        weight_num_bus_stop = int(request.form.get("num_bus_stops_slider")) / 100.0
         weight_num_taxi_stand = int(request.form.get("num_taxi_stands_slider")) / 100.0
 
         query = f"""
-                         SELECT project_id, project, project_type, lat, long, price_per_sqm, district, feature_ids_clinic, feature_ids_community_center, feature_ids_gym, feature_ids_hawker_center, feature_ids_mall, feature_ids_other_public_sports_facility, feature_ids_park, feature_ids_primary_school, feature_ids_secondary_school, feature_ids_supermarket, feature_ids_bus_stop, feature_ids_carpark, feature_ids_mrt, feature_ids_eating_establishment, feature_ids_taxi_stand, raw_num_bus_stop, raw_num_carpark, raw_num_clinic, raw_num_community_center, raw_num_eating_establishment, raw_num_gym, raw_num_hawker_center, raw_num_mall, raw_num_mrt, raw_num_other_public_sports_facility, raw_num_park, raw_num_primary_school, raw_num_secondary_school, raw_num_supermarket, raw_num_taxi_stand, raw_quality_clinic, raw_quality_community_center, raw_quality_gym, raw_quality_hawker_center, raw_quality_mall, raw_quality_other_public_sports_facility, raw_quality_park, raw_quality_primary_school, raw_quality_secondary_school, raw_quality_supermarket,
+                         SELECT project_id, project, project_type, lat, long, price_per_sqm, district, feature_ids_clinic, feature_ids_community_center, feature_ids_gym, feature_ids_hawker_center, feature_ids_mall, feature_ids_other_public_sports_facility, feature_ids_park, feature_ids_primary_school, feature_ids_secondary_school, feature_ids_supermarket, feature_ids_carpark, feature_ids_mrt, feature_ids_eating_establishment, feature_ids_taxi_stand, raw_num_carpark, raw_num_clinic, raw_num_community_center, raw_num_eating_establishment, raw_num_gym, raw_num_hawker_center, raw_num_mall, raw_num_mrt, raw_num_other_public_sports_facility, raw_num_park, raw_num_primary_school, raw_num_secondary_school, raw_num_supermarket, raw_num_taxi_stand, raw_quality_clinic, raw_quality_community_center, raw_quality_gym, raw_quality_hawker_center, raw_quality_mall, raw_quality_other_public_sports_facility, raw_quality_park, raw_quality_primary_school, raw_quality_secondary_school, raw_quality_supermarket,
                                 -- calculate overall score per property, given user weights
                                 num_primary_school * {weight_num_primary_school}
                                 + quality_primary_school * {weight_quality_primary_school}
@@ -94,7 +93,6 @@ def index():
                                 + num_mrt * {weight_num_mrt}
                                 + num_eating_establishment * {weight_num_eating_establishment}
                                 + num_carpark * {weight_num_carpark}
-                                + num_bus_stop* {weight_num_bus_stop}
                                 + num_taxi_stand * {weight_num_taxi_stand}
                                 as overall_score
                          FROM properties
@@ -183,67 +181,75 @@ def index():
             geojson_list.append(feature)
 
             #For given property, add amenity to geojson list
-            for amenity in json.loads(row.clinic):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Clinic')
-                geojson_list.append(feature)
+            if not pd.isna(row.clinic):
+                for amenity in json.loads(row.clinic):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Clinic')
+                    geojson_list.append(feature)
 
-            for amenity in json.loads(row.community_center):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Community Center')
-                geojson_list.append(feature)
+            if not pd.isna(row.community_center):
+                for amenity in json.loads(row.community_center):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Community Center')
+                    geojson_list.append(feature)
 
-            for amenity in json.loads(row.gym):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Gym')
-                geojson_list.append(feature)
+            if not pd.isna(row.gym):
+                for amenity in json.loads(row.gym):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Gym')
+                    geojson_list.append(feature)
 
-            for amenity in json.loads(row.hawker_center):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Hawker Center')
-                geojson_list.append(feature)
+            if not pd.isna(row.hawker_center):
+                for amenity in json.loads(row.hawker_center):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Hawker Center')
+                    geojson_list.append(feature)
 
-            for amenity in json.loads(row.mall):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Mall')
-                geojson_list.append(feature)
+            if not pd.isna(row.mall):
+                for amenity in json.loads(row.mall):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Mall')
+                    geojson_list.append(feature)
 
+            if not pd.isna(row.other_public_sports_facility):
+                for amenity in json.loads(row.other_public_sports_facility):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Sport')
+                    geojson_list.append(feature)
 
-            for amenity in json.loads(row.other_public_sports_facility):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Sport')
-                geojson_list.append(feature)
+            if not pd.isna(row.park):
+                for amenity in json.loads(row.park):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Park')
+                    geojson_list.append(feature)
 
-            for amenity in json.loads(row.park):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Park')
-                geojson_list.append(feature)
+            if not pd.isna(row.primary_school):
+                for amenity in json.loads(row.primary_school):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Primary School')
+                    geojson_list.append(feature)
 
-            for amenity in json.loads(row.primary_school):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Primary School')
-                geojson_list.append(feature)
+            if not pd.isna(row.secondary_school):
+                for amenity in json.loads(row.secondary_school):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Secondary School')
+                    geojson_list.append(feature)
 
-            for amenity in json.loads(row.secondary_school):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Secondary School')
-                geojson_list.append(feature)
+            if not pd.isna(row.supermarket):
+                for amenity in json.loads(row.supermarket):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Supermarket')
+                    geojson_list.append(feature)
 
-            for amenity in json.loads(row.supermarket):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Supermarket')
-                geojson_list.append(feature)
+            if not pd.isna(row.carpark):
+                for amenity in json.loads(row.carpark):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Carpark')
+                    geojson_list.append(feature)
 
+            if not pd.isna(row.mrt):
+                for amenity in json.loads(row.mrt):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Mrt')
+                    geojson_list.append(feature)
 
-            for amenity in json.loads(row.bus_stop):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Bus Stop')
-                geojson_list.append(feature)
+            if not pd.isna(row.eating_establishment):
+                for amenity in json.loads(row.eating_establishment):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Eating')
+                    geojson_list.append(feature)
 
-            for amenity in json.loads(row.carpark):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Carpark')
-                geojson_list.append(feature)
-
-            for amenity in json.loads(row.mrt):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Mrt')
-                geojson_list.append(feature)
-
-            for amenity in json.loads(row.eating_establishment):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Eating')
-                geojson_list.append(feature)
-
-            for amenity in json.loads(row.taxi_stand):
-                feature = get_amenity_geojson(amenity=amenity, index=index, description='Taxi Stand')
-                geojson_list.append(feature)
+            if not pd.isna(row.taxi_stand):
+                for amenity in json.loads(row.taxi_stand):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Taxi Stand')
+                    geojson_list.append(feature)
 
         #print(geojson_list)
         return redirect(url_for('map', geojson_response = jsonify(geojson_list)))       #Pass matches in geojson format to map() function that renders map.html

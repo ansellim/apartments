@@ -77,11 +77,6 @@ var mkt_icon = L.icon({
     iconSize: [20, 20], // size of the icon
 });
 
-
-var busstop_icon = L.icon({
-    iconUrl: "{{ url_for('static', filename='/bulma/icons/busstop.png') }}",    
-    iconSize: [20, 20], // size of the icon
-});
 var carpark_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/carpark.png') }}",
     iconSize: [20, 20], // size of the icon
@@ -169,7 +164,6 @@ function pointToLayer (feature, latlng) {
         case "Secondary School": return L.marker(latlng, {icon: ssch_icon});
         case "Supermarket": return L.marker(latlng, {icon: mkt_icon});
 
-        case "Bus Stop": return L.marker(latlng, {icon: busstop_icon});
         case "Carpark": return L.marker(latlng, {icon: carpark_icon});
         case "Mrt": return L.marker(latlng, {icon: mrt_icon});
         case "Eating": return L.marker(latlng, {icon: eating_icon});
@@ -276,14 +270,6 @@ function showFeatures(item) {
     })
 
     // Feature #11 to #15 //
-    bus_stop_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Bus Stop") return true;
-        }
-    })
-
     carpark_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
@@ -328,7 +314,6 @@ function showFeatures(item) {
     controlLayers.addOverlay(sschool_layer, "Secondary Schools").addTo(map);
     controlLayers.addOverlay(supermarket_layer, "Supermarkets").addTo(map);
 
-    controlLayers.addOverlay(bus_stop_layer, "Bus Stops").addTo(map);
     controlLayers.addOverlay(carpark_layer, "Carparks").addTo(map);
     controlLayers.addOverlay(mrt_layer, "Train Stations").addTo(map);
     controlLayers.addOverlay(eating_establishment_layer, "Eating Establishments").addTo(map);
@@ -351,7 +336,6 @@ function resetFeatures() {
     controlLayers.removeLayer(sschool_layer)
     controlLayers.removeLayer(supermarket_layer)
 
-    controlLayers.removeLayer(bus_stop_layer)
     controlLayers.removeLayer(carpark_layer)
     controlLayers.removeLayer(mrt_layer)
     controlLayers.removeLayer(eating_establishment_layer)
@@ -370,7 +354,6 @@ function resetFeatures() {
     map.removeLayer(sschool_layer)
     map.removeLayer(supermarket_layer)
 
-    map.removeLayer(bus_stop_layer)
     map.removeLayer(carpark_layer)
     map.removeLayer(mrt_layer)
     map.removeLayer(eating_establishment_layer)
@@ -385,7 +368,7 @@ var features_visible = false
 var GeoJSon_properties
  
 var property_layer
-var clinic_layer, cc_layer, gym_layer, hawker_center_layer, mall_layer, sport_layer, park_layer, pschool_layer, sschool_layer, supermarket_layer, bus_stop_layer, carpark_layer, mrt_layer, eating_establishment_layer, taxi_stand_layer
+var clinic_layer, cc_layer, gym_layer, hawker_center_layer, mall_layer, sport_layer, park_layer, pschool_layer, sschool_layer, supermarket_layer, carpark_layer, mrt_layer, eating_establishment_layer, taxi_stand_layer
 
 
 var testGeoJSon_properties = [
