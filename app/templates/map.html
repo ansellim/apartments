@@ -318,6 +318,7 @@ function showFeatures(item) {
     map.addLayer(taxi_stand_layer)
     
     // add to control layer //
+    controlLayers.options.collapsed = true
     controlLayers.addOverlay(clinic_layer, "Clinics").addTo(map);
     controlLayers.addOverlay(cc_layer, "Community Centers").addTo(map);
     controlLayers.addOverlay(gym_layer, "Gyms").addTo(map);
@@ -335,13 +336,14 @@ function showFeatures(item) {
     controlLayers.addOverlay(eating_establishment_layer, "Eating Establishments").addTo(map);
     controlLayers.addOverlay(taxi_stand_layer, "Taxi Stands").addTo(map);
 
-    controlLayers.options.collapsed = true
+    
 
 }
 
 
 function resetFeatures() {
     // remove from layer control //
+    controlLayers.options.collapsed = false
     controlLayers.removeLayer(clinic_layer)
     controlLayers.removeLayer(cc_layer)
     controlLayers.removeLayer(gym_layer)
@@ -357,9 +359,7 @@ function resetFeatures() {
     controlLayers.removeLayer(carpark_layer)
     controlLayers.removeLayer(mrt_layer)
     controlLayers.removeLayer(eating_establishment_layer)
-    controlLayers.removeLayer(taxi_stand_layer)
-
-    controlLayers.options.collapsed = false
+    controlLayers.removeLayer(taxi_stand_layer)    
 
     // remove from map  //
     map.removeLayer(clinic_layer)
