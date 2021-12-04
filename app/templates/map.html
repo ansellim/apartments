@@ -10,8 +10,7 @@ crossorigin=""></script>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-<body>
-<div id='map' style='height:100%; width:100%;'></div>
+<body> <div id='map' style='height:100%; width:100%;'></div>
 
 <script>
 
@@ -85,7 +84,6 @@ var taxistand_icon = L.icon({
 });
 
 
-
 // OneMap APIs //
 function nameSearch(){
     $.ajax({
@@ -130,7 +128,7 @@ function onEachFeature (feature, layer) {
 
         layer.bindPopup("Name: <b>" + feature.properties.name +
                         "</b><br>Price/Sqm: <b>$" + Math.round(feature.properties.price_per_sqm) +
-                        "</b><br>Overall Score: <b>" + feature.properties.overall_score);
+                        "</b><br>Overall Score: <b>" + Math.round(feature.properties.overall_score*100)/100);
 
     } else {
         layer.bindPopup("Name: <b>" + feature.properties.name + "</b>");
@@ -141,7 +139,6 @@ function onEachFeature (feature, layer) {
 function pointToLayer (feature, latlng) {
     switch (feature.properties.description) {
         case "Property": return L.marker(latlng, {icon: hse_icon});
-
         case "Clinic": return L.marker(latlng, {icon: clinic_icon});
         case "Community Center": return L.marker(latlng, {icon: cc_icon});
         case "Gym": return L.marker(latlng, {icon: gym_icon});
@@ -164,7 +161,6 @@ function pointToLayer (feature, latlng) {
 function onClick(e) {
     
     map.fitBounds([e.latlng])
-    //map.fitBounds(DistrictLayer.getBounds())
     
     if (controlLayers._layers.length > 0 ) {
         resetFeatures()
@@ -354,7 +350,6 @@ function resetFeatures() {
 }
 
 // global variables //
-var features_visible = false
 var GeoJSon_properties
  
 var property_layer
@@ -512,7 +507,7 @@ axios.get('http://127.0.0.1:5000/GeoJSon_properties').then(response => {
 
     default_map.addTo(map);
     property_layer.addTo(map);
-    //map.fitBounds(property_layer)
+    map.fitBounds(property_layer)
 })
 
 </script>
