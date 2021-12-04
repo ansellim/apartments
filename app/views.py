@@ -165,7 +165,7 @@ def index():
             return feature
 
         #Convert dataframe to GeoJson format
-        geojson_list = []
+        geojson_list.clear()
         for index, row in matches.iterrows():
             #Add property to geojson list
             feature = {'type':'Feature',
