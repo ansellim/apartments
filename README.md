@@ -1,4 +1,4 @@
-# CSE6242 PROJECT
+# Personalized Apartment Recommendations Project
 
 Group members: Ansel, Daosheng, Key, Keith
 
