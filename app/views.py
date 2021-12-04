@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, request, redirect, url_for
-from flask import jsonify # Added by Keith #
+from flask import jsonify
 import json
 import pandas as pd
 import sqlite3 as sql

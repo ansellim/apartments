@@ -18,21 +18,12 @@ crossorigin=""></script>
 // global variables //
 var OneMap_Token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjgxMTAsInVzZXJfaWQiOjgxMTAsImVtYWlsIjoia2VpdGgubG9vQGdhdGVjaC5lZHUiLCJmb3JldmVyIjpmYWxzZSwiaXNzIjoiaHR0cDpcL1wvb20yLmRmZS5vbmVtYXAuc2dcL2FwaVwvdjJcL3VzZXJcL3Nlc3Npb24iLCJpYXQiOjE2MzU4MjczMzEsImV4cCI6MTYzNjI1OTMzMSwibmJmIjoxNjM1ODI3MzMxLCJqdGkiOiI3ZDRjMjYzOTg2NWY2YjUyMTMxYWI4NGU3MDIzMTgxZiJ9.1hAkQfZUTY1LsAqIKoi0lbXqYi3jCnIgkK3XBFaw34c"
 
-// testing variables //
-var testSearch = "J Gateway"
-var testlocationXY = {x: 26196.0124962935, y: 30258.525668541, name: "Artra"} //"X":"26196.0124962935","Y":"30258.525668541"
-var testlocationLatLong1 = {latitude: 1.2901276549478262, longitude: 103.81655234786841, name: "Artra", price: 1700000} //"LATITUDE":"1.2901276549478262","LONGITUDE":"103.81655234786841
-var testlocationLatLong2 = {latitude: 1.33555731797921, longitude: 103.742416815373, name: "J Gateway", price: 1200000} //"LATITUDE":"1.33555731797921","LONGITUDE":"103.742416815373"
-var testTheme = "kindergartens"
-var tempLatLong = {latitude: 1.2901276549478262, longitude: 103.81655234786841, name: "Artra", road: "Alexandra View"}
-
 // icon variables //
 var hse_icon = L.icon({
     //iconUrl: "../icons/hse.jpg",
     iconUrl: "{{ url_for('static', filename='/bulma/icons/hse.jpg') }}",    
     iconSize: [20, 20], // size of the icon
 });
-
 
 var clinic_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/clinic.jpg') }}",
@@ -54,7 +45,6 @@ var mall_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/mall.png') }}",
     iconSize: [20, 20], // size of the icon
 });
-
 
 var sport_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/sport.png') }}",    
