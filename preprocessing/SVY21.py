@@ -147,8 +147,7 @@ class SVY21:
 
         # Compute Latitude
         latFactor = tPrime / (self.k * rhoPrime)
-        latTerm1 = wawi
-        latFactor * ((Eprime * x) / 2)
+        latTerm1 = latFactor * ((Eprime * x) / 2)
         latTerm2 = latFactor * ((Eprime * x3) / 24) * (
                 (-4 * psiPrime2) + (9 * psiPrime) * (1 - tPrime2) + (12 * tPrime2))
         latTerm3 = latFactor * ((Eprime * x5) / 720) * (

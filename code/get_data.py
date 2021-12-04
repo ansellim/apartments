@@ -482,8 +482,9 @@ def getLatLong_Supermarkets(x):
         return ("unknown", "unknown", isLatLongAvailable)
 
 
-supermarkets = pd.concat([supermarkets, supermarkets.apply(getLatLong, axis=1, result_type='expand').rename(
-    mapper={0: 'lat', 1: 'long', 2: 'isLatLongAvailable'}, axis=1)], axis=1)
+supermarkets = pd.concat(
+    [supermarkets, supermarkets.apply(getLatLong_Supermarkets, axis=1, result_type='expand').rename(
+        mapper={0: 'lat', 1: 'long', 2: 'isLatLongAvailable'}, axis=1)], axis=1)
 
 supermarkets = supermarkets.reset_index()
 
