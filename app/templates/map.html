@@ -144,7 +144,7 @@ function onEachFeature (feature, layer) {
         //Exclude these non-rated features: Carpark, Mrt, Eating, and Taxi Stand)
         if (feature.properties.description == "Carpark" || feature.properties.description == "Mrt" || feature.properties.description == "Eating" || feature.properties.description == "Taxi Stand") {
             layer.bindPopup("Name: <b>" + feature.properties.name);
-                
+
         } else {
             layer.bindPopup("Name: <b>" + feature.properties.name +
                 "</b><br>Rating: <b>" + Math.round(feature.properties.weighted_rating*100)/100);
@@ -179,16 +179,17 @@ function pointToLayer (feature, latlng) {
 function onClick(e) {
     
     map.fitBounds([e.latlng])
-    controlLayers.options.collapsed = true
     
     if (e.sourceTarget.feature.properties.description == "Property") {
         
         if (controlLayers._layers.length > 0 ) {
             resetFeatures()
+            //controlLayers.collapse()
         }
         
-        controlLayers.options.collapsed = false
+        //controlLayers.options.collapsed = false
         showFeatures(e.sourceTarget.feature.properties.item)
+        controlLayers.expand()
     }
         
 }
@@ -202,7 +203,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Clinic") return true;
         }
-    }).on('click', onClick)
+    })
     
     cc_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
@@ -210,7 +211,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Community Center") return true;
         }
-    }).on('click', onClick)
+    })
     
     gym_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
@@ -218,7 +219,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Gym") return true;
         }
-    }).on('click', onClick)
+    })
 
     hawker_center_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
@@ -226,7 +227,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Hawker Center") return true;
         }
-    }).on('click', onClick)
+    })
 
     mall_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
@@ -234,7 +235,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Mall") return true;
         }
-    }).on('click', onClick)
+    })
 
     // Feature #6 to #10 //
 
@@ -244,7 +245,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Sport") return true;
         }
-    }).on('click', onClick)
+    })
 
     park_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
@@ -252,7 +253,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Park") return true;
         }
-    }).on('click', onClick)
+    })
 
     pschool_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
@@ -260,7 +261,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
         }
-    }).on('click', onClick)
+    })
 
     sschool_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
@@ -268,7 +269,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Secondary School") return true;
         }
-    }).on('click', onClick)
+    })
 
     supermarket_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
@@ -276,7 +277,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
         }
-    }).on('click', onClick)
+    })
 
     // Feature #11 to #14 //
     carpark_layer = L.geoJSON(GeoJSon_properties, {
@@ -285,7 +286,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Carpark") return true;
         }
-    }).on('click', onClick)
+    })
 
     mrt_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
@@ -293,7 +294,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Mrt") return true;
         }
-    }).on('click', onClick)
+    })
 
     eating_establishment_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
@@ -301,7 +302,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Eating") return true;
         }
-    }).on('click', onClick)
+    })
 
     taxi_stand_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
@@ -309,7 +310,7 @@ function showFeatures(item) {
         filter: function(feature, layer) {
             if (feature.properties.item == item && feature.properties.description == "Taxi Stand") return true;
         }
-    }).on('click', onClick)
+    })
     
     // add to control layer //
     controlLayers.addOverlay(clinic_layer, "Clinics").addTo(map);
@@ -390,138 +391,14 @@ function resetFeatures() {
 }
 
 // global variables //
-var GeoJSon_properties, property_layer
+var GeoJSon_properties, property_layer, features_layer
 var clinic_layer, cc_layer, gym_layer, hawker_center_layer, mall_layer, sport_layer, park_layer, pschool_layer, sschool_layer, supermarket_layer, carpark_layer, mrt_layer, eating_establishment_layer, taxi_stand_layer
 
-var testGeoJSon_properties = [
-    // #1 Property //
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 1,
-            "description": "Property",
-            "name": "119 ANG MO KIO AVE 3", // "popupContent": "#1 Property"
-            "price_per_sqm": 4451.222288,
-            "overall_score": 11.145,
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.8446989, 1.369563443]
-        }
-    },
-
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 1,
-            "description": "School",
-            "name": "TECK GHEE PRIMARY SCHOOL",
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.851009800453, 1.36565018546903]
-        }
-    },
-
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 1,
-            "description": "Mall",
-            "name": "AMK Hub",
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.8484398, 1.36953]
-        }
-    },
-
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 1,
-            "description": "Supermarket",
-            "name": "SHENG SIONG SUPERMARKET",
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.843413231524, 1.37018860668947]
-        }
-    },
-
-    // #2 Property //
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 2,
-            "description": "Property",
-            "name": "120 ANG MO KIO AVE 3",
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.8445948, 1.370047397]
-        }
-    },
-
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 2,
-            "description": "School",
-            "name": "TECK GHEE PRIMARY SCHOOL",
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.851009800453, 1.36565018546903]
-        }
-    },
-
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 2,
-            "description": "Mall",
-            "name": "AMK Hub",
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.8484398, 1.36953]
-        }
-    },
-
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 2,
-            "description": "Supermarket",
-            "name": "SHENG SIONG SUPERMARKET",
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.843413231524, 1.37018860668947]
-        }
-    },
-    
-    // #3 Property //
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 3,
-            "description": "Property",
-            "name": "201 ANG MO KIO AVE 3",
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.8445648, 1.368849627]
-        }
-    }
-];
-
-
 // map variables //
-var default_map = L.tileLayer("https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png", {detectRetina: true, maxZoom: 18, minZoom: 11});
+var default_map = L.tileLayer("https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png", {detectRetina: true, maxZoom: 18, minZoom: 11, attribution: '<img src="https://docs.onemap.sg/maps/images/oneMap64-01.png" style="height:20px;width:20px;"/> OneMap | Map data &copy; contributors, <a href="http://SLA.gov.sg">Singapore Land Authority</a>'});
 var map = L.map('map', {center: [1.355, 103.81], zoom: 12 }); //layers: [default_map]
 var controlLayers = L.control.layers()
+
 
 // layer variables //
 var base_maps = { "Default": default_map };
@@ -546,6 +423,10 @@ axios.get('http://127.0.0.1:5000/GeoJSon_properties').then(response => {
     });
     
     map.fitBounds(property_layer.getBounds())
+    
+    //map.on('click', function(e) {
+        //controlLayers.collapse()
+    //});
 
 })
 
