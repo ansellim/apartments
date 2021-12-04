@@ -5,7 +5,6 @@ FROM continuumio/miniconda3
 ADD . /application
 WORKDIR /application
 
-RUN conda install numpy pandas geopandas flask
-RUN pip install sklearn python-dotenv
+RUN conda install flask
 
 ENTRYPOINT ["python", "run.py"]
