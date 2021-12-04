@@ -24,18 +24,15 @@
 
 	\begin{center}
 		\sc\large\textbf{Personalized Apartment Recommender}\\
-			\noindent {\small 
+			\noindent {\small  TEAM 153:
         	Ansel Lim,
         	Daosheng Lin
-        	Hong Wen Tai,
-        	Keith Loo (Team 153)}\\
-        	
+        	Hong Wen (Key) Tai,
+        	Keith Loo\footnote{All team members contributed equally to the project. Ansel performed data collection and scoring and edited the report and poster. Daosheng designed the user preferences questionnaire, performed the experiments, and wrote the report and poster. Key designed the scoring algorithm and worked on database design and data retrieval. Keith worked on data visualization and the map's user interface. Everyone participated in literature review, code review and review of this manuscript.} }
 	\end{center}
 	
-	
-All team members contributed equally to the project.  Ansel performed data collection \& scoring. Scoring algorithm was designed by Key. Daosheng designed the user preferences questionnaire. Keith created the map.
 
-	\section{Introduction}
+	\section{Motivation}
 	
 	Aspiring homeowners in Singapore are constrained by biases in multiple information sources, as the content creators on many platforms tend to be realtors, who have skin in the game. We have created a tool which aspiring homebuyers in Singapore can use to analyze and visualize multiple unbiased sources of information, and provide recommendations to the users based on their specified preferences and constraints. 
 
@@ -47,11 +44,13 @@ All team members contributed equally to the project.  Ansel performed data colle
 	
 	\subsection{Intuition}
 	
-	Most of the currently available tools for researching the property market involve filtering among certain attributes, such as location, price and size of the home. However, the thought process in purchasing a home involves a much greater variety of factors, such as proximity to various amenities (e.g. food \& beverage, schools, recreational facilities). Each individual would have his/her own preferences and priorities, hence it is difficult to have a one-size-fits-all approach in determining the best place to live. We have built a tool to make this a simple yet dynamic process, where the recommender system will take into account user preferences and return a list of best options.
+	Most of the currently available tools for researching the property market involve filtering for property-specific attributes, such as location, price and size of the apartment. However, the thought process that goes into purchasing a home involves a much greater variety of factors \textit{beyond} attributes of the property, such as proximity to various amenities (e.g. restaurants, schools, and recreational facilities). Depending on demographic factors and stage of life, individuals may have different priorities and preferences as to amenities in their shortlisted homes' neighborhoods.
+	
+	We have built a property recommendation tool which incorporates the rich information available in neighborhood amenities. Unlike other tools which do not emphasize the role that neighborhood amenities play in property search, our tool provides personalized recommendations of the best options in an easy-to-visualize way.
 	
 	\subsection{Data collection and preprocessing}
 	
-	The Government of Singapore maintains and publishes publicly available datasets (www.data.gov.sg and www.ura.gov.sg/maps/api/), and a comprehensive map with an open API (www.onemap.gov.sg), both of which are extremely useful for our tool. Through these sources, we were able to download and scrape details of residential projects (e.g. past sale transactions, addresses, map coordinates) and locations of various amenities (e.g. parks, educational institutions, food and beverage establishments). We further enriched the information with data from Google Places API, adding details such as review ratings and number of reviews. The raw data was stored in multiple comma separated values (CSV) files, and subsequently formatted into a consistent schema and loaded into an SQLite database. The data was stored in two tables, (1) a “Properties” table, containing details of the various residential housing projects such as name, district, location, average transacted price, and (2) a “Features” table, containing details of the different amenities such as name, category, location, and review ratings. In total, we retrieved 10,614 rows of property transaction data and 32,695 rows of amenities data over 15 different types of amenities (
+	The Government of Singapore maintains and publishes publicly available datasets (www.data.gov.sg and www.ura.gov.sg/maps/api/), and a comprehensive map with an open API (www.onemap.gov.sg), both of which are extremely useful for our tool. Through these sources, we were able to download and scrape details of residential projects (e.g. past sale transactions, addresses, map coordinates) and locations of various amenities (e.g. parks, educational institutions, food and beverage establishments). We further enriched the information with data from Google Places API, adding details such as review ratings and number of reviews. The raw data was stored in multiple comma separated values (CSV) files, and subsequently formatted into a consistent schema and loaded into an SQLite database. The data was stored in two tables, (1) a “Properties” table, containing details of the various residential housing projects such as name, district, location, average transacted price, and (2) a “Features” table, containing details of the different amenities such as name, category, location, and review ratings. In total, we retrieved 10,614 rows of property transaction data and 32,695 rows of amenities data over 15 different types of amenities (subsidized clinics, community centers, gyms, hawker centers, shopping malls, public sports facilities, parks, primary schools, secondary schools, supermarkets, food and beverage establishments, bus stops, carparks, subway stations, and taxi stands).
 
     \subsection{User preferences questionnaire}
     
