@@ -132,7 +132,7 @@ def index():
                 feature_ids_str = f"""feature_id in {tuple(feature_ids)}"""
 
             query2 = f"""
-                        SELECT name,num_ratings,avg_rating,lat,long,feature_type,address
+                        SELECT name,num_ratings,avg_rating,lat,long,feature_type,address,weighted_rating
                         FROM features
                         WHERE """ + feature_ids_str + """
                     """
@@ -158,11 +158,16 @@ def index():
                        'properties':{},
                        'geometry':{'type':'Point',
                                    'coordinates':[]}}
+
             feature['geometry']['coordinates'] = [float(amenity["long"]),float(amenity["lat"])]
             feature['properties']['item'] = index + 1
             feature['properties']['description'] = description
             feature['properties']['name'] = amenity['name']
-            #feature['properties']['weighted_rating'] = float(amenity["weighted_rating"])
+
+            #Exclude these non-rated features: Carpark, Mrt, Eating, and Taxi Stand)
+            if description != 'Carpark' and description != 'Mrt' and description != 'Eating' and description != 'Taxi Stand':
+                feature['properties']['weighted_rating'] = float(amenity["weighted_rating"])
+            
             return feature
 
         #Convert dataframe to GeoJson format
