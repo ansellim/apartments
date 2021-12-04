@@ -10,14 +10,16 @@ crossorigin=""></script>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+<body> <div id='map' style='height:100%; width:100%;'></div>
+
 <style>
-    .mypopup.leaflet-popup-content-wrapper {
-        background-color: red;
-        opacity: 0.5;
+    /* css to customize Leaflet default styles  */
+    .popupCustom.leaflet-popup-tip,
+    .popupCustom.leaflet-popup-content-wrapper {
+        background: #e0e0e0;
+        color: #234c5e;
     }
 </style>
-
-<body> <div id='map' style='height:100%; width:100%;'></div>
 
 <script>
 
@@ -264,7 +266,7 @@ function showFeatures(item) {
         }
     })
 
-    // Feature #11 to #15 //
+    // Feature #11 to #14 //
     carpark_layer = L.geoJSON(GeoJSon_properties, {
         onEachFeature: onEachFeature,
         pointToLayer: pointToLayer,
@@ -316,6 +318,7 @@ function showFeatures(item) {
     map.addLayer(taxi_stand_layer)
     
     // add to control layer //
+    controlLayers.options.collapsed = true
     controlLayers.addOverlay(clinic_layer, "Clinics").addTo(map);
     controlLayers.addOverlay(cc_layer, "Community Centers").addTo(map);
     controlLayers.addOverlay(gym_layer, "Gyms").addTo(map);
@@ -332,11 +335,15 @@ function showFeatures(item) {
     controlLayers.addOverlay(mrt_layer, "Train Stations").addTo(map);
     controlLayers.addOverlay(eating_establishment_layer, "Eating Establishments").addTo(map);
     controlLayers.addOverlay(taxi_stand_layer, "Taxi Stands").addTo(map);
+
+    
+
 }
 
 
 function resetFeatures() {
     // remove from layer control //
+    controlLayers.options.collapsed = false
     controlLayers.removeLayer(clinic_layer)
     controlLayers.removeLayer(cc_layer)
     controlLayers.removeLayer(gym_layer)
@@ -352,7 +359,7 @@ function resetFeatures() {
     controlLayers.removeLayer(carpark_layer)
     controlLayers.removeLayer(mrt_layer)
     controlLayers.removeLayer(eating_establishment_layer)
-    controlLayers.removeLayer(taxi_stand_layer)
+    controlLayers.removeLayer(taxi_stand_layer)    
 
     // remove from map  //
     map.removeLayer(clinic_layer)
@@ -371,6 +378,7 @@ function resetFeatures() {
     map.removeLayer(mrt_layer)
     map.removeLayer(eating_establishment_layer)
     map.removeLayer(taxi_stand_layer)
+
 }
 
 // global variables //
@@ -509,8 +517,6 @@ var controlLayers = L.control.layers()
 
 // layer variables //
 var base_maps = { "Default": default_map };
-//var overlayMaps = { //"Boundaries" : boundaries, //"Locations": locations };
-//var area_layer = L.geoJSON(null, {onEachFeature: onEachFeature, style: onEachStyle}).addTo(map);
 
 axios.get('http://127.0.0.1:5000/GeoJSon_properties').then(response => {
     console.log(response.data)
