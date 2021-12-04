@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Singapore Property Analysis</title>
+    <title>Personalized Apartment Recommender</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='/bulma/css/bulma.min.css') }}">
     <style>
           .dropdown.is-hoverable .dropdown-menu {
@@ -27,7 +27,7 @@
     <div class="container">
       <form action="/" method="POST">
       <h1 class="title">
-        Singapore Property Analysis
+          Personalized Apartment Recommender
       </h1>
       <p class="subtitle">
         CSE6242 project, by <strong>Team 153</strong>
@@ -41,15 +41,39 @@
         
         <div class="block">
             <div class="columns">
-                <div class="column is-2 is-align-items-center is-flex"><div class="column has-text-right"><strong>Price range (per square metre):</strong></div></div>
-                <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded" name='minPricePerSqM' id='minPricePerSqM' type="text" placeholder="Minimum Price Per sq m (S$)"></div>
-                <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded" name='maxPricePerSqM' id='maxPricePerSqM' type="text" placeholder="Maximum Price per sq m (S$)"></div>
+
+                <div class="column is-2 is-align-items-center is-flex">
+                    <div class="column has-text-right"><strong>Apartment type:</strong></div>
+                </div>
+
+                <div class="column is-one-fourth is-align-items-center is-flex">
+                    <label class="checkbox"><input type="checkbox" id="hdb_selector" name="hdb_selector"> Public housing</label>
+                </div>
+                <div class="column is-one-fourth is-align-items-center is-flex">
+                    <label class="checkbox"><input type="checkbox" id="condo_selector" name="condo_selector">
+                        Condominium</label>
+                </div>
+
+                <div class="column is-2 is-align-items-center is-flex">
+                    <div class="column has-text-right"><strong>Price range (per square metre):</strong></div>
+                </div>
+                <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded"
+                                                                                      name='minPricePerSqM'
+                                                                                      id='minPricePerSqM' type="text"
+                                                                                      placeholder="Minimum Price Per sq m (S$)">
+                </div>
+                <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded"
+                                                                                      name='maxPricePerSqM'
+                                                                                      id='maxPricePerSqM' type="text"
+                                                                                      placeholder="Maximum Price per sq m (S$)">
+                </div>
             </div>
         </div>
 
         <div class="block">
             <div class="columns">
                 <div class="column is-2 is-align-items-center is-flex"><div class="column has-text-right"><strong>Location:</strong></div></div>
+
                 <div class="column is-align-items-center is-flex">
                     <div class="dropdown is-hoverable">
                         <div class="dropdown-trigger">
@@ -467,24 +491,35 @@
         function numberWithCommas(x) {
             return x.toString().replace(/\D/g,'').replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         }
-        const minPricePerSqM = document.getElementById("minPricePerSqM");
-        const maxPricePerSqM = document.getElementById("maxPricePerSqM");
-        minPricePerSqM.addEventListener("focusout", function(){
-            minPricePerSqM.value = numberWithCommas(minPricePerSqM.value)
-        })
-        maxPricePerSqM.addEventListener("focusout", function(){
-            maxPricePerSqM.value = numberWithCommas(maxPricePerSqM.value)
-        })
 
-        var num_primary_schools_slider = document.getElementById("num_primary_schools_slider");
-        var num_primary_schools_val = document.getElementById("num_primary_schools_val");
-        num_primary_schools_val.innerHTML = num_primary_schools_slider.value; 
-        num_primary_schools_slider.oninput = function() {
-            num_primary_schools_val.innerHTML = this.value;
-        }
-        var qlt_primary_schools_slider = document.getElementById("qlt_primary_schools_slider");
-        var qlt_primary_schools_val = document.getElementById("qlt_primary_schools_val");
-        qlt_primary_schools_val.innerHTML = qlt_primary_schools_slider.value; 
+      const minPricePerSqM = document.getElementById("minPricePerSqM");
+      const maxPricePerSqM = document.getElementById("maxPricePerSqM");
+
+      minPricePerSqM.addEventListener("focusout", function () {
+          minPricePerSqM.value = numberWithCommas(minPricePerSqM.value)
+      })
+      maxPricePerSqM.addEventListener("focusout", function () {
+          maxPricePerSqM.value = numberWithCommas(maxPricePerSqM.value)
+      })
+
+      const hdb_selector = document.getElementById("hdb_selector");
+      const condo_selector = document.getElementById("condo_selector");
+      hdb_selector.addEventListener("change", function () {
+          hdb_selector.value = hdb_selector.checked;
+      })
+      condo_selector.addEventListener("change", function () {
+          condo_selector.value = condo_selector.checked;
+      })
+
+      var num_primary_schools_slider = document.getElementById("num_primary_schools_slider");
+      var num_primary_schools_val = document.getElementById("num_primary_schools_val");
+      num_primary_schools_val.innerHTML = num_primary_schools_slider.value;
+      num_primary_schools_slider.oninput = function () {
+          num_primary_schools_val.innerHTML = this.value;
+      }
+      var qlt_primary_schools_slider = document.getElementById("qlt_primary_schools_slider");
+      var qlt_primary_schools_val = document.getElementById("qlt_primary_schools_val");
+      qlt_primary_schools_val.innerHTML = qlt_primary_schools_slider.value;
         qlt_primary_schools_slider.oninput = function() {
             qlt_primary_schools_val.innerHTML = this.value;
         }

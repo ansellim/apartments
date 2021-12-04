@@ -10,10 +10,26 @@ import numpy as np
 DB_FILEPATH = os.getcwd() + '/data/database.db'
 geojson_list = []
 
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         req = request.form
+
+        # Filter for HDB / condominium
+        hdb_selector = request.values.get("hdb_selector")
+        condo_selector = request.values.get("condo_selector")
+
+        if (hdb_selector == 'true') and (condo_selector == 'true'):
+            apartment_type = "project_type IN ('hdb','condo')"
+        elif (hdb_selector == 'true'):
+            apartment_type = "project_type = 'hdb'"
+        elif (condo_selector == 'true'):
+            apartment_type = "project_type = 'condo'"
+        else:
+            apartment_type = "project_type IN ('hdb','condo')"
+
+        print(apartment_type)
 
         # Get user's input regarding minimum and maximum price per square meter. Since apartments have different square area (square footage), price per square per meter is a fairer metric.
         min_price_per_sq_m = request.form.get("minPricePerSqM").replace(',', '')
@@ -40,26 +56,26 @@ def index():
             district_str = f"""district in {district_value}"""
 
         # Get user's weights for features (amenities / places of interest) with quality & quantity scores.
-        weight_num_primary_school = int(request.form.get("num_primary_schools_slider"))/100.0
-        weight_quality_primary_school = int(request.form.get("qlt_primary_schools_slider"))/100.0
-        weight_num_secondary_school = int(request.form.get("num_secondary_schools_slider"))/100.0
-        weight_quality_secondary_school = int(request.form.get("qlt_secondary_schools_slider"))/100.0
-        weight_num_hawker_center = int(request.form.get("num_hawker_slider"))/100.0
-        weight_quality_hawker_center = int(request.form.get("qlt_hawker_slider"))/100.0
-        weight_num_clinic = int(request.form.get("num_clinic_slider"))/100.0
-        weight_quality_clinic = int(request.form.get("qlt_clinic_slider"))/100.0
-        weight_other_public_sports_facility = int(request.form.get("num_sports_facilities_slider"))/100.0
-        weight_quality_other_public_sports_facility = int(request.form.get("qlt_sports_facilities_slider"))/100.0
-        weight_num_gym = int(request.form.get("num_gym_slider"))/100.0
-        weight_quality_gym = int(request.form.get("qlt_gym_slider"))/100.0
-        weight_num_community_center = int(request.form.get("num_community_centers_slider"))/100.0
-        weight_quality_community_center = int(request.form.get("qlt_community_centers_slider"))/100.0
-        weight_num_park = int(request.form.get("num_parks_slider"))/100.0
-        weight_quality_park = int(request.form.get("qlt_parks_slider"))/100.0
-        weight_num_mall = int(request.form.get("num_malls_slider"))/100.0
-        weight_quality_mall = int(request.form.get("qlt_malls_slider"))/100.0
-        weight_num_supermarket = int(request.form.get("num_supermarkets_slider"))/100.0
-        weight_quality_supermarket = int(request.form.get("qlt_supermarkets_slider"))/100.0
+        weight_num_primary_school = int(request.form.get("num_primary_schools_slider")) / 100.0
+        weight_quality_primary_school = int(request.form.get("qlt_primary_schools_slider")) / 100.0
+        weight_num_secondary_school = int(request.form.get("num_secondary_schools_slider")) / 100.0
+        weight_quality_secondary_school = int(request.form.get("qlt_secondary_schools_slider")) / 100.0
+        weight_num_hawker_center = int(request.form.get("num_hawker_slider")) / 100.0
+        weight_quality_hawker_center = int(request.form.get("qlt_hawker_slider")) / 100.0
+        weight_num_clinic = int(request.form.get("num_clinic_slider")) / 100.0
+        weight_quality_clinic = int(request.form.get("qlt_clinic_slider")) / 100.0
+        weight_other_public_sports_facility = int(request.form.get("num_sports_facilities_slider")) / 100.0
+        weight_quality_other_public_sports_facility = int(request.form.get("qlt_sports_facilities_slider")) / 100.0
+        weight_num_gym = int(request.form.get("num_gym_slider")) / 100.0
+        weight_quality_gym = int(request.form.get("qlt_gym_slider")) / 100.0
+        weight_num_community_center = int(request.form.get("num_community_centers_slider")) / 100.0
+        weight_quality_community_center = int(request.form.get("qlt_community_centers_slider")) / 100.0
+        weight_num_park = int(request.form.get("num_parks_slider")) / 100.0
+        weight_quality_park = int(request.form.get("qlt_parks_slider")) / 100.0
+        weight_num_mall = int(request.form.get("num_malls_slider")) / 100.0
+        weight_quality_mall = int(request.form.get("qlt_malls_slider")) / 100.0
+        weight_num_supermarket = int(request.form.get("num_supermarkets_slider")) / 100.0
+        weight_quality_supermarket = int(request.form.get("qlt_supermarkets_slider")) / 100.0
 
         # Get user's weights for features (amenities / places of interest) with quantity scores ONLY. These amenities do not have quality scores.
         weight_num_eating_establishment = int(request.form.get("num_eating_establishments_slider")) / 100.0
@@ -99,6 +115,7 @@ def index():
                                 as overall_score
                          FROM properties
                          WHERE price_per_sqm>={min_price_per_sq_m} and price_per_sqm<={max_price_per_sq_m}
+                         AND """ + apartment_type + """
                          AND """ + district_str + """
                          ORDER BY overall_score desc, price_per_sqm desc
                          LIMIT 5
@@ -154,33 +171,33 @@ def index():
                 colnames_to_drop.append(colname)
         matches.drop(columns=colnames_to_drop, inplace=True)
 
-        #function that takes in one amenity for a given feature and return GeoJson format
+        # function that takes in one amenity for a given feature and return GeoJson format
         def get_amenity_geojson(amenity, index, description):
-            feature = {'type':'Feature',
-                       'properties':{},
-                       'geometry':{'type':'Point',
-                                   'coordinates':[]}}
+            feature = {'type': 'Feature',
+                       'properties': {},
+                       'geometry': {'type': 'Point',
+                                    'coordinates': []}}
 
-            feature['geometry']['coordinates'] = [float(amenity["long"]),float(amenity["lat"])]
+            feature['geometry']['coordinates'] = [float(amenity["long"]), float(amenity["lat"])]
             feature['properties']['item'] = index + 1
             feature['properties']['description'] = description
             feature['properties']['name'] = amenity['name']
 
-            #Exclude these non-rated features: Carpark, Mrt, Eating, and Taxi Stand)
+            # Exclude these non-rated features: Carpark, Mrt, Eating, and Taxi Stand)
             if description != 'Carpark' and description != 'Mrt' and description != 'Eating' and description != 'Taxi Stand' and description != 'Bus Stop':
                 feature['properties']['weighted_rating'] = float(amenity["weighted_rating"])
-            
+
             return feature
 
-        #Convert dataframe to GeoJson format
+        # Convert dataframe to GeoJson format
         geojson_list.clear()
         for index, row in matches.iterrows():
-            #Add property to geojson list
-            feature = {'type':'Feature',
-                       'properties':{},
-                       'geometry':{'type':'Point',
-                                   'coordinates':[]}}
-            feature['geometry']['coordinates'] = [row["long"],row["lat"]]
+            # Add property to geojson list
+            feature = {'type': 'Feature',
+                       'properties': {},
+                       'geometry': {'type': 'Point',
+                                    'coordinates': []}}
+            feature['geometry']['coordinates'] = [row["long"], row["lat"]]
             feature['properties']['item'] = index + 1
             feature['properties']['description'] = 'Property'
             feature['properties']['name'] = row['project']
@@ -188,7 +205,7 @@ def index():
             feature['properties']['overall_score'] = row['overall_score']
             geojson_list.append(feature)
 
-            #For given property, add amenity to geojson list
+            # For given property, add amenity to geojson list
             if not pd.isna(row.clinic):
                 for amenity in json.loads(row.clinic):
                     feature = get_amenity_geojson(amenity=amenity, index=index, description='Clinic')
@@ -264,8 +281,9 @@ def index():
                     feature = get_amenity_geojson(amenity=amenity, index=index, description='Taxi Stand')
                     geojson_list.append(feature)
 
-        #print(geojson_list)
-        return redirect(url_for('map', geojson_response = jsonify(geojson_list)))       #Pass matches in geojson format to map() function that renders map.html
+        # print(geojson_list)
+        return redirect(url_for('map', geojson_response=jsonify(
+            geojson_list)))  # Pass matches in geojson format to map() function that renders map.html
     return render_template("index.html")
 
 
@@ -273,7 +291,7 @@ def index():
 def map():
     geojson_response_str = request.args['geojson_response']
     geojson_response = jsonify(geojson_response_str)
-    return render_template("map.html", geojson_response = geojson_response)     #pass matches in geojson format to map.html
+    return render_template("map.html", geojson_response=geojson_response)  # pass matches in geojson format to map.html
 
 
 @app.route("/GeoJSon_properties")
@@ -287,131 +305,131 @@ def create_GeoJSon():
 
 @app.route("/GeoJSon_testing")
 def create_GeoJSon_object():
-
     GeoJSon_samples = [
-    #1 Property details #
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 1,
-            "description": "Property",
-            "name": "119 ANG MO KIO AVE 3",
-            "price_per_sqm": 4451.222288,
-            "overall_score": 11.145,
+        # 1 Property details #
+        {
+            "type": "Feature",
+            "properties": {
+                "item": 1,
+                "description": "Property",
+                "name": "119 ANG MO KIO AVE 3",
+                "price_per_sqm": 4451.222288,
+                "overall_score": 11.145,
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [103.8446989, 1.369563443]
+            }
         },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.8446989, 1.369563443]
-        }
-    },
 
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 1,
-            "description": "School",
-            "name": "TECK GHEE PRIMARY SCHOOL",
+        {
+            "type": "Feature",
+            "properties": {
+                "item": 1,
+                "description": "School",
+                "name": "TECK GHEE PRIMARY SCHOOL",
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [103.851009800453, 1.36565018546903]
+            }
         },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.851009800453, 1.36565018546903]
-        }
-    },
 
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 1,
-            "description": "Mall",
-            "name": "AMK Hub",
+        {
+            "type": "Feature",
+            "properties": {
+                "item": 1,
+                "description": "Mall",
+                "name": "AMK Hub",
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [103.8484398, 1.36953]
+            }
         },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.8484398, 1.36953]
-        }
-    },
 
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 1,
-            "description": "Supermarket",
-            "name": "SHENG SIONG SUPERMARKET",
+        {
+            "type": "Feature",
+            "properties": {
+                "item": 1,
+                "description": "Supermarket",
+                "name": "SHENG SIONG SUPERMARKET",
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [103.843413231524, 1.37018860668947]
+            }
         },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.843413231524, 1.37018860668947]
-        }
-    },
 
-    #2 Property details #
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 2,
-            "description": "Property",
-            "name": "120 ANG MO KIO AVE 3",
+        # 2 Property details #
+        {
+            "type": "Feature",
+            "properties": {
+                "item": 2,
+                "description": "Property",
+                "name": "120 ANG MO KIO AVE 3",
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [103.8445948, 1.370047397]
+            }
         },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.8445948, 1.370047397]
-        }
-    },
 
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 2,
-            "description": "School",
-            "name": "TECK GHEE PRIMARY SCHOOL",
+        {
+            "type": "Feature",
+            "properties": {
+                "item": 2,
+                "description": "School",
+                "name": "TECK GHEE PRIMARY SCHOOL",
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [103.851009800453, 1.36565018546903]
+            }
         },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.851009800453, 1.36565018546903]
-        }
-    },
 
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 2,
-            "description": "Mall",
-            "name": "AMK Hub",
+        {
+            "type": "Feature",
+            "properties": {
+                "item": 2,
+                "description": "Mall",
+                "name": "AMK Hub",
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [103.8484398, 1.36953]
+            }
         },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.8484398, 1.36953]
-        }
-    },
 
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 2,
-            "description": "Supermarket",
-            "name": "SHENG SIONG SUPERMARKET",
+        {
+            "type": "Feature",
+            "properties": {
+                "item": 2,
+                "description": "Supermarket",
+                "name": "SHENG SIONG SUPERMARKET",
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [103.843413231524, 1.37018860668947]
+            }
         },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.843413231524, 1.37018860668947]
-        }
-    },
 
-    #3 Property details #
-    {
-        "type": "Feature",
-        "properties": {
-            "item": 3,
-            "description": "Property",
-            "name": "201 ANG MO KIO AVE 3",
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [103.8445648, 1.368849627]
+        # 3 Property details #
+        {
+            "type": "Feature",
+            "properties": {
+                "item": 3,
+                "description": "Property",
+                "name": "201 ANG MO KIO AVE 3",
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [103.8445648, 1.368849627]
+            }
         }
-    }
-]
+    ]
     return jsonify(GeoJSon_samples)
+
 
 # End of code added by Keith #
 ##############################
