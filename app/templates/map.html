@@ -141,7 +141,8 @@ function onEachFeature (feature, layer) {
 
     } else {
 
-        layer.bindPopup("Name: <b>" + feature.properties.name + "</b>");
+        layer.bindPopup("Name: <b>" + feature.properties.name +
+            "</b><br>Rating: <b>" + Math.round(feature.properties.weighted_rating*100)/100);
     
     }
 
@@ -335,8 +336,6 @@ function showFeatures(item) {
     controlLayers.addOverlay(mrt_layer, "Train Stations").addTo(map);
     controlLayers.addOverlay(eating_establishment_layer, "Eating Establishments").addTo(map);
     controlLayers.addOverlay(taxi_stand_layer, "Taxi Stands").addTo(map);
-
-    
 
 }
 

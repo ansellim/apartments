@@ -162,6 +162,7 @@ def index():
             feature['properties']['item'] = index + 1
             feature['properties']['description'] = description
             feature['properties']['name'] = amenity['name']
+            #feature['properties']['weighted_rating'] = float(amenity["weighted_rating"])
             return feature
 
         #Convert dataframe to GeoJson format
