@@ -176,9 +176,11 @@ function onClick(e) {
     
     if (controlLayers._layers.length > 0 ) {
         resetFeatures()
+        controlLayers.options.collapsed = false
     }
     
     showFeatures(e.sourceTarget.feature.properties.item)
+    controlLayers.options.collapsed = true
 
 }
 
@@ -319,7 +321,6 @@ function showFeatures(item) {
     map.addLayer(taxi_stand_layer)
     
     // add to control layer //
-    controlLayers.options.collapsed = true
     controlLayers.addOverlay(clinic_layer, "Clinics").addTo(map);
     controlLayers.addOverlay(cc_layer, "Community Centers").addTo(map);
     controlLayers.addOverlay(gym_layer, "Gyms").addTo(map);
@@ -342,7 +343,6 @@ function showFeatures(item) {
 
 function resetFeatures() {
     // remove from layer control //
-    controlLayers.options.collapsed = false
     controlLayers.removeLayer(clinic_layer)
     controlLayers.removeLayer(cc_layer)
     controlLayers.removeLayer(gym_layer)
@@ -537,6 +537,7 @@ axios.get('http://127.0.0.1:5000/GeoJSon_properties').then(response => {
     });
     
     map.fitBounds(property_layer.getBounds())
+    
 })
 
 </script>
