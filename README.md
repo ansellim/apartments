@@ -81,7 +81,7 @@ The user may then view the top recommendations (top 5 recommendations) as well a
 ### Run the app on the web
 
 The app is available
-at [https://apartments-recommendation.herokuapp.com/](https://apartments-recommendation.herokuapp.com/). (in progress)
+at [https://apartments-recommendation.herokuapp.com/](https://apartments-recommendation.herokuapp.com/).
 
 ### Run the app locally
 
