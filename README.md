@@ -14,6 +14,8 @@ types of amenities and facilities. Therefore, the novelty of our project lies in
 preferences, and our application returns *personalized* recommendations based on a scoring system which uses the
 preference weight assignments defined by the user.
 
+## What data was analyzed
+
 A total of 10,614 properties were analyzed. Transaction records were obtained from the Housing and Development Board (
 HDB) and the Urban Redevelopment Authority (URA). The HDB dataset contained sale prices, floor areas, and block and
 street names for public housing apartments which were sold in the market from 2017 to 2021. The URA dataset contained
@@ -26,24 +28,25 @@ ratings (0 to 5 stars) these amenities received on Google Places. These scores w
 the ratings were adjusted for the number of ratings an amenity receives in comparison to the total number of ratings
 received by amenities of the same type.
 
-| Type of place                                              | Standardized `feature_type` variable name | Quality scores available? |
-|------------------------------------------------------------|-------------------------------------------| --- |
-| CHAS clinic                                                | `clinic`                                  | Yes |
-| Community center                                           | `community_center`                        | Yes |
-| Gym                                                        | `gym`                                     | Yes |
-| Hawker center                                              | `hawker_center`                           | Yes |
-| Shopping mall                                              | `mall`                                    | Yes |
-| Other public sports facilities (mostly swimming complexes) | `other_public_sports_facility`            | Yes |
-| Park                                                       | `park`                                    | Yes |
-| Primary school                                             | `primary_school`                          | Yes |
-| Secondary school                                           | `secondary_school`                        | Yes |
-| Supermarket                                                | `supermarket`                             | Yes |
-| Carpark                                                    | `carpark`                                 | No |
-| Subway (MRT) station                                       | `mrt`                                     | No |
-| F&B (eating establishment)                                 | `eating_establishment`                    | No (too many to calculate) |
-| Taxi stand                                                 | `taxi_stand`                              | No |
+| Type of place                                              | Standardized `feature_type` variable name | Quality scores available?  |
+|------------------------------------------------------------|------------------------------------------|----------------------------|
+| CHAS clinic                                                | `clinic`                                 | Yes                        |
+| Community center                                           | `community_center`                       | Yes                        |
+| Gym                                                        | `gym`                                    | Yes                        |
+| Hawker center                                              | `hawker_center`                          | Yes                        |
+| Shopping mall                                              | `mall`                                   | Yes                        |
+| Other public sports facilities (mostly swimming complexes) | `other_public_sports_facility`           | Yes                        |
+| Park                                                       | `park`                                   | Yes                        |
+| Primary school                                             | `primary_school`                         | Yes                        |
+| Secondary school                                           | `secondary_school`                       | Yes                        |
+| Supermarket                                                | `supermarket`                            | Yes                        |
+| Bus stop                                                   | `bus_stop`                               | No                         |
+| Carpark                                                    | `carpark`                                | No                         |
+| Subway (MRT) station                                       | `mrt`                                    | No                         |
+| F&B (eating establishment)                                 | `eating_establishment`                   | No (too many to calculate) |
+| Taxi stand                                                 | `taxi_stand`                             | No                         |
 
-## Our custom database
+## Creating our custom database
 
 With location data available for homes as well as amenities, we then computed, for each residential property project,
 the **number of amenities** ("quantity score") as well as the **median weighted quality score of amenities** ("quality
@@ -73,7 +76,7 @@ The user may then view the top recommendations (top 5 recommendations) as well a
 
 ![](docs/mapping_example.png)
 
-## How to run
+## Try it out yourself!
 
 Create a conda environment using the `environment.yml` file by running the following command in the project root.
 
