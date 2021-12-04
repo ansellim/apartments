@@ -1,10 +1,10 @@
 # Specify docker image
 # Ansel Lim
-FROM continuumio/miniconda3
+FROM continuumio/anaconda3:2020.11
 
-ADD . /application
-WORKDIR /application
+ADD . /app
+WORKDIR /app
 
-RUN conda install flask
+# RUN pip install flask
 
 ENTRYPOINT ["python", "run.py"]
