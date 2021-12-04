@@ -10,6 +10,13 @@ crossorigin=""></script>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+<style>
+    .mypopup.leaflet-popup-content-wrapper {
+        background-color: red;
+        opacity: 0.5;
+    }
+</style>
+
 <body> <div id='map' style='height:100%; width:100%;'></div>
 
 <script>
@@ -127,10 +134,13 @@ function onEachFeature (feature, layer) {
 
         layer.bindPopup("Name: <b>" + feature.properties.name +
                         "</b><br>Price/Sqm: <b>$" +  price_per_sqm +
-                        "</b><br>Overall Score: <b>" + Math.round(feature.properties.overall_score*100)/100);
+                        "</b><br>Overall Score: <b>" + Math.round(feature.properties.overall_score*100)/100,
+                            {autoClose: false});
 
     } else {
+
         layer.bindPopup("Name: <b>" + feature.properties.name + "</b>");
+    
     }
 
 }
@@ -516,7 +526,12 @@ axios.get('http://127.0.0.1:5000/GeoJSon_properties').then(response => {
 
     default_map.addTo(map);
     property_layer.addTo(map);
-    //map.fitBounds(property_layer)
+
+    property_layer.eachLayer(function(layer){
+        layer.openPopup();
+    });
+    
+    map.fitBounds(property_layer.getBounds())
 })
 
 </script>
