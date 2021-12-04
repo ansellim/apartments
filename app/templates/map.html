@@ -23,64 +23,61 @@ var hse_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/hse.jpg') }}",    
     iconSize: [20, 20], // size of the icon
 });
-
 var clinic_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/clinic.jpg') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
 var cc_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/cc.png') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
 var gym_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/gym.jpg') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
 var hawker_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/hawker.png') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
 var mall_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/mall.png') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
-
 var sport_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/sport.png') }}",    
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
 var park_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/park.png') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
 var psch_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/psch.jpg') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
 var ssch_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/ssch.png') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
 var mkt_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/mkt.jpg') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
-
 var carpark_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/carpark.png') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
 var mrt_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/mrt.png') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
 var eating_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/eating.png') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
 var taxistand_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/taxistand.jpg') }}",
-    iconSize: [20, 20], // size of the icon
+    iconSize: [15, 15], // size of the icon
 });
 
 
@@ -126,8 +123,10 @@ function onEachFeature (feature, layer) {
 
     if (feature.properties.description == "Property") {
 
+        var price_per_sqm = Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(Math.round(feature.properties.price_per_sqm))
+
         layer.bindPopup("Name: <b>" + feature.properties.name +
-                        "</b><br>Price/Sqm: <b>$" + Math.round(feature.properties.price_per_sqm) +
+                        "</b><br>Price/Sqm: <b>$" +  price_per_sqm +
                         "</b><br>Overall Score: <b>" + Math.round(feature.properties.overall_score*100)/100);
 
     } else {
@@ -287,7 +286,26 @@ function showFeatures(item) {
             if (feature.properties.item == item && feature.properties.description == "Taxi Stand") return true;
         }
     })
+
+    // add to map //
+    map.addLayer(clinic_layer)
+    map.addLayer(cc_layer)
+    map.addLayer(gym_layer)
+    map.addLayer(hawker_center_layer)   
+    map.addLayer(mall_layer)
+
+    map.addLayer(sport_layer)
+    map.addLayer(park_layer)
+    map.addLayer(pschool_layer)
+    map.addLayer(sschool_layer)
+    map.addLayer(supermarket_layer)
+
+    map.addLayer(carpark_layer)
+    map.addLayer(mrt_layer)
+    map.addLayer(eating_establishment_layer)
+    map.addLayer(taxi_stand_layer)
     
+    // add to control layer //
     controlLayers.addOverlay(clinic_layer, "Clinics").addTo(map);
     controlLayers.addOverlay(cc_layer, "Community Centers").addTo(map);
     controlLayers.addOverlay(gym_layer, "Gyms").addTo(map);
@@ -304,7 +322,6 @@ function showFeatures(item) {
     controlLayers.addOverlay(mrt_layer, "Train Stations").addTo(map);
     controlLayers.addOverlay(eating_establishment_layer, "Eating Establishments").addTo(map);
     controlLayers.addOverlay(taxi_stand_layer, "Taxi Stands").addTo(map);
-
 }
 
 
@@ -344,17 +361,11 @@ function resetFeatures() {
     map.removeLayer(mrt_layer)
     map.removeLayer(eating_establishment_layer)
     map.removeLayer(taxi_stand_layer)
-
-    //markers.clearLayers();
-    //map.removeLayer(supermarket_layer);
 }
 
 // global variables //
-var GeoJSon_properties
- 
-var property_layer
+var GeoJSon_properties, property_layer
 var clinic_layer, cc_layer, gym_layer, hawker_center_layer, mall_layer, sport_layer, park_layer, pschool_layer, sschool_layer, supermarket_layer, carpark_layer, mrt_layer, eating_establishment_layer, taxi_stand_layer
-
 
 var testGeoJSon_properties = [
     // #1 Property //
@@ -486,10 +497,8 @@ var default_map = L.tileLayer("https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}
 var map = L.map('map', {center: [1.355, 103.81], zoom: 12 }); //layers: [default_map]
 var controlLayers = L.control.layers()
 
-
 // layer variables //
 var base_maps = { "Default": default_map };
-var overlay_maps = {};
 //var overlayMaps = { //"Boundaries" : boundaries, //"Locations": locations };
 //var area_layer = L.geoJSON(null, {onEachFeature: onEachFeature, style: onEachStyle}).addTo(map);
 
@@ -507,7 +516,7 @@ axios.get('http://127.0.0.1:5000/GeoJSon_properties').then(response => {
 
     default_map.addTo(map);
     property_layer.addTo(map);
-    map.fitBounds(property_layer)
+    //map.fitBounds(property_layer)
 })
 
 </script>
