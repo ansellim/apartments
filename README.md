@@ -146,8 +146,38 @@ buggy and doesn't work, so I recommend trying the app out on your local machine 
 
 ## Examples
 
-### Example 1: Persona 1 of ....
+### Example 1: Persona 1 of young parents with below-average income
 
-Examples of queries go here.
+In this example, our constraints include a price limit of S$5,000/sqm, with the search limited to public housing and in two specific districts which are further from the city centre (D27 and D28). As forward-thinking young parents, they prioritised being close to primary and secondary schools, clinics, hawker centers and subway (MRT) stations. For the quantity and quality weights of these features were set to the maximum value of 100, while the other features were set at a lower value of 20.
 
-### Example 2
+![](docs/Persona1_parameters.png)
+
+For the recommended results, 7 out of the 9 quantity and quality scores for the preferred features were in the top quartile (Q4) of properties within the selected constraints. The remaining two were within the third quartile (Q3)
+
+![](docs/Persona1_map.png)
+
+
+
+### Example 2: Persona 2 of a single young adult with average income
+
+In this example, our constraints include a price limit of S$8,000/sqm, with no restrictions on the type of housing or districts. As hip and trendy young adult, being close to sports facilities, gyms, community centers, hawker centers, eating establishments, MRT stations and taxi stands was prioritised. Similar to the earlier example, the quantity and quality weights of these features were set to the maximum value of 100, while the other features were set at a lower value of 20.
+
+
+![](docs/Persona2_parameters.png)
+
+For the recommended results, 10 out of the 13 quantity and quality scores for the preferred features were in the top quartile. The remaining three ranged between the 2nd and 3rd quartiles.
+
+![](docs/Persona2_map.png)
+
+
+
+### Example 3: Persona 3 of a large multi-generational family, wealthy
+
+In this example, our constraints include a price range between S$20,000/sqm and S$30,000/sqm, with the search limited to condominiums and in three specific districts (D9, D10, D11). As a large multi-generational family, they prioritised being close to primary and secondary schools, clinics, sports facilities, gyms, community centers, parks and malls. As with the earlier examples, the quantity and quality weights of these features were set to the maximum value of 100, while the other features were set at a lower value of 20.
+
+
+![](docs/Persona3_parameters.png)
+
+The stricter constraints narrowed the shortlist to only 205 properties. For the recommended results, 9 out of the 16 quantity and quality scores for the preferred features were in the top quartile. The remaining 7 ranged between the 1st and 3rd quartiles. 
+
+![](docs/Persona3_map.png)
