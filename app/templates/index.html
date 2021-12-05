@@ -1,669 +1,674 @@
+<!--Questionnaire page - HTML-->
+<!--Author: Daosheng Lin-->
+<!--Edits: Ansel Lim-->
+
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Personalized Apartment Recommender</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='/bulma/css/bulma.min.css') }}">
     <style>
-          .dropdown.is-hoverable .dropdown-menu {
+        .dropdown.is-hoverable .dropdown-menu {
             width: 70vw;
-            }
+        }
 
-          .slider {
+        .slider {
             -webkit-appearance: none;  /* Override default CSS styles */
             appearance: none;
-            height: 20px; 
+            height: 20px;
             background: #00d1b2;
             outline: none; /* Remove outline */
-            opacity: 0.7; 
-            -webkit-transition: .2s; 
+            opacity: 0.7;
+            -webkit-transition: .2s;
             transition: opacity .2s;
-            }
+        }
     </style>
-  </head>
-  <body>
-  <section class="section">
+</head>
+<body>
+<section class="section">
     <div class="container">
-      <form action="/" method="POST">
-      <h1 class="title">
-          Personalized Apartment Recommender
-      </h1>
-      <p class="subtitle">
-        CSE6242 project, by <strong>Team 153</strong>
-      </p>
+        <form action="/" method="POST">
+            <h1 class="title">
+                Personalized Apartment Recommender
+            </h1>
+            <p class="subtitle">
+                CSE6242 project, by <strong>Team 153</strong>
+            </p>
 
-      <div class="block">
-        <h4 class="title is-4">Share your preferences, we'll help you find your perfect home.</h4>        
-      </div>
-      <div class="box">
-        <h5 class="title is-5">Let's start with the basics. Limit your search results to with these criteria:</h5>
-        
-        <div class="block">
-            <div class="columns">
-
-                <div class="column is-2 is-align-items-center is-flex">
-                    <div class="column has-text-right"><strong>Apartment type:</strong></div>
-                </div>
-
-                <div class="column is-one-fourth is-align-items-center is-flex">
-                    <label class="checkbox"><input type="checkbox" id="hdb_selector" name="hdb_selector"> Public housing</label>
-                </div>
-                <div class="column is-one-fourth is-align-items-center is-flex">
-                    <label class="checkbox"><input type="checkbox" id="condo_selector" name="condo_selector">
-                        Condominium</label>
-                </div>
-
-                <div class="column is-2 is-align-items-center is-flex">
-                    <div class="column has-text-right"><strong>Price range (per square metre):</strong></div>
-                </div>
-                <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded"
-                                                                                      name='minPricePerSqM'
-                                                                                      id='minPricePerSqM' type="text"
-                                                                                      placeholder="Minimum Price Per sq m (S$)">
-                </div>
-                <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded"
-                                                                                      name='maxPricePerSqM'
-                                                                                      id='maxPricePerSqM' type="text"
-                                                                                      placeholder="Maximum Price per sq m (S$)">
-                </div>
+            <div class="block">
+                <h4 class="title is-4">Share your preferences, we'll help you find your perfect home.</h4>
             </div>
-        </div>
+            <div class="box">
+                <h5 class="title is-5">Let's start with the basics. Limit your search results to with these criteria:</h5>
 
-        <div class="block">
-            <div class="columns">
-                <div class="column is-2 is-align-items-center is-flex"><div class="column has-text-right"><strong>Location:</strong></div></div>
+                <div class="block">
+                    <div class="columns">
 
-                <div class="column is-align-items-center is-flex">
-                    <div class="dropdown is-hoverable">
-                        <div class="dropdown-trigger">
-                            <div class="box">
-                                Which districts are you considering?
-                              </div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <div class="column has-text-right"><strong>Apartment type:</strong></div>
                         </div>
-                        <div class="dropdown-menu" id="dropdown-menu4" role="menu">
-                        <div class="dropdown-content">
-                            <div class="dropdown-item">
-                                <div class="block">
-                                    <label class="checkbox">
-                                        <input type="checkbox" checked="checked" name="districts_all" onClick="toggle_all_districts(this)" />
-                                        <strong>All Districts</strong><br/>
-                                        
-                                    </label>
-                                        <div class="tags">
+
+                        <div class="column is-one-fourth is-align-items-center is-flex">
+                            <label class="checkbox"><input type="checkbox" id="hdb_selector" name="hdb_selector"> Public housing</label>
+                        </div>
+                        <div class="column is-one-fourth is-align-items-center is-flex">
+                            <label class="checkbox"><input type="checkbox" id="condo_selector" name="condo_selector">
+                                Condominium</label>
+                        </div>
+
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <div class="column has-text-right"><strong>Price range (per square metre):</strong></div>
+                        </div>
+                        <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded"
+                                                                                              name='minPricePerSqM'
+                                                                                              id='minPricePerSqM' type="text"
+                                                                                              placeholder="Minimum Price Per sq m (S$)">
+                        </div>
+                        <div class="column is-one-fifth is-align-items-center is-flex"><input class="input is-rounded"
+                                                                                              name='maxPricePerSqM'
+                                                                                              id='maxPricePerSqM' type="text"
+                                                                                              placeholder="Maximum Price per sq m (S$)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block">
+                    <div class="columns">
+                        <div class="column is-2 is-align-items-center is-flex"><div class="column has-text-right"><strong>Location:</strong></div></div>
+
+                        <div class="column is-align-items-center is-flex">
+                            <div class="dropdown is-hoverable">
+                                <div class="dropdown-trigger">
+                                    <div class="box">
+                                        Which districts are you considering?
+                                    </div>
+                                </div>
+                                <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                                    <div class="dropdown-content">
+                                        <div class="dropdown-item">
+                                            <div class="block">
+                                                <label class="checkbox">
+                                                    <input type="checkbox" checked="checked" name="districts_all" onClick="toggle_all_districts(this)" />
+                                                    <strong>All Districts</strong><br/>
+
+                                                </label>
+                                                <div class="tags">
                                             <span class="tag is-primary">
                                                 <label class="checkbox">
                                                     <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D1" id="check_D1" onClick="check_all_districts(this)" >
                                                     D1: Raffles Place, Cecil, Marina, People's Park
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D2" id="check_D2" onClick="check_all_districts(this)" >
                                                         D2: Anson, Tanjong Pagar
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D3" id="check_D3" onClick="check_all_districts(this)" >
                                                         D3: Queenstown, Tiong Bahru 
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D4" id="check_D4" onClick="check_all_districts(this)" >
                                                         D4: Telok Blangah, Harbourfront 
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D5" id="check_D5" onClick="check_all_districts(this)" >
                                                         D5: Pasir Panjang, Hong Leong Garden, Clementi
 
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D6" id="check_D6" onClick="check_all_districts(this)" >
                                                         D6: High Street, Beach Road 
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D7" id="check_D7" onClick="check_all_districts(this)" >
                                                         D7: Middle Road, Golden Mile 
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D8" id="check_D8" onClick="check_all_districts(this)" >
                                                         D8: Little India 
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D9" id="check_D9" onClick="check_all_districts(this)" >
                                                         D9: Orchard, Cairnhill, River Valley 
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D10" id="check_D10" onClick="check_all_districts(this)" >
                                                         D10: Ardmore, Bukit Timah, Holland Road, Tanglin 
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D11" id="check_D11" onClick="check_all_districts(this)" >
                                                         D11: Watten Estate, Novena, Thomson
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D12" id="check_D12" onClick="check_all_districts(this)" >
                                                         D12: Balestier, Toa Payoh, Serangoon
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D13" id="check_D13" onClick="check_all_districts(this)" >
                                                         D13: Macpherson, Braddell
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D14" id="check_D14" onClick="check_all_districts(this)" >
                                                         D14: Geylang, Eunos
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D15" id="check_D15" onClick="check_all_districts(this)" >
                                                         D15: Katong, Joo Chiat, Amber Road
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D16" id="check_D16" onClick="check_all_districts(this)" >
                                                         D16: Bedok, Upper East Coast, Eastwood, Kew Drive
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D17" id="check_D17" onClick="check_all_districts(this)" >
                                                         D17: Loyang, Changi
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D18" id="check_D18" onClick="check_all_districts(this)" >
                                                         D18: Tampines, Pasir Ris
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D19" id="check_D19" onClick="check_all_districts(this)" >
                                                         D19: Serangoon Garden, Hougang, Punggol
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D20" id="check_D20" onClick="check_all_districts(this)" >
                                                         D20: Bishan, Ang Mo Kio
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D21" id="check_D21" onClick="check_all_districts(this)" >
                                                         D21: Upper Bukit Timah, Clementi Park, Ulu Pandan
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D22" id="check_D22" onClick="check_all_districts(this)" >
                                                         D22: Jurong
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D23" id="check_D23" onClick="check_all_districts(this)" >
                                                         D23: Hillview, Dairy Farm, Bukit Panjang, Choa Chu Kang
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D24" id="check_D24" onClick="check_all_districts(this)" >
                                                         D24: Lim Chu Kang, Tengah
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D25" id="check_D25" onClick="check_all_districts(this)" >
                                                         D25: Kranji, Woodgrove
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D26" id="check_D26" onClick="check_all_districts(this)" >
                                                         D26: Upper Thomson, Springleaf
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D27" id="check_D27" onClick="check_all_districts(this)" >
                                                         D27: Yishun, Sembawang
                                                 </label>
                                             </span>
-                                            <span class="tag is-primary">
+                                                    <span class="tag is-primary">
                                                 <label class="checkbox">
                                                         <input type="checkbox" checked="checked" class="districts_checkboxes" name="check_D28" id="check_D28" onClick="check_all_districts(this)" >
                                                         D28: Seletar
                                                 </label>
                                             </span>
+                                                </div>
                                             </div>
                                         </div>
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="column is-align-items-center is-flex">
+                                <span class="tag is-primary is-large" id="districts_output">All</span>
                             </div>
                         </div>
                     </div>
-                    <div class="column is-align-items-center is-flex">
-                        <span class="tag is-primary is-large" id="districts_output">All</span>
+                </div>
+            </div>
+
+            <div class="box">
+                <h5 class="title is-5">Which of the following amenities are important to you?</h5>
+                <div class="block">
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Primary schools:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_primary_schools_slider" id="num_primary_schools_slider">
+                            <div class="column has-text-left" name="num_primary_schools_val" id="num_primary_schools_val">50</div>
+                        </div>
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Primary schools:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="qlt_primary_schools_slider" id="qlt_primary_schools_slider">
+                            <div class="column has-text-left" name="qlt_primary_schools_val" id="qlt_primary_schools_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Secondary schools:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_secondary_schools_slider" id="num_secondary_schools_slider">
+                            <div class="column has-text-left" name="num_secondary_schools_val" id="num_secondary_schools_val">50</div>
+                        </div>
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Secondary schools:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="qlt_secondary_schools_slider" id="qlt_secondary_schools_slider">
+                            <div class="column has-text-left" name="qlt_secondary_schools_val" id="qlt_secondary_schools_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Hawker centres:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_hawker_slider" id="num_hawker_slider">
+                            <div class="column has-text-left" name="num_hawker_val" id="num_hawker_val">50</div>
+                        </div>
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Hawker centres:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="qlt_hawker_slider" id="qlt_hawker_slider">
+                            <div class="column has-text-left" name="qlt_hawker_val" id="qlt_hawker_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Eating establishments:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_eating_establishments_slider" id="num_eating_establishments_slider">
+                            <div class="column has-text-left" name="num_eating_establishments_val" id="num_eating_establishments_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Clinics:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_clinic_slider" id="num_clinic_slider">
+                            <div class="column has-text-left" name="num_clinic_val" id="num_clinic_val">50</div>
+                        </div>
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Clinics:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="qlt_clinic_slider" id="qlt_clinic_slider">
+                            <div class="column has-text-left" name="qlt_clinic_val" id="qlt_clinic_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Sports facilities:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_sports_facilities_slider" id="num_sports_facilities_slider">
+                            <div class="column has-text-left" name="num_sports_facilities_val" id="num_sports_facilities_val">50</div>
+                        </div>
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Sports facilities:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="qlt_sports_facilities_slider" id="qlt_sports_facilities_slider">
+                            <div class="column has-text-left" name="qlt_sports_facilities_val" id="qlt_sports_facilities_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Gyms:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_gym_slider" id="num_gym_slider">
+                            <div class="column has-text-left" name="num_gym_val" id="num_gym_val">50</div>
+                        </div>
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Gyms:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="qlt_gym_slider" id="qlt_gym_slider">
+                            <div class="column has-text-left" name="qlt_gym_val" id="qlt_gym_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Community centres:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_community_centers_slider" id="num_community_centers_slider">
+                            <div class="column has-text-left" name="num_community_centers_val" id="num_community_centers_val">50</div>
+                        </div>
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Community centres:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="qlt_community_centers_slider" id="qlt_community_centers_slider">
+                            <div class="column has-text-left" name="qlt_community_centers_val" id="qlt_community_centers_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Parks:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_parks_slider" id="num_parks_slider">
+                            <div class="column has-text-left" name="num_parks_val" id="num_parks_val">50</div>
+                        </div>
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Parks:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="qlt_parks_slider" id="qlt_parks_slider">
+                            <div class="column has-text-left" name="qlt_parks_val" id="qlt_parks_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Malls:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_malls_slider" id="num_malls_slider">
+                            <div class="column has-text-left" name="num_malls_val" id="num_malls_val">50</div>
+                        </div>
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Malls:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="qlt_malls_slider" id="qlt_malls_slider">
+                            <div class="column has-text-left" name="qlt_malls_val" id="qlt_malls_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Supermarkets:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_supermarkets_slider" id="num_supermarkets_slider">
+                            <div class="column has-text-left" name="num_supermarkets_val" id="num_supermarkets_val">50</div>
+                        </div>
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Supermarkets:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="qlt_supermarkets_slider" id="qlt_supermarkets_slider">
+                            <div class="column has-text-left" name="qlt_supermarkets_val" id="qlt_supermarkets_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of MRT stations:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_mrt_slider" id="num_mrt_slider">
+                            <div class="column has-text-left" name="num_mrt_val" id="num_mrt_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Bus stops:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_bus_stop_slider" id="num_bus_stop_slider">
+                            <div class="column has-text-left" name="num_bus_stop_val" id="num_bus_stop_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Carparks:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_carparks_slider" id="num_carparks_slider">
+                            <div class="column has-text-left" name="num_carparks_val" id="num_carparks_val">50</div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Taxi stands:</strong></div></div>
+                        <div class="column is-2 is-align-items-center is-flex">
+                            <input type="range" min="0" max="100" value="50" class="slider" name="num_taxi_stands_slider" id="num_taxi_stands_slider">
+                            <div class="column has-text-left" name="num_taxi_stands_val" id="num_taxi_stands_val">50</div>
+                        </div>
                     </div>
                 </div>
             </div>
-          </div>
-      </div>
-      
-      <div class="box">
-        <h5 class="title is-5">Which of the following amenities are important to you?</h5>
-        <div class="block">
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Primary schools:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_primary_schools_slider" id="num_primary_schools_slider">
-                        <div class="column has-text-left" name="num_primary_schools_val" id="num_primary_schools_val">50</div>
-                </div>
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Primary schools:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="qlt_primary_schools_slider" id="qlt_primary_schools_slider">
-                        <div class="column has-text-left" name="qlt_primary_schools_val" id="qlt_primary_schools_val">50</div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Secondary schools:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_secondary_schools_slider" id="num_secondary_schools_slider">
-                        <div class="column has-text-left" name="num_secondary_schools_val" id="num_secondary_schools_val">50</div>
-                </div>
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Secondary schools:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="qlt_secondary_schools_slider" id="qlt_secondary_schools_slider">
-                        <div class="column has-text-left" name="qlt_secondary_schools_val" id="qlt_secondary_schools_val">50</div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Hawker centres:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_hawker_slider" id="num_hawker_slider">
-                        <div class="column has-text-left" name="num_hawker_val" id="num_hawker_val">50</div>
-                </div>
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Hawker centres:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="qlt_hawker_slider" id="qlt_hawker_slider">
-                        <div class="column has-text-left" name="qlt_hawker_val" id="qlt_hawker_val">50</div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Eating establishments:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_eating_establishments_slider" id="num_eating_establishments_slider">
-                        <div class="column has-text-left" name="num_eating_establishments_val" id="num_eating_establishments_val">50</div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Clinics:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_clinic_slider" id="num_clinic_slider">
-                        <div class="column has-text-left" name="num_clinic_val" id="num_clinic_val">50</div>
-                </div>
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Clinics:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="qlt_clinic_slider" id="qlt_clinic_slider">
-                        <div class="column has-text-left" name="qlt_clinic_val" id="qlt_clinic_val">50</div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Sports facilities:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_sports_facilities_slider" id="num_sports_facilities_slider">
-                        <div class="column has-text-left" name="num_sports_facilities_val" id="num_sports_facilities_val">50</div>
-                </div>
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Sports facilities:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="qlt_sports_facilities_slider" id="qlt_sports_facilities_slider">
-                        <div class="column has-text-left" name="qlt_sports_facilities_val" id="qlt_sports_facilities_val">50</div>
-                </div>
-            </div>            
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Gyms:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_gym_slider" id="num_gym_slider">
-                        <div class="column has-text-left" name="num_gym_val" id="num_gym_val">50</div>
-                </div>
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Gyms:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="qlt_gym_slider" id="qlt_gym_slider">
-                        <div class="column has-text-left" name="qlt_gym_val" id="qlt_gym_val">50</div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Community centres:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_community_centers_slider" id="num_community_centers_slider">
-                        <div class="column has-text-left" name="num_community_centers_val" id="num_community_centers_val">50</div>
-                </div>
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Community centres:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="qlt_community_centers_slider" id="qlt_community_centers_slider">
-                        <div class="column has-text-left" name="qlt_community_centers_val" id="qlt_community_centers_val">50</div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Parks:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_parks_slider" id="num_parks_slider">
-                        <div class="column has-text-left" name="num_parks_val" id="num_parks_val">50</div>
-                </div>
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Parks:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="qlt_parks_slider" id="qlt_parks_slider">
-                        <div class="column has-text-left" name="qlt_parks_val" id="qlt_parks_val">50</div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Malls:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_malls_slider" id="num_malls_slider">
-                        <div class="column has-text-left" name="num_malls_val" id="num_malls_val">50</div>
-                </div>
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Malls:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="qlt_malls_slider" id="qlt_malls_slider">
-                        <div class="column has-text-left" name="qlt_malls_val" id="qlt_malls_val">50</div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Supermarkets:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_supermarkets_slider" id="num_supermarkets_slider">
-                        <div class="column has-text-left" name="num_supermarkets_val" id="num_supermarkets_val">50</div>
-                </div>
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong>Quality of Supermarkets:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="qlt_supermarkets_slider" id="qlt_supermarkets_slider">
-                        <div class="column has-text-left" name="qlt_supermarkets_val" id="qlt_supermarkets_val">50</div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of MRT stations:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_mrt_slider" id="num_mrt_slider">
-                        <div class="column has-text-left" name="num_mrt_val" id="num_mrt_val">50</div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Bus stops:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_bus_stop_slider" id="num_bus_stop_slider">
-                        <div class="column has-text-left" name="num_bus_stop_val" id="num_bus_stop_val">50</div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Carparks:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_carparks_slider" id="num_carparks_slider">
-                        <div class="column has-text-left" name="num_carparks_val" id="num_carparks_val">50</div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-3 is-align-items-center is-flex"><div class="column has-text-right"><strong># of Taxi stands:</strong></div></div>
-                <div class="column is-2 is-align-items-center is-flex">
-                        <input type="range" min="0" max="100" value="50" class="slider" name="num_taxi_stands_slider" id="num_taxi_stands_slider">
-                        <div class="column has-text-left" name="num_taxi_stands_val" id="num_taxi_stands_val">50</div>
-                </div>
-            </div>
-        </div>
-        </div>
-        
-        <div>
-            <input class="button is-link is-pulled-right" type="submit" value="Find my home!">
-        </div>
-    </form>
-    </div>
-  </section>
-  
 
-  <script>
-      var dropdown = document.querySelector('.dropdown');
-        dropdown.addEventListener('click', function(event) {
+            <div>
+                <input class="button is-link is-pulled-right" type="submit" value="Find my home!">
+            </div>
+        </form>
+    </div>
+</section>
+
+
+<script>
+    var dropdown = document.querySelector('.dropdown');
+    dropdown.addEventListener('click', function(event) {
         event.stopPropagation();
         dropdown.classList.toggle('is-active');
-        });
+    });
 
-      function toggle_all_districts(source) {
-            var checkboxes = document.querySelectorAll('input[class="districts_checkboxes"]');
-            var output_text = document.getElementById("districts_output");
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i] != source)
-                    checkboxes[i].checked = source.checked;
-            }
-            if (source.checked) {
-                output_text.textContent = 'All'
-            } else {
-                output_text.textContent = 'Please choose at least 1'
-            }
+    function toggle_all_districts(source) {
+        var checkboxes = document.querySelectorAll('input[class="districts_checkboxes"]');
+        var output_text = document.getElementById("districts_output");
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i] != source)
+                checkboxes[i].checked = source.checked;
         }
-      function check_all_districts(source) {
+        if (source.checked) {
+            output_text.textContent = 'All'
+        } else {
+            output_text.textContent = 'Please choose at least 1'
+        }
+    }
+
+    function check_all_districts(source) {
         var checkboxes = document.querySelectorAll('input[class="districts_checkboxes"]');
         var all_checkbox = document.querySelectorAll('input[name="districts_all"]')[0];
         var output_text = document.getElementById("districts_output");
         var num_checked = 0
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].checked == true)
-                    num_checked++
-            }
-            if (num_checked == checkboxes.length) {
-                all_checkbox.checked = true
-                output_text.textContent = 'All'
-            } else {
-                all_checkbox.checked = false
-                output_text.textContent = num_checked + ' district(s) selected'
-            }
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked == true)
+                num_checked++
         }
+        if (num_checked == checkboxes.length) {
+            all_checkbox.checked = true
+            output_text.textContent = 'All'
+        } else {
+            all_checkbox.checked = false
+            output_text.textContent = num_checked + ' district(s) selected'
+        }
+    }
 
-        function numberWithCommas(x) {
-            return x.toString().replace(/\D/g,'').replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-        }
+    function numberWithCommas(x) {
+        return x.toString().replace(/\D/g,'').replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
 
-      const minPricePerSqM = document.getElementById("minPricePerSqM");
-      const maxPricePerSqM = document.getElementById("maxPricePerSqM");
+    const minPricePerSqM = document.getElementById("minPricePerSqM");
+    const maxPricePerSqM = document.getElementById("maxPricePerSqM");
 
-      minPricePerSqM.addEventListener("focusout", function () {
-          minPricePerSqM.value = numberWithCommas(minPricePerSqM.value)
-      })
-      maxPricePerSqM.addEventListener("focusout", function () {
-          maxPricePerSqM.value = numberWithCommas(maxPricePerSqM.value)
-      })
+    minPricePerSqM.addEventListener("focusout", function () {
+        minPricePerSqM.value = numberWithCommas(minPricePerSqM.value)
+    })
+    maxPricePerSqM.addEventListener("focusout", function () {
+        maxPricePerSqM.value = numberWithCommas(maxPricePerSqM.value)
+    })
 
-      const hdb_selector = document.getElementById("hdb_selector");
-      const condo_selector = document.getElementById("condo_selector");
-      hdb_selector.addEventListener("change", function () {
-          hdb_selector.value = hdb_selector.checked;
-      })
-      condo_selector.addEventListener("change", function () {
-          condo_selector.value = condo_selector.checked;
-      })
+    const hdb_selector = document.getElementById("hdb_selector");
+    const condo_selector = document.getElementById("condo_selector");
+    hdb_selector.addEventListener("change", function () {
+        hdb_selector.value = hdb_selector.checked;
+    })
+    condo_selector.addEventListener("change", function () {
+        condo_selector.value = condo_selector.checked;
+    })
 
-      var num_primary_schools_slider = document.getElementById("num_primary_schools_slider");
-      var num_primary_schools_val = document.getElementById("num_primary_schools_val");
-      num_primary_schools_val.innerHTML = num_primary_schools_slider.value;
-      num_primary_schools_slider.oninput = function () {
-          num_primary_schools_val.innerHTML = this.value;
-      }
-      var qlt_primary_schools_slider = document.getElementById("qlt_primary_schools_slider");
-      var qlt_primary_schools_val = document.getElementById("qlt_primary_schools_val");
-      qlt_primary_schools_val.innerHTML = qlt_primary_schools_slider.value;
-        qlt_primary_schools_slider.oninput = function() {
-            qlt_primary_schools_val.innerHTML = this.value;
-        }
-        
-        var num_secondary_schools_slider = document.getElementById("num_secondary_schools_slider");
-        var num_secondary_schools_val = document.getElementById("num_secondary_schools_val");
-        num_secondary_schools_val.innerHTML = num_secondary_schools_slider.value; 
-        num_secondary_schools_slider.oninput = function() {
-            num_secondary_schools_val.innerHTML = this.value;
-        }
-        var qlt_secondary_schools_slider = document.getElementById("qlt_secondary_schools_slider");
-        var qlt_secondary_schools_val = document.getElementById("qlt_secondary_schools_val");
-        qlt_secondary_schools_val.innerHTML = qlt_secondary_schools_slider.value; 
-        qlt_secondary_schools_slider.oninput = function() {
-            qlt_secondary_schools_val.innerHTML = this.value;
-        }
-        
-        var num_hawker_slider = document.getElementById("num_hawker_slider");
-        var num_hawker_val = document.getElementById("num_hawker_val");
-        num_hawker_val.innerHTML = num_hawker_slider.value; 
-        num_hawker_slider.oninput = function() {
-            num_hawker_val.innerHTML = this.value;
-        }
-        var qlt_hawker_slider = document.getElementById("qlt_hawker_slider");
-        var qlt_hawker_val = document.getElementById("qlt_hawker_val");
-        qlt_hawker_val.innerHTML = qlt_hawker_slider.value; 
-        qlt_hawker_slider.oninput = function() {
-            qlt_hawker_val.innerHTML = this.value;
-        }
-        
-        var num_eating_establishments_slider = document.getElementById("num_eating_establishments_slider");
-        var num_eating_establishments_val = document.getElementById("num_eating_establishments_val");
-        num_eating_establishments_val.innerHTML = num_eating_establishments_slider.value; 
-        num_eating_establishments_slider.oninput = function() {
-            num_eating_establishments_val.innerHTML = this.value;
-        }
-        
-        var num_clinic_slider = document.getElementById("num_clinic_slider");
-        var num_clinic_val = document.getElementById("num_clinic_val");
-        num_clinic_val.innerHTML = num_clinic_slider.value; 
-        num_clinic_slider.oninput = function() {
-            num_clinic_val.innerHTML = this.value;
-        }
-        
-        var qlt_clinic_slider = document.getElementById("qlt_clinic_slider");
-        var qlt_clinic_val = document.getElementById("qlt_clinic_val");
-        qlt_clinic_val.innerHTML = qlt_clinic_slider.value; 
-        qlt_clinic_slider.oninput = function() {
-            qlt_clinic_val.innerHTML = this.value;
-        }
-        
-        var num_sports_facilities_slider = document.getElementById("num_sports_facilities_slider");
-        var num_sports_facilities_val = document.getElementById("num_sports_facilities_val");
-        num_sports_facilities_val.innerHTML = num_sports_facilities_slider.value; 
-        num_sports_facilities_slider.oninput = function() {
-            num_sports_facilities_val.innerHTML = this.value;
-        }
-        var qlt_sports_facilities_slider = document.getElementById("qlt_sports_facilities_slider");
-        var qlt_sports_facilities_val = document.getElementById("qlt_sports_facilities_val");
-        qlt_sports_facilities_val.innerHTML = qlt_sports_facilities_slider.value; 
-        qlt_sports_facilities_slider.oninput = function() {
-            qlt_sports_facilities_val.innerHTML = this.value;
-        }
-        
-        var num_gym_slider = document.getElementById("num_gym_slider");
-        var num_gym_val = document.getElementById("num_gym_val");
-        num_gym_val.innerHTML = num_gym_slider.value; 
-        num_gym_slider.oninput = function() {
-            num_gym_val.innerHTML = this.value;
-        }
-        var qlt_gym_slider = document.getElementById("qlt_gym_slider");
-        var qlt_gym_val = document.getElementById("qlt_gym_val");
-        qlt_gym_val.innerHTML = qlt_gym_slider.value; 
-        qlt_gym_slider.oninput = function() {
-            qlt_gym_val.innerHTML = this.value;
-        }
+    var num_primary_schools_slider = document.getElementById("num_primary_schools_slider");
+    var num_primary_schools_val = document.getElementById("num_primary_schools_val");
+    num_primary_schools_val.innerHTML = num_primary_schools_slider.value;
+    num_primary_schools_slider.oninput = function () {
+        num_primary_schools_val.innerHTML = this.value;
+    }
+    var qlt_primary_schools_slider = document.getElementById("qlt_primary_schools_slider");
+    var qlt_primary_schools_val = document.getElementById("qlt_primary_schools_val");
+    qlt_primary_schools_val.innerHTML = qlt_primary_schools_slider.value;
+    qlt_primary_schools_slider.oninput = function() {
+        qlt_primary_schools_val.innerHTML = this.value;
+    }
 
-        var num_community_centers_slider = document.getElementById("num_community_centers_slider");
-        var num_community_centers_val = document.getElementById("num_community_centers_val");
-        num_community_centers_val.innerHTML = num_community_centers_slider.value; 
-        num_community_centers_slider.oninput = function() {
-            num_community_centers_val.innerHTML = this.value;
-        }
-        var qlt_community_centers_slider = document.getElementById("qlt_community_centers_slider");
-        var qlt_community_centers_val = document.getElementById("qlt_community_centers_val");
-        qlt_community_centers_val.innerHTML = qlt_community_centers_slider.value; 
-        qlt_community_centers_slider.oninput = function() {
-            qlt_community_centers_val.innerHTML = this.value;
-        }
-        
-        var num_parks_slider = document.getElementById("num_parks_slider");
-        var num_parks_val = document.getElementById("num_parks_val");
-        num_parks_val.innerHTML = num_parks_slider.value; 
-        num_parks_slider.oninput = function() {
-            num_parks_val.innerHTML = this.value;
-        }
-        var qlt_parks_slider = document.getElementById("qlt_parks_slider");
-        var qlt_parks_val = document.getElementById("qlt_parks_val");
-        qlt_parks_val.innerHTML = qlt_parks_slider.value; 
-        qlt_parks_slider.oninput = function() {
-            qlt_parks_val.innerHTML = this.value;
-        }
+    var num_secondary_schools_slider = document.getElementById("num_secondary_schools_slider");
+    var num_secondary_schools_val = document.getElementById("num_secondary_schools_val");
+    num_secondary_schools_val.innerHTML = num_secondary_schools_slider.value;
+    num_secondary_schools_slider.oninput = function() {
+        num_secondary_schools_val.innerHTML = this.value;
+    }
+    var qlt_secondary_schools_slider = document.getElementById("qlt_secondary_schools_slider");
+    var qlt_secondary_schools_val = document.getElementById("qlt_secondary_schools_val");
+    qlt_secondary_schools_val.innerHTML = qlt_secondary_schools_slider.value;
+    qlt_secondary_schools_slider.oninput = function() {
+        qlt_secondary_schools_val.innerHTML = this.value;
+    }
 
-        var num_malls_slider = document.getElementById("num_malls_slider");
-        var num_malls_val = document.getElementById("num_malls_val");
-        num_malls_val.innerHTML = num_malls_slider.value; 
-        num_malls_slider.oninput = function() {
-            num_malls_val.innerHTML = this.value;
-        }
-        var qlt_malls_slider = document.getElementById("qlt_malls_slider");
-        var qlt_malls_val = document.getElementById("qlt_malls_val");
-        qlt_malls_val.innerHTML = qlt_malls_slider.value; 
-        qlt_malls_slider.oninput = function() {
-            qlt_malls_val.innerHTML = this.value;
-        }
-        var num_supermarkets_slider = document.getElementById("num_supermarkets_slider");
-        var num_supermarkets_val = document.getElementById("num_supermarkets_val");
-        num_supermarkets_val.innerHTML = num_supermarkets_slider.value; 
-        num_supermarkets_slider.oninput = function() {
-            num_supermarkets_val.innerHTML = this.value;
-        }
-        var qlt_supermarkets_slider = document.getElementById("qlt_supermarkets_slider");
-        var qlt_supermarkets_val = document.getElementById("qlt_supermarkets_val");
-        qlt_supermarkets_val.innerHTML = qlt_supermarkets_slider.value; 
-        qlt_supermarkets_slider.oninput = function() {
-            qlt_supermarkets_val.innerHTML = this.value;
-        }
-        var num_mrt_slider = document.getElementById("num_mrt_slider");
-        var num_mrt_val = document.getElementById("num_mrt_val");
-        num_mrt_val.innerHTML = num_mrt_slider.value; 
-        num_mrt_slider.oninput = function() {
-            num_mrt_val.innerHTML = this.value;
-        }
-        var num_bus_stop_slider = document.getElementById("num_bus_stop_slider");
-        var num_bus_stop_val = document.getElementById("num_bus_stop_val");
-        num_bus_stop_val.innerHTML = num_bus_stop_slider.value; 
-        num_bus_stop_slider.oninput = function() {
-            num_bus_stop_val.innerHTML = this.value;
-        }
-        var num_carparks_slider = document.getElementById("num_carparks_slider");
-        var num_carparks_val = document.getElementById("num_carparks_val");
-        num_carparks_val.innerHTML = num_carparks_slider.value; 
-        num_carparks_slider.oninput = function() {
-            num_carparks_val.innerHTML = this.value;
-        }
-        var num_taxi_stands_slider = document.getElementById("num_taxi_stands_slider");
-        var num_taxi_stands_val = document.getElementById("num_taxi_stands_val");
-        num_taxi_stands_val.innerHTML = num_taxi_stands_slider.value; 
-        num_taxi_stands_slider.oninput = function() {
-            num_taxi_stands_val.innerHTML = this.value;
-        }
-  </script>
-  </body>
+    var num_hawker_slider = document.getElementById("num_hawker_slider");
+    var num_hawker_val = document.getElementById("num_hawker_val");
+    num_hawker_val.innerHTML = num_hawker_slider.value;
+    num_hawker_slider.oninput = function() {
+        num_hawker_val.innerHTML = this.value;
+    }
+    var qlt_hawker_slider = document.getElementById("qlt_hawker_slider");
+    var qlt_hawker_val = document.getElementById("qlt_hawker_val");
+    qlt_hawker_val.innerHTML = qlt_hawker_slider.value;
+    qlt_hawker_slider.oninput = function() {
+        qlt_hawker_val.innerHTML = this.value;
+    }
+
+    var num_eating_establishments_slider = document.getElementById("num_eating_establishments_slider");
+    var num_eating_establishments_val = document.getElementById("num_eating_establishments_val");
+    num_eating_establishments_val.innerHTML = num_eating_establishments_slider.value;
+    num_eating_establishments_slider.oninput = function() {
+        num_eating_establishments_val.innerHTML = this.value;
+    }
+
+    var num_clinic_slider = document.getElementById("num_clinic_slider");
+    var num_clinic_val = document.getElementById("num_clinic_val");
+    num_clinic_val.innerHTML = num_clinic_slider.value;
+    num_clinic_slider.oninput = function() {
+        num_clinic_val.innerHTML = this.value;
+    }
+
+    var qlt_clinic_slider = document.getElementById("qlt_clinic_slider");
+    var qlt_clinic_val = document.getElementById("qlt_clinic_val");
+    qlt_clinic_val.innerHTML = qlt_clinic_slider.value;
+    qlt_clinic_slider.oninput = function() {
+        qlt_clinic_val.innerHTML = this.value;
+    }
+
+    var num_sports_facilities_slider = document.getElementById("num_sports_facilities_slider");
+    var num_sports_facilities_val = document.getElementById("num_sports_facilities_val");
+    num_sports_facilities_val.innerHTML = num_sports_facilities_slider.value;
+    num_sports_facilities_slider.oninput = function() {
+        num_sports_facilities_val.innerHTML = this.value;
+    }
+    var qlt_sports_facilities_slider = document.getElementById("qlt_sports_facilities_slider");
+    var qlt_sports_facilities_val = document.getElementById("qlt_sports_facilities_val");
+    qlt_sports_facilities_val.innerHTML = qlt_sports_facilities_slider.value;
+    qlt_sports_facilities_slider.oninput = function() {
+        qlt_sports_facilities_val.innerHTML = this.value;
+    }
+
+    var num_gym_slider = document.getElementById("num_gym_slider");
+    var num_gym_val = document.getElementById("num_gym_val");
+    num_gym_val.innerHTML = num_gym_slider.value;
+    num_gym_slider.oninput = function() {
+        num_gym_val.innerHTML = this.value;
+    }
+    var qlt_gym_slider = document.getElementById("qlt_gym_slider");
+    var qlt_gym_val = document.getElementById("qlt_gym_val");
+    qlt_gym_val.innerHTML = qlt_gym_slider.value;
+    qlt_gym_slider.oninput = function() {
+        qlt_gym_val.innerHTML = this.value;
+    }
+
+    var num_community_centers_slider = document.getElementById("num_community_centers_slider");
+    var num_community_centers_val = document.getElementById("num_community_centers_val");
+    num_community_centers_val.innerHTML = num_community_centers_slider.value;
+    num_community_centers_slider.oninput = function() {
+        num_community_centers_val.innerHTML = this.value;
+    }
+    var qlt_community_centers_slider = document.getElementById("qlt_community_centers_slider");
+    var qlt_community_centers_val = document.getElementById("qlt_community_centers_val");
+    qlt_community_centers_val.innerHTML = qlt_community_centers_slider.value;
+    qlt_community_centers_slider.oninput = function() {
+        qlt_community_centers_val.innerHTML = this.value;
+    }
+
+    var num_parks_slider = document.getElementById("num_parks_slider");
+    var num_parks_val = document.getElementById("num_parks_val");
+    num_parks_val.innerHTML = num_parks_slider.value;
+    num_parks_slider.oninput = function() {
+        num_parks_val.innerHTML = this.value;
+    }
+    var qlt_parks_slider = document.getElementById("qlt_parks_slider");
+    var qlt_parks_val = document.getElementById("qlt_parks_val");
+    qlt_parks_val.innerHTML = qlt_parks_slider.value;
+    qlt_parks_slider.oninput = function() {
+        qlt_parks_val.innerHTML = this.value;
+    }
+
+    var num_malls_slider = document.getElementById("num_malls_slider");
+    var num_malls_val = document.getElementById("num_malls_val");
+    num_malls_val.innerHTML = num_malls_slider.value;
+    num_malls_slider.oninput = function() {
+        num_malls_val.innerHTML = this.value;
+    }
+    var qlt_malls_slider = document.getElementById("qlt_malls_slider");
+    var qlt_malls_val = document.getElementById("qlt_malls_val");
+    qlt_malls_val.innerHTML = qlt_malls_slider.value;
+    qlt_malls_slider.oninput = function() {
+        qlt_malls_val.innerHTML = this.value;
+    }
+    var num_supermarkets_slider = document.getElementById("num_supermarkets_slider");
+    var num_supermarkets_val = document.getElementById("num_supermarkets_val");
+    num_supermarkets_val.innerHTML = num_supermarkets_slider.value;
+    num_supermarkets_slider.oninput = function() {
+        num_supermarkets_val.innerHTML = this.value;
+    }
+    var qlt_supermarkets_slider = document.getElementById("qlt_supermarkets_slider");
+    var qlt_supermarkets_val = document.getElementById("qlt_supermarkets_val");
+    qlt_supermarkets_val.innerHTML = qlt_supermarkets_slider.value;
+    qlt_supermarkets_slider.oninput = function() {
+        qlt_supermarkets_val.innerHTML = this.value;
+    }
+    var num_mrt_slider = document.getElementById("num_mrt_slider");
+    var num_mrt_val = document.getElementById("num_mrt_val");
+    num_mrt_val.innerHTML = num_mrt_slider.value;
+    num_mrt_slider.oninput = function() {
+        num_mrt_val.innerHTML = this.value;
+    }
+    var num_bus_stop_slider = document.getElementById("num_bus_stop_slider");
+    var num_bus_stop_val = document.getElementById("num_bus_stop_val");
+    num_bus_stop_val.innerHTML = num_bus_stop_slider.value;
+    num_bus_stop_slider.oninput = function() {
+        num_bus_stop_val.innerHTML = this.value;
+    }
+    var num_carparks_slider = document.getElementById("num_carparks_slider");
+    var num_carparks_val = document.getElementById("num_carparks_val");
+    num_carparks_val.innerHTML = num_carparks_slider.value;
+    num_carparks_slider.oninput = function() {
+        num_carparks_val.innerHTML = this.value;
+    }
+    var num_taxi_stands_slider = document.getElementById("num_taxi_stands_slider");
+    var num_taxi_stands_val = document.getElementById("num_taxi_stands_val");
+    num_taxi_stands_val.innerHTML = num_taxi_stands_slider.value;
+    num_taxi_stands_slider.oninput = function() {
+        num_taxi_stands_val.innerHTML = this.value;
+    }
+</script>
+</body>
 </html>

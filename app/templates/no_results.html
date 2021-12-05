@@ -1,32 +1,35 @@
+<!--No Results page (for edge case where no housing projects meet user's criteria (preferences / constraints)-->
+<!--Author: Key Tai-->
+
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Singapore Property Analysis</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='/bulma/css/bulma.min.css') }}">
     <style>
-          .dropdown.is-hoverable .dropdown-menu {
+        .dropdown.is-hoverable .dropdown-menu {
             width: 70vw;
-            }
+        }
 
-          .slider {
+        .slider {
             -webkit-appearance: none;  /* Override default CSS styles */
             appearance: none;
-            height: 20px; 
+            height: 20px;
             background: #00d1b2;
             outline: none; /* Remove outline */
-            opacity: 0.7; 
-            -webkit-transition: .2s; 
+            opacity: 0.7;
+            -webkit-transition: .2s;
             transition: opacity .2s;
-            }
+        }
     </style>
-  </head>
+</head>
 <body>
-    <section class="section">
-        <div class="notification is-warning">
-            <button class="delete"></button>
-            Oops! There are no available housing projects for this selection. Please go back to the form and try again.
-          </div>
-    </section>
+<section class="section">
+    <div class="notification is-warning">
+        <button class="delete"></button>
+        Oops! There are no available housing projects for this selection. Please go back to the form and try again.
+    </div>
+</section>
 </body>

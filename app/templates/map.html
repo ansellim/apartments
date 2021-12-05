@@ -1,12 +1,15 @@
+<!--Map page-->
+<!--Author: Keith Loo-->
+
 <html>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-crossorigin=""/>
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""/>
 
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-crossorigin=""></script>
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
@@ -23,13 +26,13 @@ crossorigin=""></script>
 
 <script>
 
-// global variables //
+    // global variables //
 var OneMap_Token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjgxMTAsInVzZXJfaWQiOjgxMTAsImVtYWlsIjoia2VpdGgubG9vQGdhdGVjaC5lZHUiLCJmb3JldmVyIjpmYWxzZSwiaXNzIjoiaHR0cDpcL1wvb20yLmRmZS5vbmVtYXAuc2dcL2FwaVwvdjJcL3VzZXJcL3Nlc3Npb24iLCJpYXQiOjE2MzU4MjczMzEsImV4cCI6MTYzNjI1OTMzMSwibmJmIjoxNjM1ODI3MzMxLCJqdGkiOiI3ZDRjMjYzOTg2NWY2YjUyMTMxYWI4NGU3MDIzMTgxZiJ9.1hAkQfZUTY1LsAqIKoi0lbXqYi3jCnIgkK3XBFaw34c"
 
-// icon variables //
+    // icon variables //
 var hse_icon = L.icon({
     //iconUrl: "../icons/hse.jpg",
-    iconUrl: "{{ url_for('static', filename='/bulma/icons/hse.jpg') }}",    
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/hse.jpg') }}",
     iconSize: [20, 20], // size of the icon
 });
 var clinic_icon = L.icon({
@@ -53,7 +56,7 @@ var mall_icon = L.icon({
     iconSize: [15, 15], // size of the icon
 });
 var sport_icon = L.icon({
-    iconUrl: "{{ url_for('static', filename='/bulma/icons/sport.png') }}",    
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/sport.png') }}",
     iconSize: [15, 15], // size of the icon
 });
 var park_icon = L.icon({
@@ -90,44 +93,44 @@ var taxistand_icon = L.icon({
 });
 
 
-// OneMap APIs //
+    // OneMap APIs //
 function nameSearch(){
     $.ajax({
         url: "https://developers.onemap.sg/commonapi/search?searchVal="+testSearch+"&returnGeom=Y&getAddrDetails=Y&pageNum=1",
         success: function(result) {
-        var TrueResult = JSON.stringify(result); //Set result to a variable for writing
-        console.log(TrueResult); //document.write(TrueResult);
-    }});
-}
-
-function GeoXY(){
-    $.ajax({
-        url: "https://developers.onemap.sg/privateapi/commonsvc/revgeocodexy?location="+testlocationXY.x+","+testlocationXY.y+"&token="+OneMap_Token+"&buffer=10&addressType=all",
-        success: function(result){
-        var TrueResult = JSON.stringify(result); //Set result to a variable for writing
-        console.log(TrueResult); //document.write(TrueResult);
-    }});                  
-}
-
-function GeoLatLong(input, PopUp_flag){
-    $.ajax({
-        url: "https://developers.onemap.sg/privateapi/commonsvc/revgeocode?location="+input.latitude+","+input.longitude+"&token="+OneMap_Token+"&buffer=10&addressType=all",
-        success: function(result){
             var TrueResult = JSON.stringify(result); //Set result to a variable for writing
-            //console.log(TrueResult); //document.write(TrueResult);
-            console.log(result.GeocodeInfo[0].BUILDINGNAME);
-            
-            var position = {
-                latitude: input.latitude,
-                longitude: input.longitude,
-                name: result.GeocodeInfo[0].BUILDINGNAME
-            };
-            if (PopUp_flag == 1) { showPopUp(position); }
-        }
-    });
+            console.log(TrueResult); //document.write(TrueResult);
+        }});
 }
 
-// functions //
+    function GeoXY(){
+        $.ajax({
+            url: "https://developers.onemap.sg/privateapi/commonsvc/revgeocodexy?location="+testlocationXY.x+","+testlocationXY.y+"&token="+OneMap_Token+"&buffer=10&addressType=all",
+            success: function(result){
+                var TrueResult = JSON.stringify(result); //Set result to a variable for writing
+                console.log(TrueResult); //document.write(TrueResult);
+            }});
+}
+
+    function GeoLatLong(input, PopUp_flag){
+        $.ajax({
+            url: "https://developers.onemap.sg/privateapi/commonsvc/revgeocode?location="+input.latitude+","+input.longitude+"&token="+OneMap_Token+"&buffer=10&addressType=all",
+            success: function(result){
+                var TrueResult = JSON.stringify(result); //Set result to a variable for writing
+                //console.log(TrueResult); //document.write(TrueResult);
+                console.log(result.GeocodeInfo[0].BUILDINGNAME);
+
+                var position = {
+                    latitude: input.latitude,
+                    longitude: input.longitude,
+                    name: result.GeocodeInfo[0].BUILDINGNAME
+                };
+                if (PopUp_flag == 1) { showPopUp(position); }
+            }
+        });
+}
+
+    // functions //
 function onEachFeature (feature, layer) {
 
     if (feature.properties.description == "Property") {
@@ -135,12 +138,12 @@ function onEachFeature (feature, layer) {
         var price_per_sqm = Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(Math.round(feature.properties.price_per_sqm))
 
         layer.bindPopup("Name: <b>" + feature.properties.name +
-                        "</b><br>Price/Sqm: <b>$" +  price_per_sqm +
-                        "</b><br>Overall Score: <b>" + Math.round(feature.properties.overall_score*100)/100,
-                            {autoClose: false});
+            "</b><br>Price/Sqm: <b>$" +  price_per_sqm +
+            "</b><br>Overall Score: <b>" + Math.round(feature.properties.overall_score*100)/100,
+            {autoClose: false});
 
     } else {
-        
+
         //Exclude these non-rated features: Carpark, Mrt, Eating, and Taxi Stand)
         if (feature.properties.description == "Carpark" || feature.properties.description == "Mrt" || feature.properties.description == "Eating" || feature.properties.description == "Taxi Stand") {
             layer.bindPopup("Name: <b>" + feature.properties.name);
@@ -154,281 +157,281 @@ function onEachFeature (feature, layer) {
 
 }
 
-function pointToLayer (feature, latlng) {
-    switch (feature.properties.description) {
-        case "Property": return L.marker(latlng, {icon: hse_icon});
-        case "Clinic": return L.marker(latlng, {icon: clinic_icon});
-        case "Community Center": return L.marker(latlng, {icon: cc_icon});
-        case "Gym": return L.marker(latlng, {icon: gym_icon});
-        case "Hawker Center": return L.marker(latlng, {icon: hawker_icon});
-        case "Mall": return L.marker(latlng, {icon: mall_icon});
+    function pointToLayer (feature, latlng) {
+        switch (feature.properties.description) {
+            case "Property": return L.marker(latlng, {icon: hse_icon});
+            case "Clinic": return L.marker(latlng, {icon: clinic_icon});
+            case "Community Center": return L.marker(latlng, {icon: cc_icon});
+            case "Gym": return L.marker(latlng, {icon: gym_icon});
+            case "Hawker Center": return L.marker(latlng, {icon: hawker_icon});
+            case "Mall": return L.marker(latlng, {icon: mall_icon});
 
-        case "Sport": return L.marker(latlng, {icon: sport_icon});
-        case "Park": return L.marker(latlng, {icon: park_icon});
-        case "Primary School": return L.marker(latlng, {icon: psch_icon});
-        case "Secondary School": return L.marker(latlng, {icon: ssch_icon});
-        case "Supermarket": return L.marker(latlng, {icon: mkt_icon});
+            case "Sport": return L.marker(latlng, {icon: sport_icon});
+            case "Park": return L.marker(latlng, {icon: park_icon});
+            case "Primary School": return L.marker(latlng, {icon: psch_icon});
+            case "Secondary School": return L.marker(latlng, {icon: ssch_icon});
+            case "Supermarket": return L.marker(latlng, {icon: mkt_icon});
 
-        case "Carpark": return L.marker(latlng, {icon: carpark_icon});
-        case "Mrt": return L.marker(latlng, {icon: mrt_icon});
-        case "Eating": return L.marker(latlng, {icon: eating_icon});
-        case "Taxi Stand": return L.marker(latlng, {icon: taxistand_icon});
+            case "Carpark": return L.marker(latlng, {icon: carpark_icon});
+            case "Mrt": return L.marker(latlng, {icon: mrt_icon});
+            case "Eating": return L.marker(latlng, {icon: eating_icon});
+            case "Taxi Stand": return L.marker(latlng, {icon: taxistand_icon});
+        }
+}
+
+    function onClick(e) {
+
+        map.fitBounds([e.latlng])
+
+        if (e.sourceTarget.feature.properties.description == "Property") {
+
+            if (controlLayers._layers.length > 0 ) {
+                resetFeatures()
+                //controlLayers.collapse()
+            }
+
+            //controlLayers.options.collapsed = false
+            showFeatures(e.sourceTarget.feature.properties.item)
+            controlLayers.expand()
+        }
+
     }
-}
 
-function onClick(e) {
-    
-    map.fitBounds([e.latlng])
-    
-    if (e.sourceTarget.feature.properties.description == "Property") {
-        
-        if (controlLayers._layers.length > 0 ) {
-            resetFeatures()
-            //controlLayers.collapse()
-        }
-        
-        //controlLayers.options.collapsed = false
-        showFeatures(e.sourceTarget.feature.properties.item)
-        controlLayers.expand()
+    function showFeatures(item) {
+
+        // Feature #1 to #5 //
+        clinic_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Clinic") return true;
+            }
+        })
+
+        cc_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Community Center") return true;
+            }
+        })
+
+        gym_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Gym") return true;
+            }
+        })
+
+        hawker_center_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Hawker Center") return true;
+            }
+        })
+
+        mall_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Mall") return true;
+            }
+        })
+
+        // Feature #6 to #10 //
+
+        sport_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Sport") return true;
+            }
+        })
+
+        park_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Park") return true;
+            }
+        })
+
+        pschool_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
+            }
+        })
+
+        sschool_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Secondary School") return true;
+            }
+        })
+
+        supermarket_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
+            }
+        })
+
+        // Feature #11 to #14 //
+        carpark_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Carpark") return true;
+            }
+        })
+
+        mrt_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Mrt") return true;
+            }
+        })
+
+        eating_establishment_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Eating") return true;
+            }
+        })
+
+        taxi_stand_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Taxi Stand") return true;
+            }
+        })
+
+        // add to control layer //
+        controlLayers.addOverlay(clinic_layer, "Clinics").addTo(map);
+        controlLayers.addOverlay(cc_layer, "Community Centers").addTo(map);
+        controlLayers.addOverlay(gym_layer, "Gyms").addTo(map);
+        controlLayers.addOverlay(hawker_center_layer, "Hawker Centers").addTo(map);
+        controlLayers.addOverlay(mall_layer, "Malls").addTo(map);
+
+        controlLayers.addOverlay(sport_layer, "Sports").addTo(map);
+        controlLayers.addOverlay(park_layer, "Parks").addTo(map);
+        controlLayers.addOverlay(pschool_layer, "Primary Schools").addTo(map);
+        controlLayers.addOverlay(sschool_layer, "Secondary Schools").addTo(map);
+        controlLayers.addOverlay(supermarket_layer, "Supermarkets").addTo(map);
+
+        controlLayers.addOverlay(carpark_layer, "Carparks").addTo(map);
+        controlLayers.addOverlay(mrt_layer, "Train Stations").addTo(map);
+        controlLayers.addOverlay(eating_establishment_layer, "Eating Establishments").addTo(map);
+        controlLayers.addOverlay(taxi_stand_layer, "Taxi Stands").addTo(map);
+
+        // add to map //
+        map.addLayer(clinic_layer)
+        map.addLayer(cc_layer)
+        map.addLayer(gym_layer)
+        map.addLayer(hawker_center_layer)
+        map.addLayer(mall_layer)
+
+        map.addLayer(sport_layer)
+        map.addLayer(park_layer)
+        map.addLayer(pschool_layer)
+        map.addLayer(sschool_layer)
+        map.addLayer(supermarket_layer)
+
+        map.addLayer(carpark_layer)
+        map.addLayer(mrt_layer)
+        map.addLayer(eating_establishment_layer)
+        map.addLayer(taxi_stand_layer)
+
     }
-        
-}
-
-function showFeatures(item) {
-    
-    // Feature #1 to #5 //
-    clinic_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Clinic") return true;
-        }
-    })
-    
-    cc_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Community Center") return true;
-        }
-    })
-    
-    gym_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Gym") return true;
-        }
-    })
-
-    hawker_center_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Hawker Center") return true;
-        }
-    })
-
-    mall_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Mall") return true;
-        }
-    })
-
-    // Feature #6 to #10 //
-
-    sport_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Sport") return true;
-        }
-    })
-
-    park_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Park") return true;
-        }
-    })
-
-    pschool_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Primary School") return true;
-        }
-    })
-
-    sschool_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Secondary School") return true;
-        }
-    })
-
-    supermarket_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Supermarket") return true;
-        }
-    })
-
-    // Feature #11 to #14 //
-    carpark_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Carpark") return true;
-        }
-    })
-
-    mrt_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Mrt") return true;
-        }
-    })
-
-    eating_establishment_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Eating") return true;
-        }
-    })
-
-    taxi_stand_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.item == item && feature.properties.description == "Taxi Stand") return true;
-        }
-    })
-    
-    // add to control layer //
-    controlLayers.addOverlay(clinic_layer, "Clinics").addTo(map);
-    controlLayers.addOverlay(cc_layer, "Community Centers").addTo(map);
-    controlLayers.addOverlay(gym_layer, "Gyms").addTo(map);
-    controlLayers.addOverlay(hawker_center_layer, "Hawker Centers").addTo(map);    
-    controlLayers.addOverlay(mall_layer, "Malls").addTo(map);
-
-    controlLayers.addOverlay(sport_layer, "Sports").addTo(map);
-    controlLayers.addOverlay(park_layer, "Parks").addTo(map);
-    controlLayers.addOverlay(pschool_layer, "Primary Schools").addTo(map);
-    controlLayers.addOverlay(sschool_layer, "Secondary Schools").addTo(map);
-    controlLayers.addOverlay(supermarket_layer, "Supermarkets").addTo(map);
-
-    controlLayers.addOverlay(carpark_layer, "Carparks").addTo(map);
-    controlLayers.addOverlay(mrt_layer, "Train Stations").addTo(map);
-    controlLayers.addOverlay(eating_establishment_layer, "Eating Establishments").addTo(map);
-    controlLayers.addOverlay(taxi_stand_layer, "Taxi Stands").addTo(map);
-
-    // add to map //
-    map.addLayer(clinic_layer)
-    map.addLayer(cc_layer)
-    map.addLayer(gym_layer)
-    map.addLayer(hawker_center_layer)   
-    map.addLayer(mall_layer)
-
-    map.addLayer(sport_layer)
-    map.addLayer(park_layer)
-    map.addLayer(pschool_layer)
-    map.addLayer(sschool_layer)
-    map.addLayer(supermarket_layer)
-
-    map.addLayer(carpark_layer)
-    map.addLayer(mrt_layer)
-    map.addLayer(eating_establishment_layer)
-    map.addLayer(taxi_stand_layer)
-
-}
 
 
-function resetFeatures() {
-    // remove from layer control //
-    controlLayers.removeLayer(clinic_layer)
-    controlLayers.removeLayer(cc_layer)
-    controlLayers.removeLayer(gym_layer)
-    controlLayers.removeLayer(hawker_center_layer)   
-    controlLayers.removeLayer(mall_layer)
-    
-    controlLayers.removeLayer(sport_layer)
-    controlLayers.removeLayer(park_layer)
-    controlLayers.removeLayer(pschool_layer)
-    controlLayers.removeLayer(sschool_layer)
-    controlLayers.removeLayer(supermarket_layer)
+    function resetFeatures() {
+        // remove from layer control //
+        controlLayers.removeLayer(clinic_layer)
+        controlLayers.removeLayer(cc_layer)
+        controlLayers.removeLayer(gym_layer)
+        controlLayers.removeLayer(hawker_center_layer)
+        controlLayers.removeLayer(mall_layer)
 
-    controlLayers.removeLayer(carpark_layer)
-    controlLayers.removeLayer(mrt_layer)
-    controlLayers.removeLayer(eating_establishment_layer)
-    controlLayers.removeLayer(taxi_stand_layer)    
+        controlLayers.removeLayer(sport_layer)
+        controlLayers.removeLayer(park_layer)
+        controlLayers.removeLayer(pschool_layer)
+        controlLayers.removeLayer(sschool_layer)
+        controlLayers.removeLayer(supermarket_layer)
 
-    // remove from map  //
-    map.removeLayer(clinic_layer)
-    map.removeLayer(cc_layer)
-    map.removeLayer(gym_layer)
-    map.removeLayer(hawker_center_layer)   
-    map.removeLayer(mall_layer)
+        controlLayers.removeLayer(carpark_layer)
+        controlLayers.removeLayer(mrt_layer)
+        controlLayers.removeLayer(eating_establishment_layer)
+        controlLayers.removeLayer(taxi_stand_layer)
 
-    map.removeLayer(sport_layer)
-    map.removeLayer(park_layer)
-    map.removeLayer(pschool_layer)
-    map.removeLayer(sschool_layer)
-    map.removeLayer(supermarket_layer)
+        // remove from map  //
+        map.removeLayer(clinic_layer)
+        map.removeLayer(cc_layer)
+        map.removeLayer(gym_layer)
+        map.removeLayer(hawker_center_layer)
+        map.removeLayer(mall_layer)
 
-    map.removeLayer(carpark_layer)
-    map.removeLayer(mrt_layer)
-    map.removeLayer(eating_establishment_layer)
-    map.removeLayer(taxi_stand_layer)
+        map.removeLayer(sport_layer)
+        map.removeLayer(park_layer)
+        map.removeLayer(pschool_layer)
+        map.removeLayer(sschool_layer)
+        map.removeLayer(supermarket_layer)
 
-}
+        map.removeLayer(carpark_layer)
+        map.removeLayer(mrt_layer)
+        map.removeLayer(eating_establishment_layer)
+        map.removeLayer(taxi_stand_layer)
 
-// global variables //
+    }
+
+    // global variables //
 var GeoJSon_properties, property_layer, features_layer
 var clinic_layer, cc_layer, gym_layer, hawker_center_layer, mall_layer, sport_layer, park_layer, pschool_layer, sschool_layer, supermarket_layer, carpark_layer, mrt_layer, eating_establishment_layer, taxi_stand_layer
 
-// map variables //
+    // map variables //
 var default_map = L.tileLayer("https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png", {detectRetina: true, maxZoom: 18, minZoom: 11, attribution: '<img src="https://docs.onemap.sg/maps/images/oneMap64-01.png" style="height:20px;width:20px;"/> OneMap | Map data &copy; contributors, <a href="http://SLA.gov.sg">Singapore Land Authority</a>'});
 var map = L.map('map', {center: [1.355, 103.81], zoom: 12 }); //layers: [default_map]
 var controlLayers = L.control.layers()
 
 
-// layer variables //
+    // layer variables //
 var base_maps = { "Default": default_map };
 
-axios.get('http://127.0.0.1:5000/GeoJSon_properties').then(response => {
-    console.log(response.data)
-    GeoJSon_properties = response.data;
-    
-    property_layer = L.geoJSON(GeoJSon_properties, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer,
-        filter: function(feature, layer) {
-            if (feature.properties.description == "Property") return true;
-        }   
-    }).on('click', onClick)
+    axios.get('http://127.0.0.1:5000/GeoJSon_properties').then(response => {
+        console.log(response.data)
+        GeoJSon_properties = response.data;
 
-    default_map.addTo(map);
-    property_layer.addTo(map);
+        property_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.description == "Property") return true;
+            }
+        }).on('click', onClick)
 
-    property_layer.eachLayer(function(layer){
-        layer.openPopup();
-    });
-    
-    map.fitBounds(property_layer.getBounds())
-    
-    //map.on('click', function(e) {
+        default_map.addTo(map);
+        property_layer.addTo(map);
+
+        property_layer.eachLayer(function(layer){
+            layer.openPopup();
+        });
+
+        map.fitBounds(property_layer.getBounds())
+
+        //map.on('click', function(e) {
         //controlLayers.collapse()
-    //});
+        //});
 
-})
+    })
 
 </script>
 </body>

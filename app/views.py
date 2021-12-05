@@ -1,3 +1,7 @@
+# Application logic for querying the database and returning recommendations to the map interface
+# Authors: Key Tai, Keith Loo, Ansel Lim, Daosheng Lin
+# December 2021
+
 from app import app
 from flask import render_template, request, redirect, url_for
 from flask import jsonify
@@ -9,7 +13,6 @@ import numpy as np
 
 DB_FILEPATH = os.getcwd() + '/data/database.db'
 geojson_list = []
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -84,6 +87,7 @@ def index():
         weight_num_carpark = int(request.form.get("num_carparks_slider")) / 100.0
         weight_num_taxi_stand = int(request.form.get("num_taxi_stands_slider")) / 100.0
 
+        # Calculate overall score for projects based on user's weights (preferences) and constraints, and then rank the projects in descending order of overall score, and pick the top 5. Use price as a tie-breaker (given everything else such as overall scores are the same, the cheaper apartment is preferred)
         query = f"""
                          SELECT project_id, project, project_type, lat, long, price_per_sqm, district, feature_ids_clinic, feature_ids_community_center, feature_ids_gym, feature_ids_hawker_center, feature_ids_mall, feature_ids_other_public_sports_facility, feature_ids_park, feature_ids_primary_school, feature_ids_secondary_school, feature_ids_supermarket, feature_ids_carpark, feature_ids_mrt, feature_ids_bus_stop, feature_ids_eating_establishment, feature_ids_taxi_stand, raw_num_carpark, raw_num_clinic, raw_num_community_center, raw_num_eating_establishment, raw_num_gym, raw_num_hawker_center, raw_num_mall, raw_num_mrt, raw_num_bus_stop, raw_num_other_public_sports_facility, raw_num_park, raw_num_primary_school, raw_num_secondary_school, raw_num_supermarket, raw_num_taxi_stand, raw_quality_clinic, raw_quality_community_center, raw_quality_gym, raw_quality_hawker_center, raw_quality_mall, raw_quality_other_public_sports_facility, raw_quality_park, raw_quality_primary_school, raw_quality_secondary_school, raw_quality_supermarket,
                                 -- calculate overall score per property, given user weights
@@ -171,7 +175,7 @@ def index():
                 colnames_to_drop.append(colname)
         matches.drop(columns=colnames_to_drop, inplace=True)
 
-        # function that takes in one amenity for a given feature and return GeoJson format
+        # Function that takes in one amenity for a given feature and return GeoJson format
         def get_amenity_geojson(amenity, index, description):
             feature = {'type': 'Feature',
                        'properties': {},
@@ -183,7 +187,7 @@ def index():
             feature['properties']['description'] = description
             feature['properties']['name'] = amenity['name']
 
-            # Exclude these non-rated features: Carpark, Mrt, Eating, and Taxi Stand)
+            # Exclude these non-rated features: Carpark, Mrt, Eating Establishment, and Taxi Stand)
             if description != 'Carpark' and description != 'Mrt' and description != 'Eating' and description != 'Taxi Stand' and description != 'Bus Stop':
                 feature['properties']['weighted_rating'] = float(amenity["weighted_rating"])
 
@@ -281,158 +285,19 @@ def index():
                     feature = get_amenity_geojson(amenity=amenity, index=index, description='Taxi Stand')
                     geojson_list.append(feature)
 
-        # print(geojson_list)
         return redirect(url_for('map', geojson_response=jsonify(
             geojson_list)))  # Pass matches in geojson format to map() function that renders map.html
     return render_template("index.html")
-
 
 @app.route("/map")
 def map():
     geojson_response_str = request.args['geojson_response']
     geojson_response = jsonify(geojson_response_str)
-    return render_template("map.html", geojson_response=geojson_response)  # pass matches in geojson format to map.html
-
+    return render_template("map.html", geojson_response=geojson_response)  # Pass matches in geojson format to map.html
 
 @app.route("/GeoJSon_properties")
 def create_GeoJSon():
     return jsonify(geojson_list)
-
-
-######################################
-# Added by Keith for testing purpose #
-######################################
-
-@app.route("/GeoJSon_testing")
-def create_GeoJSon_object():
-    GeoJSon_samples = [
-        # 1 Property details #
-        {
-            "type": "Feature",
-            "properties": {
-                "item": 1,
-                "description": "Property",
-                "name": "119 ANG MO KIO AVE 3",
-                "price_per_sqm": 4451.222288,
-                "overall_score": 11.145,
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [103.8446989, 1.369563443]
-            }
-        },
-
-        {
-            "type": "Feature",
-            "properties": {
-                "item": 1,
-                "description": "School",
-                "name": "TECK GHEE PRIMARY SCHOOL",
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [103.851009800453, 1.36565018546903]
-            }
-        },
-
-        {
-            "type": "Feature",
-            "properties": {
-                "item": 1,
-                "description": "Mall",
-                "name": "AMK Hub",
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [103.8484398, 1.36953]
-            }
-        },
-
-        {
-            "type": "Feature",
-            "properties": {
-                "item": 1,
-                "description": "Supermarket",
-                "name": "SHENG SIONG SUPERMARKET",
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [103.843413231524, 1.37018860668947]
-            }
-        },
-
-        # 2 Property details #
-        {
-            "type": "Feature",
-            "properties": {
-                "item": 2,
-                "description": "Property",
-                "name": "120 ANG MO KIO AVE 3",
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [103.8445948, 1.370047397]
-            }
-        },
-
-        {
-            "type": "Feature",
-            "properties": {
-                "item": 2,
-                "description": "School",
-                "name": "TECK GHEE PRIMARY SCHOOL",
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [103.851009800453, 1.36565018546903]
-            }
-        },
-
-        {
-            "type": "Feature",
-            "properties": {
-                "item": 2,
-                "description": "Mall",
-                "name": "AMK Hub",
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [103.8484398, 1.36953]
-            }
-        },
-
-        {
-            "type": "Feature",
-            "properties": {
-                "item": 2,
-                "description": "Supermarket",
-                "name": "SHENG SIONG SUPERMARKET",
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [103.843413231524, 1.37018860668947]
-            }
-        },
-
-        # 3 Property details #
-        {
-            "type": "Feature",
-            "properties": {
-                "item": 3,
-                "description": "Property",
-                "name": "201 ANG MO KIO AVE 3",
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [103.8445648, 1.368849627]
-            }
-        }
-    ]
-    return jsonify(GeoJSon_samples)
-
-
-# End of code added by Keith #
-##############################
 
 @app.route("/no_results")
 def no_results():
