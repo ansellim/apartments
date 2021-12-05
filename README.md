@@ -1,6 +1,8 @@
 # Personalized Apartment Recommendations Project
 
-Group members: Ansel, Daosheng, Key, Keith
+https://github.com/ansellim/apartments.git
+
+Group members: Ansel Lim, Daosheng Lin, Hong Wen (Key) Tai, Keith Loo
 
 Author of this readme: Ansel Lim.
 
@@ -9,9 +11,9 @@ Author of this readme: Ansel Lim.
 The purpose of our web application is to help homebuyers in Singapore find their ideal homes based on their preferences.
 In particular, we feel that while homebuyers can easily access price information online, it is not so easy for
 homebuyers to select neighborhoods or property projects based on the amenities and facilities (e.g., parks, malls, or
-schools) are available in the vicinity. Furthermore, different homebuyers may have different preferences with regard to
-types of amenities and facilities. Therefore, the novelty of our project lies in how a homebuyer may define his
-preferences, and our application returns *personalized* recommendations based on a scoring system which uses the
+schools) which are available in the vicinity. Furthermore, different homebuyers may have different preferences with
+regard to types of amenities and facilities. Therefore, the novelty of our project lies in how a homebuyer may define
+his preferences, and our application returns *personalized* recommendations based on a scoring system which uses the
 preference weight assignments defined by the user.
 
 ## What data was analyzed
@@ -23,12 +25,11 @@ street names for public housing apartments which were sold in the market from 20
 sale prices, floor areas, project names, and street names for private residential properties sold from 2017 to 2021.
 
 A total of **32,695** amenities were analyzed. We obtained datasets containing the addresses and/or locations of
-amenities (
-which we also call "features") in the city. The following table shows the fourteen different types of amenities for
-which we had location information. For some of these amenity types, we computed **weighted quality scores** based on the
-ratings (0 to 5 stars) these amenities received on Google Places. These scores were *weighted* scores in the sense that
-the ratings were adjusted for the number of ratings an amenity receives in comparison to the total number of ratings
-received by amenities of the same type.
+amenities (which we also call "features") in the city. The following table shows the fourteen different types of
+amenities for which we had location information. For some of these amenity types, we computed **weighted quality
+scores** based on the ratings (0 to 5 stars) these amenities received on Google Places. These scores were *weighted*
+scores in the sense that the ratings were adjusted for the number of ratings an amenity receives in comparison to the
+total number of ratings received by amenities of the same type.
 
 | Type of place                                              | Standardized `feature_type` variable name | Quality scores available?  |
 |------------------------------------------------------------|------------------------------------------|----------------------------|
@@ -75,11 +76,11 @@ Here is a table showing the schema of the `properties` table.
 | `long`                                                       | Longitude                                                                                                                                                        |
 | `price_per_sqm`                                              | Average price per square meter of units in this property (historical)                                                                                            |
 | `district`                                                   | Postal district                                                                                                                                                  |
-| `num_` + any `feature_type` in the list of feature types     | (binned) quantity score: scaled number of features of that `feature_type` within 1km of the property                                                             |
+| `num_` + any `feature_type` in the list of feature types     | (binned) quantity score: binned and scaled number of features of that `feature_type` within 1km of the property                                                  |
 | `raw_num_` + any `feature_type` in the list of feature types | raw, unscaled quantity score: number of features of that `feature_type` within 1km of the property                                                               |
-| `feature_ids_` + any `feature_type`                          | a list of `feature_id`'s of that `feature_type` within 1km of the property; can join with `features.csv` to get feature data attributes                          |
 | `quality_` + any `feature_type`                              | (scaled) quality score: scaled median quality score (weighted/normalized Google Places API rating) of features of that `feature_type` within 1km of the property |
-| `raw_quality_` + any `feature_type`                          | unscaled quality score: median quality score (weighted/normalized Google Places API rating) of features of that `feature_type` within 1km of the property |
+| `raw_quality_` + any `feature_type`                          | unscaled quality score: median quality score (weighted/normalized Google Places API rating) of features of that `feature_type` within 1km of the property        |
+| `feature_ids_` + any `feature_type`                          | a list of `feature_id`'s of that `feature_type` within 1km of the property; can join with `features.csv` to get feature data attributes                          |
 | `condo_street`                                               | Street name (only available for condominiums)                                                                                                                    |
 | `condo_market_segment`                                       | Market segment (only available for condos)                                                                                                                       |
 | `condo_commonest_tenure`                                     | Commonest tenure type (only available for condominiums)                                                                                                          |
@@ -88,19 +89,19 @@ Here is a table showing the schema of the `properties` table.
 
 Here is a table showing the information available in the `features` table.
 
-| Attribute| Description |
-| ------ | ----------- |
-| `feature_id` | A unique identiifer for each feature |
-| `name` | Name of feature |
-| `google_place_id` | A unique place ID assigned to a place |
-| `num_ratings` | Number of ratings on Google Places API |
-| `avg_rating` | Average rating on Google Places API (max of 5 stars) |
-| `weighted_rating` | A weighted rating, calculated according to formula in report |
-| `W` | a "normalization" ratio used in calculation of weighted rating. Equals the number of ratings for a feature divided by sum of number of ratings for all features with the same feature type. |
-| `lat` | Latitude |
-| `long` | Longitude |
-| `address` | Address of the feature, if available |
-| `feature_type` | Type of feature (type of place of interest) |
+| Attribute| Description                                                                                                                                                                                         |
+| ------ |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `feature_id` | A unique identiifer for each feature                                                                                                                                                                |
+| `name` | Name of feature                                                                                                                                                                                     |
+| `google_place_id` | A unique place ID assigned to a place                                                                                                                                                               |
+| `num_ratings` | Number of ratings on Google Places API                                                                                                                                                              |
+| `avg_rating` | Average rating on Google Places API (max of 5 stars)                                                                                                                                                |
+| `weighted_rating` | A weighted rating, calculated according to formula in report                                                                                                                                        |
+| `W` | a "normalization" ratio used in calculation of weighted rating. Equals the number of ratings for a feature divided by the maximum number of ratings across all features with the same feature type. |
+| `lat` | Latitude                                                                                                                                                                                            |
+| `long` | Longitude                                                                                                                                                                                           |
+| `address` | Address of the feature, if available                                                                                                                                                                |
+| `feature_type` | Type of feature (type of place of interest)                                                                                                                                                         |
 
 ## How the application works
 
@@ -109,7 +110,7 @@ range. Since different properties have different floor areas, price per square m
 prices across projects. The user may also restrict the search to a selection of districts in the city. Then, the user
 specifies the priority and importance of various amenities.
 
-![](docs/user_interface.png)
+![](docs/questionnaire.png)
 
 Based on the user's settings, an SQL query is then executed. The user's weights are applied to the precomputed scores
 available for each property. A weighted score for each property is thereby calculated. The SQL query then returns a
@@ -118,9 +119,9 @@ API (https://www.onemap.gov.sg/docs/), which is a mapping application designed f
 
 The user may then view the top recommendations (top 5 recommendations) as well as nearby amenities in the browser.
 
-![](docs/mapping_example.png)
+![](docs/map.png)
 
-## Try it out yourself!
+## Try it out yourself! (How to Install and Demo the App)
 
 ### Run the app locally (recommended)
 
@@ -138,7 +139,15 @@ The user may then view the top recommendations (top 5 recommendations) as well a
 4. Then, run the app by entering `flask run` in your terminal window, and then go to http://127.0.0.1:5000/ in your
    favorite browser.
 
-### Run the app on the web
+### How to run the app on the web
 
 The deployment [https://apartments-recommendation.herokuapp.com/](https://apartments-recommendation.herokuapp.com/) is
-buggy, so I recommend trying the app out on your local machine by following the instructions above.
+buggy and doesn't work, so I recommend trying the app out on your local machine by following the instructions above.
+
+## Examples
+
+### Example 1: Persona 1 of ....
+
+Examples of queries go here.
+
+### Example 2
