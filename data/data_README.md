@@ -1,5 +1,7 @@
 # README for `data` folder
 
+Author: Ansel Lim
+
 The `data` folder contains the data used in the project.
 
 The SQLite database is `database.db` in the `data` folder.
