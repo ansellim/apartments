@@ -285,15 +285,18 @@ def index():
                     feature = get_amenity_geojson(amenity=amenity, index=index, description='Taxi Stand')
                     geojson_list.append(feature)
 
-        return redirect(url_for('map', geojson_response=jsonify(
-            geojson_list)))  # Pass matches in geojson format to map() function that renders map.html
+            if not pd.isna(row.taxi_stand):
+                for amenity in json.loads(row.taxi_stand):
+                    feature = get_amenity_geojson(amenity=amenity, index=index, description='Bus Stop')
+                    geojson_list.append(feature)                    
+        
+        return redirect(url_for('map')) # redirect to map() function that renders map.html
+        
     return render_template("index.html")
 
 @app.route("/map")
 def map():
-    geojson_response_str = request.args['geojson_response']
-    geojson_response = jsonify(geojson_response_str)
-    return render_template("map.html", geojson_response=geojson_response)  # Pass matches in geojson format to map.html
+    return render_template("map.html")  # show results in map.html
 
 @app.route("/GeoJSon_properties")
 def create_GeoJSon():

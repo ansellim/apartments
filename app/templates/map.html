@@ -1,5 +1,6 @@
 <!--Map page-->
 <!--Author: Keith Loo-->
+<!-- December 2021 -->
 
 <html>
 
@@ -14,15 +15,6 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <body> <div id='map' style='height:100%; width:100%;'></div>
-
-<style>
-    /* css to customize Leaflet default styles  */
-    .popupCustom.leaflet-popup-tip,
-    .popupCustom.leaflet-popup-content-wrapper {
-        background: #e0e0e0;
-        color: #234c5e;
-    }
-</style>
 
 <script>
 
@@ -91,44 +83,10 @@ var taxistand_icon = L.icon({
     iconUrl: "{{ url_for('static', filename='/bulma/icons/taxistand.jpg') }}",
     iconSize: [15, 15], // size of the icon
 });
-
-
-    // OneMap APIs //
-function nameSearch(){
-    $.ajax({
-        url: "https://developers.onemap.sg/commonapi/search?searchVal="+testSearch+"&returnGeom=Y&getAddrDetails=Y&pageNum=1",
-        success: function(result) {
-            var TrueResult = JSON.stringify(result); //Set result to a variable for writing
-            console.log(TrueResult); //document.write(TrueResult);
-        }});
-}
-
-    function GeoXY(){
-        $.ajax({
-            url: "https://developers.onemap.sg/privateapi/commonsvc/revgeocodexy?location="+testlocationXY.x+","+testlocationXY.y+"&token="+OneMap_Token+"&buffer=10&addressType=all",
-            success: function(result){
-                var TrueResult = JSON.stringify(result); //Set result to a variable for writing
-                console.log(TrueResult); //document.write(TrueResult);
-            }});
-}
-
-    function GeoLatLong(input, PopUp_flag){
-        $.ajax({
-            url: "https://developers.onemap.sg/privateapi/commonsvc/revgeocode?location="+input.latitude+","+input.longitude+"&token="+OneMap_Token+"&buffer=10&addressType=all",
-            success: function(result){
-                var TrueResult = JSON.stringify(result); //Set result to a variable for writing
-                //console.log(TrueResult); //document.write(TrueResult);
-                console.log(result.GeocodeInfo[0].BUILDINGNAME);
-
-                var position = {
-                    latitude: input.latitude,
-                    longitude: input.longitude,
-                    name: result.GeocodeInfo[0].BUILDINGNAME
-                };
-                if (PopUp_flag == 1) { showPopUp(position); }
-            }
-        });
-}
+var busstop_icon = L.icon({
+    iconUrl: "{{ url_for('static', filename='/bulma/icons/busstop.png') }}",
+    iconSize: [15, 15], // size of the icon
+});
 
     // functions //
 function onEachFeature (feature, layer) {
@@ -145,7 +103,7 @@ function onEachFeature (feature, layer) {
     } else {
 
         //Exclude these non-rated features: Carpark, Mrt, Eating, and Taxi Stand)
-        if (feature.properties.description == "Carpark" || feature.properties.description == "Mrt" || feature.properties.description == "Eating" || feature.properties.description == "Taxi Stand") {
+        if (feature.properties.description == "Carpark" || feature.properties.description == "Mrt" || feature.properties.description == "Eating" || feature.properties.description == "Taxi Stand" || feature.properties.description == "Bus Stop") {
             layer.bindPopup("Name: <b>" + feature.properties.name);
 
         } else {
@@ -176,6 +134,8 @@ function onEachFeature (feature, layer) {
             case "Mrt": return L.marker(latlng, {icon: mrt_icon});
             case "Eating": return L.marker(latlng, {icon: eating_icon});
             case "Taxi Stand": return L.marker(latlng, {icon: taxistand_icon});
+            case "Bus Stop": return L.marker(latlng, {icon: busstop_icon});
+
         }
 }
 
@@ -282,7 +242,7 @@ function onEachFeature (feature, layer) {
             }
         })
 
-        // Feature #11 to #14 //
+        // Feature #11 to #15 //
         carpark_layer = L.geoJSON(GeoJSon_properties, {
             onEachFeature: onEachFeature,
             pointToLayer: pointToLayer,
@@ -315,6 +275,14 @@ function onEachFeature (feature, layer) {
             }
         })
 
+        bus_stop_layer = L.geoJSON(GeoJSon_properties, {
+            onEachFeature: onEachFeature,
+            pointToLayer: pointToLayer,
+            filter: function(feature, layer) {
+                if (feature.properties.item == item && feature.properties.description == "Bus Stop") return true;
+            }
+        })
+
         // add to control layer //
         controlLayers.addOverlay(clinic_layer, "Clinics").addTo(map);
         controlLayers.addOverlay(cc_layer, "Community Centers").addTo(map);
@@ -332,6 +300,7 @@ function onEachFeature (feature, layer) {
         controlLayers.addOverlay(mrt_layer, "Train Stations").addTo(map);
         controlLayers.addOverlay(eating_establishment_layer, "Eating Establishments").addTo(map);
         controlLayers.addOverlay(taxi_stand_layer, "Taxi Stands").addTo(map);
+        controlLayers.addOverlay(bus_stop_layer, "Bus Stops").addTo(map);
 
         // add to map //
         map.addLayer(clinic_layer)
@@ -350,6 +319,7 @@ function onEachFeature (feature, layer) {
         map.addLayer(mrt_layer)
         map.addLayer(eating_establishment_layer)
         map.addLayer(taxi_stand_layer)
+        map.addLayer(bus_stop_layer)
 
     }
 
@@ -372,6 +342,7 @@ function onEachFeature (feature, layer) {
         controlLayers.removeLayer(mrt_layer)
         controlLayers.removeLayer(eating_establishment_layer)
         controlLayers.removeLayer(taxi_stand_layer)
+        controlLayers.removeLayer(bus_stop_layer)
 
         // remove from map  //
         map.removeLayer(clinic_layer)
@@ -390,22 +361,20 @@ function onEachFeature (feature, layer) {
         map.removeLayer(mrt_layer)
         map.removeLayer(eating_establishment_layer)
         map.removeLayer(taxi_stand_layer)
+        map.removeLayer(bus_stop_layer)
 
     }
 
-    // global variables //
+    // layer variables //
 var GeoJSon_properties, property_layer, features_layer
-var clinic_layer, cc_layer, gym_layer, hawker_center_layer, mall_layer, sport_layer, park_layer, pschool_layer, sschool_layer, supermarket_layer, carpark_layer, mrt_layer, eating_establishment_layer, taxi_stand_layer
+var clinic_layer, cc_layer, gym_layer, hawker_center_layer, mall_layer, sport_layer, park_layer, pschool_layer, sschool_layer, supermarket_layer, carpark_layer, mrt_layer, eating_establishment_layer, taxi_stand_layer, bus_stop_layer
 
     // map variables //
 var default_map = L.tileLayer("https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png", {detectRetina: true, maxZoom: 18, minZoom: 11, attribution: '<img src="https://docs.onemap.sg/maps/images/oneMap64-01.png" style="height:20px;width:20px;"/> OneMap | Map data &copy; contributors, <a href="http://SLA.gov.sg">Singapore Land Authority</a>'});
-var map = L.map('map', {center: [1.355, 103.81], zoom: 12 }); //layers: [default_map]
+var map = L.map('map', {center: [1.355, 103.81], zoom: 12 });
 var controlLayers = L.control.layers()
 
-
-    // layer variables //
-var base_maps = { "Default": default_map };
-
+    // read properties in GeoJSon //
     axios.get('http://127.0.0.1:5000/GeoJSon_properties').then(response => {
         console.log(response.data)
         GeoJSon_properties = response.data;
@@ -426,10 +395,6 @@ var base_maps = { "Default": default_map };
         });
 
         map.fitBounds(property_layer.getBounds())
-
-        //map.on('click', function(e) {
-        //controlLayers.collapse()
-        //});
 
     })
 
