@@ -19,29 +19,29 @@ the `features` table).
 
 ## `raw` subdirectory
 
-| File                                                      | Description                                                                       | Source                                                                                           |
-|-----------------------------------------------------------|-----------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
-| `amenities.csv `                                          | List of CHAS clinics, community centers, gyms, sports facilities                  | Data.gov.sg                                                                                      |
-| `batch1.json`, `batch2.json`, `batch3.json`,`batch4.json` | Raw JSON data from Urban Redevelopment Authority API (condominium transaction data) | Urban Redevelopment Authority API (https://www.ura.gov.sg/maps/api/#private-residential-property) |
-| `ura.csv` | Private condominium transaction data from the last 5 years (accessed Dec 2021)    | Urban Redevelopment Authority API                                                                |
-| `bus_stops.csv`                                           | List of bus stops                                                                 | Land Transport Authority                                                                |
-| `carparks.csv`                                            | List of carparks                                                                  | Urban Redevelopment Authority                                                                    |
-| `data_hawker.csv`                                         | List of hawker centers                                                            | Data.gov.sg                                                                                      |
-| `data_malls.csv`                                          | List of shopping malls                                                            | Data.gov.sg                                                                                      |
-| `data_MRT.csv`                                            | List of MRT stations                                                              | Land Transport Authority                                                                         |
-| `data_prischools.csv`                                     | List of primary schools                                                           | Data.gov.sg                                                                                      |
-| `eating-establishments.kml`                               | List of eating establishments                                                     | Data.gov.sg                                                                                      |
-| `eating_establishments.csv`                               | Processed list of eating establishments (kml to csv)                              |                                                                                                  |
-| `general-information-of-schools.csv`                      | List of schools in Singapore                                                      | Data.gov.sg                                                                                      |                                                              |
-| `listing-of-supermarkets.csv` | List of supermarkets                                                              | Data.gov.sg                                                                                      |
-| `supermarkets.csv` | Cleaned-up list of supermarkets                                                   |                                                                                                  |
-
-| `parks-kml.kml` | List of parks | | | `parks.csv` | Processed list of parks (kml to csv)
-| | | `postal_codes_mapping.csv` | CSV file created by Ansel to help with mapping of postal codes to districts. | Based
-on URA webpage https://www.ura.gov.sg/realEstateIIWeb/resources/misc/list_of_postal_districts.htm | |
-|`resale-flat-prices-based-on-registration-date-from-jan-2017-onwards.csv` | HDB resale data from 2017 to current | HDB
-data | | `hdb_aggregated.csv` | HDB data (HDB resale data from 2017 to current), aggregated by block | |
-|`secondary_schools.csv` | List of secondary schools | Data.gov.sg | |  `taxi_stands.csv`| List of taxi stands | |
+| File                                                                      | Description                                                                | Source                                                                                            |
+|---------------------------------------------------------------------------|----------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| `amenities.csv `                                                          | List of CHAS clinics, community centers, gyms, sports facilities           | Data.gov.sg                                                                                       |
+| `batch1.json`, `batch2.json`, `batch3.json`,`batch4.json`                 | Raw JSON data from Urban Redevelopment Authority API (condominium transaction data) | Urban Redevelopment Authority API (https://www.ura.gov.sg/maps/api/#private-residential-property) |
+| `ura.csv`                                                                 | Private condominium transaction data from the last 5 years (accessed Dec 2021) | Urban Redevelopment Authority API                                                                 |
+| `bus_stops.csv`                                                           | List of bus stops                                                          | Land Transport Authority                                                                          |
+| `carparks.csv`                                                            | List of carparks                                                           | Urban Redevelopment Authority                                                                     |
+| `data_hawker.csv`                                                         | List of hawker centers                                                     | Data.gov.sg                                                                                       |
+| `data_malls.csv`                                                          | List of shopping malls                                                     | Data.gov.sg                                                                                       |
+| `data_MRT.csv`                                                            | List of MRT stations                                                       | Land Transport Authority                                                                          |
+| `data_prischools.csv`                                                     | List of primary schools                                                    | Data.gov.sg                                                                                       |
+| `eating-establishments.kml`                                               | List of eating establishments                                              | Data.gov.sg                                                                                       |
+| `eating_establishments.csv`                                               | Processed list of eating establishments (kml to csv)                       |                                                                                                   |
+| `general-information-of-schools.csv`                                      | List of schools in Singapore                                               | Data.gov.sg                                                                                       |                                                              |
+| `listing-of-supermarkets.csv`                                             | List of supermarkets                                                       | Data.gov.sg                                                                                       |
+| `supermarkets.csv`                                                        | Cleaned-up list of supermarkets                                            |                                                                                                   |
+| `parks-kml.kml`                                                           | List of parks                                                              | Data.gov.sg                                                                                       |
+| `parks.csv`                                                               | Processed list of parks (kml to csv) |                                                                                                   |
+| `postal_codes_mapping.csv`                                                |CSV file created by Ansel to help with mapping of postal codes to districts. | Based on URA website                                                                              |                                                                              |
+| `resale-flat-prices-based-on-registration-date-from-jan-2017-onwards.csv` |HDB resale data from 2017 to current | Data.gov.sg                                                                                       |
+| `hdb_aggregated.csv`                                                      | HDB data (HDB resale data from 2017 to current), aggregated by block |                                                                                                   |
+| `secondary_schools.csv`                                                   | List of secondary schools                                                  | Data.gov.sg                                                                                       |
+| `taxi_stands.csv`                                                         | List of taxi stands | Urban Redevelopment Authority |                                                                    |
 
 ## `with_quality_scores` subdirectory
 
