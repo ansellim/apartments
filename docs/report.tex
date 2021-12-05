@@ -1,6 +1,6 @@
 \documentclass[a4paper, 11pt]{article}
-\usepackage[english]{babel}  
-\usepackage[utf8]{inputenc} 
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
 \usepackage[centertags]{amsmath}
 \usepackage{amssymb,amsfonts,amsthm}
 \usepackage{indentfirst}
@@ -13,7 +13,7 @@
 \usepackage{epstopdf}
 \usepackage{graphics}
 \usepackage{subfigure}
-\usepackage[margin=1in]{geometry} 
+\usepackage[margin=1in]{geometry}
 \usepackage{listings}
 \usepackage{setspace}
 \usepackage{multirow}
@@ -35,56 +35,56 @@
 {All team members contributed equally to the project. Ansel performed data collection and scoring and edited the report and poster. Daosheng designed the user preferences questionnaire, performed the experiments, and wrote the report and poster. Key designed the scoring algorithm and worked on database design and data retrieval. Keith worked on data visualization and the map's user interface. Everyone participated in literature review, code review and review of this manuscript.}
 
 	\section{Introduction: Motivation \& Problem Definition}
-	
+
 	Home buyers in Singapore typically obtain their information from (a) social media (e.g. blogs, Instagram, YouTube, forums), (b) browsing commercial real estate websites (e.g. PropertyGuru, 99.co), (c) online advertisements, (d) messaging applications (e.g. WhatsApp, Telegram), (e) old media (e.g. newspapers, television) and (f) word of mouth. Multiple sources of information may lead to confusing and conflicting conclusions. Furthermore, as alluded to by Kavey (1989) [4], the search for homes may be constrained by the bias present in the information provided by realtors.
-	
+
 	Home buyers also want competitively priced homes. B.H. Chua (2015) [1] and C. Y. Yiu \& C. M. Hui (2005) [2] discussed the problems of persistent increases in property prices in Singapore. Accurate information is key to formulating timing strategies, which are very important in real estate investments, as discussed by Teck Chin \& Geofrey Mills (1999) [3].
 
  Aspiring homebuyers in Singapore need an informative toopl to analyze and visualize unbiased open-source information, and generate personalized, affordable recommendations based on their preferences and constraints.
 
 	\section{Methodology}
-	
+
 	\subsection{Intuition}
-	
+
 	Most tools for researching the property market involve filtering for property-specific attributes, such as location, price and size of the apartment. However, the thought process that goes into purchasing a home involves a much greater variety of factors \textit{beyond} attributes of the property, such as proximity to various amenities (e.g. restaurants, schools, and recreational facilities). Depending on demographic factors and stage of life, individuals may have different priorities and preferences as to neighborhood amenities, which do play a role in property search.
-	
+
 	The market needs a property recommendation tool which incorporates the rich information available in neighborhood amenities, enabling personalized, visualizable recommendations.
-	
+
 	\subsection{Data collection and preprocessing}
-	
-	The Government of Singapore maintains and publishes publicly available datasets (e.g. www.data.gov.sg), and OneMap API, a map API. Through these sources, we were downloaded and scraped details of residential projects (e.g. past sale transactions, addresses, map coordinates) and locations of various amenities (e.g. parks, educational institutions, food and beverage establishments). We further enriched the information with data from Google Places API, adding details such as review ratings and number of reviews. 
-	
+
+	The Government of Singapore maintains and publishes publicly available datasets (e.g. www.data.gov.sg), and OneMap API, a map API. Through these sources, we were downloaded and scraped details of residential projects (e.g. past sale transactions, addresses, map coordinates) and locations of various amenities (e.g. parks, educational institutions, food and beverage establishments). We further enriched the information with data from Google Places API, adding details such as review ratings and number of reviews.
+
 	The raw data was stored in multiple comma separated values (CSV) files, and subsequently formatted into a consistent schema and loaded into an SQLite database. The data was stored in two tables, (1) a “properties” table, containing details of the various residential housing projects such as name, district, location, average transacted price, and (2) a “features” table, containing details of the different amenities such as name, category, location, and review ratings. In total, we retrieved 10,614 rows of property transaction data and 32,695 rows of amenities data over 15 different types of amenities (subsidized clinics, community centers, gyms, hawker centers, shopping malls, public sports facilities, parks, primary schools, secondary schools, supermarkets, food and beverage establishments, bus stops, carparks, subway stations, and taxi stands).
-	
+
 	\begin{comment}
 	Number of properties is 11,488 if Batch 4 is fixed.
 	\end{comment}
 
     \subsection{User preferences questionnaire}
-    
+
     The landing page of our tool is a user preferences questionnaire which was designed with the Flask web framework. This consists of a mix of “hard constraints” and “preferences”. Hard constraints refer to price per square meter, district, and apartment type (public housing or condominiums). Preferences refer to a ranking of the importance of each attribute. For example, young parents may prefer homes close to good schools. The user's constraints and preferences are stored and passed to the scoring system.
-    
+
    \begin{figure}[h]
    \centering
    \includegraphics[width={0.5\textwidth}]{questionnaire.png}
    \caption{Part of the user preferences questionnaire}
    \end{figure}
-    
-    \subsection{Review of scoring methodology in recommendation systems} 
-    Various insightful methods in decision science exist in the literature. B. Song \& S. Kang (2015) [5] propose assignment of “weights” to different user inputs and attributes according to user-specified rankings, which we may adopt. However, this is not a dynamic solution; the process of arriving at the calculated weights is not ideal in a web application as it is difficult to keep users engaged during the intervening computation time. M. Morita \& Y. Shinoda (1994) [6] explore user reading times as a gauge of the relevancy of search results. This concept of using user engagement attributes may be explored in the design of our scoring algorithm. S. Opricovic \& G.H. Tzeng (2002) [7] discuss the use of two multiple-criteria decision-making methods, VIKOR and TOPSIS, in finding optimal solutions, however this may not be computationally feasible in large-scale evaluation of hundreds or thousands of alternative results. 
-    
-    Isinkaye, F. O., Folajimi, Y. O., \& Ojokoh, B. A. (2015) [8] discuss different techniques used in real estate recommender systems such as content-based and collaborative filtering methods. Deldjoo, Y., Dacrema, M.F., Constantin, M.G., et al. (2019) [9] explore a novel hybrid method which not only performs better than a pure content-based filtering method, but is also able to deal with the “cold start problem”. However, the paper had existing user-item interaction data which is not available to us from publicly available data sources. Therefore, we will have to use a pure content-based approach that relies on item features. 
-    
-    Interestingly, Lops, P., Jannach, D., Musto, C. et al. (2019) [10] share about developments for content-based recommendations such as enriching features using multimedia data or using embeddings to encode item features. We can possibly explore using such methods to improve our recommendations. 
-    
-    Computing similarity between houses can be a very computationally intensive process. J. Leskovec, A. Rajaraman, \& J. D. Ullman (2014) [11] discuss several methods of finding similar items efficiently, such as using cosine distance to compare similarity between items and using locality-sensitive hashing to hash similar items into buckets. This effectively reduces the search space to items which have the same bucket. By confining our search space to houses within the same hash bucket, we may recommend homes more efficiently. 
+
+    \subsection{Review of scoring methodology in recommendation systems}
+    Various insightful methods in decision science exist in the literature. B. Song \& S. Kang (2015) [5] propose assignment of “weights” to different user inputs and attributes according to user-specified rankings, which we may adopt. However, this is not a dynamic solution; the process of arriving at the calculated weights is not ideal in a web application as it is difficult to keep users engaged during the intervening computation time. M. Morita \& Y. Shinoda (1994) [6] explore user reading times as a gauge of the relevancy of search results. This concept of using user engagement attributes may be explored in the design of our scoring algorithm. S. Opricovic \& G.H. Tzeng (2002) [7] discuss the use of two multiple-criteria decision-making methods, VIKOR and TOPSIS, in finding optimal solutions, however this may not be computationally feasible in large-scale evaluation of hundreds or thousands of alternative results.
+
+    Isinkaye, F. O., Folajimi, Y. O., \& Ojokoh, B. A. (2015) [8] discuss different techniques used in real estate recommender systems such as content-based and collaborative filtering methods. Deldjoo, Y., Dacrema, M.F., Constantin, M.G., et al. (2019) [9] explore a novel hybrid method which not only performs better than a pure content-based filtering method, but is also able to deal with the “cold start problem”. However, the paper had existing user-item interaction data which is not available to us from publicly available data sources. Therefore, we will have to use a pure content-based approach that relies on item features.
+
+    Interestingly, Lops, P., Jannach, D., Musto, C. et al. (2019) [10] share about developments for content-based recommendations such as enriching features using multimedia data or using embeddings to encode item features. We can possibly explore using such methods to improve our recommendations.
+
+    Computing similarity between houses can be a very computationally intensive process. J. Leskovec, A. Rajaraman, \& J. D. Ullman (2014) [11] discuss several methods of finding similar items efficiently, such as using cosine distance to compare similarity between items and using locality-sensitive hashing to hash similar items into buckets. This effectively reduces the search space to items which have the same bucket. By confining our search space to houses within the same hash bucket, we may recommend homes more efficiently.
 
     \subsection{Our scoring methodology}
-    
-\subsubsection{General method of scoring}    
-    
+
+\subsubsection{General method of scoring}
+
     Putting our research into application, our scoring method takes into account input weights from the user, as well as attribute scores for each housing project. Both the input weights and attribute scores have a range of 0 to 1, and the overall score will be the weighted sum of scores. As an illustrative example, assume that there are only two attributes (schools and public transport). The user places less importance on schools and gives a weight of  0.3 ($w_{\text{school}}  = 0.3$), and values the public transport links in the area thus assigns a weight of 0.8 to public transport ($w_{\text{transport}}  = 0.8$). Each housing project has a pre-computed score for each attribute; housing project A can have 0.8 as its score for schools ($s_{A,\text{school}} = 0.8$) and 0.5 as its score for public transport ($s_{A,\text{transport}} = 0.5$), whereas housing project B can have 0.4 as its score for schools ($s_{B,\text{school}} = 0.4$) and 0.9 as its score for public transport ($s_{B,\text{transport}} = 0.9$). Using the above examples, the overall score of housing project A will be:
-    
+
 \[ w_{\text{school}} \times s_{A,\text{school}} + w_{\text{transport}} \times s_{A,\text{transport}} = 0.3 \times 0.8 + 0.8 \times 0.5 = 0.64 \]
 
 The overall score for housing project B is calculated in a similar manner:
@@ -95,13 +95,13 @@ Since housing project B has a higher score, this will be ranked higher than proj
 
 \subsubsection{Quality and quantity scores}
 
-To derive scores for individual attributes, we have to consider the \textit{type} of attribute. We created two types of scores per attribute: a quantity score and quality score.  For attributes where the ratings are important (e.g. certain schools may be perceived to be better than others), both quality and quantity scores will be calculated. Other attributes where the concept of ratings may not be as relevant (e.g. subway station) will only have a quantity score assigned. Each type of score will also have its own weight, so the user will input weight for school quantity score, as well as school quality score. 
+To derive scores for individual attributes, we have to consider the \textit{type} of attribute. We created two types of scores per attribute: a quantity score and quality score.  For attributes where the ratings are important (e.g. certain schools may be perceived to be better than others), both quality and quantity scores will be calculated. Other attributes where the concept of ratings may not be as relevant (e.g. subway station) will only have a quantity score assigned. Each type of score will also have its own weight, so the user will input weight for school quantity score, as well as school quality score.
 
 Here, we continue to use schools as an example, but note that the method applies also to other types of amenities (e.g., malls and parks).
 
 The overall score for a housing project will be: \[ w_{\text{school quality}} \times s_{B,\text{school quality}} + w_{\text{school quality}} \times s_{B,\text{school quality}} + w_{\text{transport}} \times s_{B,\text{transport}} \]
 
-For the computation of quantity scores, we computed the number of nearby schools for a given housing project. We then plotted a histogram to analyze the distribution of schools across various properties in Singapore. Depending on the nature of the specific attributes (in this case schools) and the shape of the distribution, we assigned a score, applying a higher score for housing projects with more schools in the vicinity. Thereafter, we applied scaling to keep the score range between 0 and 1. 
+For the computation of quantity scores, we computed the number of nearby schools for a given housing project. We then plotted a histogram to analyze the distribution of schools across various properties in Singapore. Depending on the nature of the specific attributes (in this case schools) and the shape of the distribution, we assigned a score, applying a higher score for housing projects with more schools in the vicinity. Thereafter, we applied scaling to keep the score range between 0 and 1.
 
 For quality scores, we first computed the median rating across all nearby schools for a given housing project, followed by min-max scaling so that the range of the score will be kept between 0 and 1. We chose to take the median instead of average, since it will be more representative and avoid situations where quality score might be largely affected by one anomalous poor school. This process was repeated for all attributes.
 
@@ -122,14 +122,14 @@ The pre-computed scores for each attribute and housing unit are stored in a tabl
 
 \subsection{Data visualization}
 
-Upon deriving the recommended results for users, the next step would be to show the recommendations to our users. We utilized the OneMap interface (www.onemap.gov.sg) for this step. The scoring system returns the top 5 results in terms of overall scores, along with JSON objects containing details of the various amenities within each property's vicinity (defined as a 1-kilometer radius from each residential property project). These results are mapped out in the interface in the form of pins. Clicking on a pin allows the user to “drill down” into greater detail. Upon drilling down, the user has the option of showing or hiding “layers”, each of which contains the property-specific amenities within the property's vicinity. Map data and visualizations have been used in real estate valuation, such as in Yang, J. et al. (2021) [12], where the authors applied machine learning techniques to urban greenery data on Google Maps. In line with home buyers’ increasing environmental consciousness, we included the visualization of public parks within our application. 
+Upon deriving the recommended results for users, the next step would be to show the recommendations to our users. We utilized the OneMap interface (www.onemap.gov.sg) for this step. The scoring system returns the top 5 results in terms of overall scores, along with JSON objects containing details of the various amenities within each property's vicinity (defined as a 1-kilometer radius from each residential property project). These results are mapped out in the interface in the form of pins. Clicking on a pin allows the user to “drill down” into greater detail. Upon drilling down, the user has the option of showing or hiding “layers”, each of which contains the property-specific amenities within the property's vicinity. Map data and visualizations have been used in real estate valuation, such as in Yang, J. et al. (2021) [12], where the authors applied machine learning techniques to urban greenery data on Google Maps. In line with home buyers’ increasing environmental consciousness, we included the visualization of public parks within our application.
 
    \begin{figure}[h]
    \centering
    \includegraphics[width={0.5\textwidth}]{map.png}
    \caption{Example of a property recommendation and its neighboring amenities}
    \end{figure}
-    
+
 \section{Experiments}
 
 \subsection{Experimental methodology}
@@ -146,7 +146,7 @@ Tables 1 through 3 show the personas tested as well as the results. For each per
       & \textbf{Input parameters}  & \textbf{Results} \\ \hline
       \textbf{Constraints}& $\leq$\$5000/sqm, public housing, districts 27 \& 28
   & Compiled with hard constraints. \\ \hline
-\textbf{Preferences} & Quality and quantity scores for primary and secondary schools, clinics, hawker centers. Quantity scores for subway (MRT) stations. & 7 out of the 9 quantity and quality scores for the preferred features were in the top quartile (Q4). The remaining two were within the third quartile (Q3). \\\hline
+\textbf{Preferences} & Features with quantity and quality scores: primary and secondary schools, clinics, hawker centres. Features with only quantity scores: subway (MRT) stations. & 7 out of the 9 quantity and quality scores for the preferred features were in the top quartile (Q4). The remaining two were within the third quartile (Q3). \\\hline
     \end{tabular}
     \caption{Persona 1: young parents with below-average income}
     \label{tab:my_label}
@@ -157,8 +157,8 @@ Tables 1 through 3 show the personas tested as well as the results. For each per
     \begin{tabular}{p{0.2\linewidth} | p{0.3\linewidth} | p{0.4\linewidth}} \hline
       & \textbf{Input parameters}  & \textbf{Results} \\ \hline
       \textbf{Constraints}& $\leq$\$8000/sqm, public or private housing, any district & Complied with hard constraints. \\ \hline
-\textbf{Preferences} & 
-Quantity and quality scores for sports facilities, gyms, community centers, hawker centres. Quantity scores for F\&B, subway (MRT) stations, taxi stands. & 
+\textbf{Preferences} &
+Features with quantity and quality scores: sports facilities, gyms, community centres, hawker centres. Features with only quantity scores: F\&B, subway (MRT) stations, taxi stands. &
 10 out of the 13 quantity and quality scores for the preferred features were in the top quartile. The remaining three ranged between the 2nd and 3rd quartiles.
 
  \\\hline
@@ -174,9 +174,9 @@ Quantity and quality scores for sports facilities, gyms, community centers, hawk
       & \textbf{Input parameters}  & \textbf{Results} \\ \hline
       \textbf{Constraints}& Between \$20,000 and \$30,000/sqm. Condominiums. Districts 9, 10, 11.
  & Complied with hard constraints. \\ \hline
-\textbf{Preferences} & 
-Quantity and quality scores for primary and secondary schools. clinics, sports facilities, gyms, community centers, parks, and malls. & The stricter constraints narrowed the shortlist to only 205 properties.
-9 out of the 16 quantity and quality scores for the preferred features were in the top quartile. The remaining 7 ranged between the 1st and 3rd quartiles. 
+\textbf{Preferences} &
+Features with quantity and quality scores: primary and secondary schools, clinics, sports facilities, gyms, community centers, parks, and malls. & The stricter constraints narrowed the shortlist to only 205 properties.
+9 out of the 16 quantity and quality scores for the preferred features were in the top quartile. The remaining 7 ranged between the 1st and 3rd quartiles.
 
  \\\hline
     \end{tabular}
@@ -192,7 +192,7 @@ In the first iteration of the tool, we had binned the quantity scores of the var
 
 Similarly, for quality scores, we initially binned them into quartiles. However, since the median weighted ratings of amenities for a given housing project tended to be very close to one another, this resulted in very similar values in each of the bins. To remedy this, we applied min-max scaling instead, which allowed housing projects with high median weighted ratings of amenities to stand out more.
 
-We are satisfied with the performance of the tool, as it helps to identify housing projects in ideal areas in an objective way and the interface is simple and intuitive. Even if the housing projects do not meet the user’s specific requirements, the suggestions indicate the appeal of the suggested areas and zones, and the user can thus focus their search on properties in these areas. 
+We are satisfied with the performance of the tool, as it helps to identify housing projects in ideal areas in an objective way and the interface is simple and intuitive. Even if the housing projects do not meet the user’s specific requirements, the suggestions indicate the appeal of the suggested areas and zones, and the user can thus focus their search on properties in these areas.
 
 The performance of the tool is not without limitations. We noted that the recommendations were often spatially clustered. This is expected since nearby housing projects have similar amenities. Further development may be done to enhance the tool, perhaps by including a heatmap of properties and scores, instead of simply showing the top 5 results. Furthermore, the information in the open-source databases we used was limited: for example, there was little info about the age of the housing projects. Because older homes tend to fetch a lower price, omission of age a configurable search parameter could lead to overrepresentation of these homes.
 
@@ -204,7 +204,7 @@ The performance of the tool is not without limitations. We noted that the recomm
 		\bibitem{Kavey} Kavey, Lee (1989). \textit{Condominium Search and Purchase Process}. Research Thesis. National University of Singapore, Singapore. Accessed at scholarbank.nus.edu.sg/handle/10635/163970.
 		\bibitem{BangweonSong} Bangweon Song\& Seokjoong Kang (2015). \textit{A Method of Assigning Weights Using a Ranking and Nonhierarchy Comparison}, Advances in Decision Sciences, 2090-3359
 		\bibitem{Morita} Morita, Masahiro\& Shinoda, Yoichi. (1994). \textit{Information Filtering Based on User Behavior Analysis and Best Match Text Retrieval}. 272-281. 10.1007/978-1-4471-2099-5\_28.
-		\bibitem{Opricovic} Opricovic, Serafim\& Tzeng, Gwo-Hshiung. (2004). \textit{Compromise solution by MCDM methods: a comparative analysis of VIKOR and TOPSIS}, European Journal of Operational Research. 156. 445-455. 10.1016/S0377-2217(03)00020-1. 
+		\bibitem{Opricovic} Opricovic, Serafim\& Tzeng, Gwo-Hshiung. (2004). \textit{Compromise solution by MCDM methods: a comparative analysis of VIKOR and TOPSIS}, European Journal of Operational Research. 156. 445-455. 10.1016/S0377-2217(03)00020-1.
 		\bibitem{Isinkaye} Isinkaye, F. O., Folajimi, Y. O.,\& Ojokoh, B. A. (2015). \textit{Recommendation systems: Principles, methods and evaluation}, Egyptian Informatics Journal, 16(3), 261-273.
 		\bibitem{Deldjoo} Deldjoo, Y., Dacrema, M.F., Constantin, M.G. et al. (2019). \textit{Movie genome: alleviating new item cold start in movie recommendation}, User Model User-Adap Inter 29, 291-343.
 		\bibitem{Lops} Lops, P., Jannach, D., Musto, C. et al. (2019). \textit{Trends in content-based recommendation}, User Model User-Adap Inter 29, 239-249.
