@@ -6,6 +6,8 @@ Group members: Ansel Lim, Daosheng Lin, Hong Wen (Key) Tai, Keith Loo
 
 Author of this readme: Ansel Lim.
 
+Editor(s): Key Tai.
+
 ## Introduction
 
 The purpose of our web application is to help homebuyers in Singapore find their ideal homes based on their preferences.
@@ -139,15 +141,25 @@ The user may then view the top recommendations (top 5 recommendations) as well a
 4. Then, run the app by entering `flask run` in your terminal window, and then go to http://127.0.0.1:5000/ in your
    favorite browser.
 
+### Installation and demo walkthrough
+
+Watch our walkthrough here:
+[https://youtu.be/zvie_BMjn4s](https://youtu.be/zvie_BMjn4s)
+
 ## Examples
 
 ### Example 1: Persona 1 of young parents with below-average income
 
-In this example, our constraints include a price limit of S$5,000/sqm, with the search limited to public housing and in two specific districts which are further from the city centre (D27 and D28). As forward-thinking young parents, they prioritised being close to primary and secondary schools, clinics, hawker centers and subway (MRT) stations. For the quantity and quality weights of these features were set to the maximum value of 100, while the other features were set at a lower value of 20.
+In this example, our constraints include a price limit of S$5,000/sqm, with the search limited to public housing and in
+two specific districts which are further from the city centre (D27 and D28). As forward-thinking young parents, they
+prioritised being close to primary and secondary schools, clinics, hawker centers and subway (MRT) stations. For the
+quantity and quality weights of these features were set to the maximum value of 100, while the other features were set
+at a lower value of 20.
 
 ![](docs/Persona1_parameters.png)
 
-For the recommended results, 7 out of the 9 quantity and quality scores for the preferred features were in the top quartile (Q4) of properties within the selected constraints. The remaining two were within the third quartile (Q3)
+For the recommended results, 7 out of the 9 quantity and quality scores for the preferred features were in the top
+quartile (Q4) of properties within the selected constraints. The remaining two were within the third quartile (Q3)
 
 ![](docs/Persona1_map.png)
 
