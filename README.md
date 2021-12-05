@@ -18,7 +18,7 @@ preference weight assignments defined by the user.
 
 ## What data was analyzed
 
-A total of **10,614** properties were analyzed. Transaction records were obtained from the Housing and Development
+A total of **11,488** properties were analyzed. Transaction records were obtained from the Housing and Development
 Board (
 HDB) and the Urban Redevelopment Authority (URA). The HDB dataset contained sale prices, floor areas, and block and
 street names for public housing apartments which were sold in the market from 2017 to 2021. The URA dataset contained
@@ -123,7 +123,7 @@ The user may then view the top recommendations (top 5 recommendations) as well a
 
 ## Try it out yourself! (How to Install and Demo the App)
 
-### Run the app locally (recommended)
+### Run the app locally
 
 1. Clone this repository.
 
@@ -138,11 +138,6 @@ The user may then view the top recommendations (top 5 recommendations) as well a
 
 4. Then, run the app by entering `flask run` in your terminal window, and then go to http://127.0.0.1:5000/ in your
    favorite browser.
-
-### How to run the app on the web
-
-The deployment [https://apartments-recommendation.herokuapp.com/](https://apartments-recommendation.herokuapp.com/) is
-buggy and doesn't work, so I recommend trying the app out on your local machine by following the instructions above.
 
 ## Examples
 

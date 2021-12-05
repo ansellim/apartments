@@ -294,13 +294,11 @@ print("Part 2: Started combining condo and hdb dataframes", print_time())
 df_condo = pd.read_csv('../data/processed/df.csv', nrows=MAX_ROWS)
 df_hdb = pd.read_csv('../data/processed/df_hdb.csv', nrows=MAX_ROWS)
 
-df_condo.drop(columns=['num_eating_establishments'], inplace=True)
 df_condo = df_condo[['street', 'project', 'marketSegment', 'lat', 'long', 'avg_price_per_sqm', 'district',
                      'commonest_tenure', 'num_malls', 'num_taxi_stands', 'num_primary_schools',
                      'num_mrt', 'num_hawker', 'num_carparks', 'num_bus_stops', 'num_chas_clinics',
                      'num_sports_facilities', 'num_community_centers', 'num_supermarkets', 'num_secondary_schools',
-                     'num_eating_establishments_', 'num_parks']]
-df_condo.rename(columns={'num_eating_establishments_': 'num_eating_establishments'}, inplace=True)
+                     'num_eating_establishments', 'num_parks']]
 df_condo.rename(columns={'street': 'condo_street', 'marketSegment': 'condo_market_segment',
                          'commonest_tenure': 'condo_commonest_tenure'}, inplace=True)
 

@@ -54,10 +54,10 @@
 
 	The Government of Singapore maintains and publishes publicly available datasets (e.g. www.data.gov.sg), and OneMap API, a map API. Through these sources, we were downloaded and scraped details of residential projects (e.g. past sale transactions, addresses, map coordinates) and locations of various amenities (e.g. parks, educational institutions, food and beverage establishments). We further enriched the information with data from Google Places API, adding details such as review ratings and number of reviews.
 
-	The raw data was stored in multiple comma separated values (CSV) files, and subsequently formatted into a consistent schema and loaded into an SQLite database. The data was stored in two tables, (1) a “properties” table, containing details of the various residential housing projects such as name, district, location, average transacted price, and (2) a “features” table, containing details of the different amenities such as name, category, location, and review ratings. In total, we retrieved 10,614 rows of property transaction data and 32,695 rows of amenities data over 15 different types of amenities (subsidized clinics, community centers, gyms, hawker centers, shopping malls, public sports facilities, parks, primary schools, secondary schools, supermarkets, food and beverage establishments, bus stops, carparks, subway stations, and taxi stands).
+	The raw data was stored in multiple comma separated values (CSV) files, and subsequently formatted into a consistent schema and loaded into an SQLite database. The data was stored in two tables, (1) a “properties” table, containing details of the various residential housing projects such as name, district, location, average transacted price, and (2) a “features” table, containing details of the different amenities such as name, category, location, and review ratings. In total, we retrieved 11,488 rows of property transaction data and 32,695 rows of amenities data over 15 different types of amenities (subsidized clinics, community centers, gyms, hawker centers, shopping malls, public sports facilities, parks, primary schools, secondary schools, supermarkets, food and beverage establishments, bus stops, carparks, subway stations, and taxi stands).
 
 	\begin{comment}
-	Number of properties is 11,488 if Batch 4 is fixed.
+	Number of properties is 10,614 without batch 3; 11,488 with batch 3 of URA data.
 	\end{comment}
 
     \subsection{User preferences questionnaire}
@@ -138,7 +138,7 @@ Because our tool is meant to recommend homes according to the user-defined prefe
 
 \subsection{Experimental results}
 
-Tables 1 through 3 show the personas tested as well as the results. For each persona, we expected that the property projects recommended by the tool will only include those meeting the hard constraints defined, and that the neighborhood amenities will have high scores mostly in the top quartile. For each persona, the tool was configured with maximal weighting (100\%) for the preferred features and a small weightage (20\%) for the non-preferred features. Applying common sense and domain knowledge, we assessed the tool's recommendations for accuracy and relevancy. We also evaluated the tool's performance in terms of efficiency. The time between questionnaire submission and result visualization (corresponding to on-the-fly data retrieval, scoring, and recommendation) consistently took $<2$ seconds, providing a smooth user experience with minimal delay.
+Tables 1 through 3 show the personas tested as well as the results. For each persona, we expected that the property projects recommended by the tool will only include those meeting the hard constraints defined, and that the neighborhood amenities will have high scores mostly in the top quartile. For each persona, the tool was configured with maximal weighting (100\%) for the preferred features and a small weighting (20\%) for the non-preferred features. Applying common sense and domain knowledge, we assessed the tool's recommendations for accuracy and relevancy. We also evaluated the tool's performance in terms of efficiency. The time between questionnaire submission and result visualization (corresponding to on-the-fly data retrieval, scoring, and recommendation) consistently took $<2$ seconds, providing a smooth user experience with minimal delay.
 
 \begin{table}[ht]
     \centering
@@ -146,7 +146,7 @@ Tables 1 through 3 show the personas tested as well as the results. For each per
       & \textbf{Input parameters}  & \textbf{Results} \\ \hline
       \textbf{Constraints}& $\leq$\$5000/sqm, public housing, districts 27 \& 28
   & Compiled with hard constraints. \\ \hline
-\textbf{Preferences} & Features with quantity and quality scores: primary and secondary schools, clinics, hawker centres. Features with only quantity scores: subway (MRT) stations. & 7 out of the 9 quantity and quality scores for the preferred features were in the top quartile (Q4). The remaining two were within the third quartile (Q3). \\\hline
+\textbf{Preferences} & \textit{Both quantity \& quality scores:} primary/secondary schools, clinics, hawker centers. \textit{Quantity scores only:} subway (MRT) stations. & 7 out of the 9 quantity and quality scores for the preferred features were in the top quartile; remaining two were in 3rd quartile. \\\hline
     \end{tabular}
     \caption{Persona 1: young parents with below-average income}
     \label{tab:my_label}
@@ -158,8 +158,8 @@ Tables 1 through 3 show the personas tested as well as the results. For each per
       & \textbf{Input parameters}  & \textbf{Results} \\ \hline
       \textbf{Constraints}& $\leq$\$8000/sqm, public or private housing, any district & Complied with hard constraints. \\ \hline
 \textbf{Preferences} &
-Features with quantity and quality scores: sports facilities, gyms, community centres, hawker centres. Features with only quantity scores: F\&B, subway (MRT) stations, taxi stands. &
-10 out of the 13 quantity and quality scores for the preferred features were in the top quartile. The remaining three ranged between the 2nd and 3rd quartiles.
+\textit{Both quantity and quality scores:} sports facilities, gyms, community centres, hawker centres. \textit{Quantity scores only:} F\&B, subway (MRT) stations, taxi stands. &
+10 out of the 13 quantity and quality scores for the preferred features were in the top quartile. The remaining three were in 2nd and 3rd quartiles.
 
  \\\hline
     \end{tabular}
@@ -175,8 +175,8 @@ Features with quantity and quality scores: sports facilities, gyms, community ce
       \textbf{Constraints}& Between \$20,000 and \$30,000/sqm. Condominiums. Districts 9, 10, 11.
  & Complied with hard constraints. \\ \hline
 \textbf{Preferences} &
-Features with quantity and quality scores: primary and secondary schools, clinics, sports facilities, gyms, community centers, parks, and malls. & The stricter constraints narrowed the shortlist to only 205 properties.
-9 out of the 16 quantity and quality scores for the preferred features were in the top quartile. The remaining 7 ranged between the 1st and 3rd quartiles.
+\textit{Both quantity and quality scores:} primary/secondary schools, clinics, sports facilities, gyms, community centers, parks, malls. & 205 properties were shortlisted by the stricter constraints.
+9 out of the 16 quantity and quality scores for the preferred features were in the top quartile. Remainder in 2nd/3rd quartiles.
 
  \\\hline
     \end{tabular}
@@ -188,13 +188,15 @@ Features with quantity and quality scores: primary and secondary schools, clinic
 
 \section{Discussion}
 
-In the first iteration of the tool, we had binned the quantity scores of the various attributes into quartiles. However, the results were not ideal, as the distribution of certain attributes (e.g. number of malls in the area) tended to fall within a fairly small range. As a result, the “top quartile” thresholds tended to be close to the median value. Instead of using quartiles, we changed our methodology. We first plotted out the distributions of all 15 attributes, and assigned attribute-specific bins of non-uniform widths to each attribute based on visual inspection and domain knowledge. For instance, the number of primary schools within the vicinity of a home was largely 2, causing the 25th and 50th percentile thresholds to both fall at 2. Applying our new methodology, having 1 school in the vicinity would result in a score of 0.25, 2 schools will score 0.5, 3 schools will score 0.75, and $>4$ schools will score 1.0. With this change in methodology, the top results tended to stand out more than the average housing project, providing better granularity and a more specific approach to scoring.
+In the first iteration of the tool, we had binned the quantity scores of the various attributes into quartiles. However, the results were not ideal, as the distribution of certain attributes (e.g. number of malls in the area) tended to fall within a fairly small range. As a result, the “top quartile” thresholds tended to be close to the median value. 
+
+Instead of using quartiles, we changed our methodology. We first plotted out the distributions of all 15 attributes, and assigned attribute-specific bins of non-uniform widths to each attribute based on visual inspection and domain knowledge. For instance, the number of primary schools within the vicinity of a home was largely 2, causing the 25th and 50th percentile thresholds to both fall at 2. Applying our new methodology, having 1 school in the vicinity would result in a score of 0.25, 2 schools will score 0.5, 3 schools will score 0.75, and $>4$ schools will score 1.0. With this change in methodology, the top results tended to stand out more than the average housing project, providing better granularity and more specific scoring.
 
 Similarly, for quality scores, we initially binned them into quartiles. However, since the median weighted ratings of amenities for a given housing project tended to be very close to one another, this resulted in very similar values in each of the bins. To remedy this, we applied min-max scaling instead, which allowed housing projects with high median weighted ratings of amenities to stand out more.
 
 We are satisfied with the performance of the tool, as it helps to identify housing projects in ideal areas in an objective way and the interface is simple and intuitive. Even if the housing projects do not meet the user’s specific requirements, the suggestions indicate the appeal of the suggested areas and zones, and the user can thus focus their search on properties in these areas.
 
-The performance of the tool is not without limitations. We noted that the recommendations were often spatially clustered. This is expected since nearby housing projects have similar amenities. Further development may be done to enhance the tool, perhaps by including a heatmap of properties and scores, instead of simply showing the top 5 results. Furthermore, the information in the open-source databases we used was limited: for example, there was little info about the age of the housing projects. Because older homes tend to fetch a lower price, omission of age a configurable search parameter could lead to overrepresentation of these homes.
+The performance of the tool is not without limitations. We noted that the recommendations were often spatially clustered. This is expected since nearby housing projects have similar amenities. Further development may be done to enhance the tool, perhaps by including a heatmap of properties and scores, instead of simply showing the top 5 results. Furthermore, the information in the open-source databases we used was limited: for example, there was little info about the age of the housing projects. Because older homes tend to fetch a lower price, omission of age as a configurable search parameter could lead to overrepresentation of these homes.
 
 	\begin{thebibliography}{00} \footnotesize
 		\bibitem{BengHuatChua}
