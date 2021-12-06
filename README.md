@@ -20,7 +20,7 @@ preference weight assignments defined by the user.
 
 ## What data was analyzed
 
-A total of **11,488** properties were analyzed. Transaction records were obtained from the Housing and Development
+A total of **11,486** properties were analyzed. Transaction records were obtained from the Housing and Development
 Board (
 HDB) and the Urban Redevelopment Authority (URA). The HDB dataset contained sale prices, floor areas, and block and
 street names for public housing apartments which were sold in the market from 2017 to 2021. The URA dataset contained
